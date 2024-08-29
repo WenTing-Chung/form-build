@@ -1,0 +1,51 @@
+body {
+  color: $black;
+  // &::-webkit-scrollbar {
+  //   width: 8px;
+  //   height: 8px;
+  // }
+  // &::-webkit-scrollbar-track {
+  //   background-color: #ececec;
+  // }
+  // &::-webkit-scrollbar-thumb {
+  //   // border: 1px solid #f7ecda;
+  //   border-radius: 8px;
+  //   background-color: #a6a6a6;
+  // }
+}
+img {
+  display: block;
+}
+a {
+  display: block;
+  text-decoration: none;
+  &:hover,
+  &:active {
+    text-decoration: none;
+  }
+}
+p {
+  margin: 0;
+}
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+select:focus,
+input:focus {
+  outline: none;
+}
+
+// 取消數字欄位小箭頭
+/* Chrome, Safari, Edge, Opera */
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+  margin: 0;
+
+  -webkit-appearance: none;
+}
+/* Firefox */
+input[type='number'] {
+  -moz-appearance: textfield;
+}

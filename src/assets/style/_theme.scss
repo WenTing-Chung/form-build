@@ -1,0 +1,29 @@
+/*******************
+ *  color          *
+ *******************/
+$black: #1a1d1a;
+$violet: #57588b;
+$icterine: #eef36a;
+$celadon: #9bc995;
+$cadetGray: #7b9496;
+$lavender: #cecedf;
+$frenchGray: #bbbbcb;
+$danger: #c82829;
+
+/*******************
+ *  checkbox       *
+ *******************/
+.checkbox-control {
+  position: relative;
+  cursor: pointer;
+  &::before,
+  &::after {
+    position: absolute;
+    top: 0;
+    content: '';
+  }
+}
+
+.gradient-mix-image {
+  background: url('../image/bg.png'), linear-gradient(45deg, $violet, #fff);
+}
