@@ -26,6 +26,16 @@ const routes = [
       },
     ],
   },
+  {
+    path: '/form-list',
+    component: () => import('@/layout/Index.vue'),
+    children: [
+      {
+        path: '/general-list',
+        name: 'GeneralList',
+      },
+    ],
+  },
 ]
 
 const router = new VueRouter({

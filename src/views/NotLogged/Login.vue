@@ -24,7 +24,13 @@
             <div slot-scope="{ valid, errors }">
               <label for="LoginForm-password">
                 <span class="text-lg">密碼</span>
-                <router-link to="" class="inline ml-4 text-violet underline hover:font-bold hover:underline">忘記密碼</router-link>
+                <button
+                  class="inline ml-4 text-violet underline hover:font-bold hover:underline"
+                  type="button"
+                  @click.prevent="$store.dispatch('isModal', true)"
+                >
+                  忘記密碼
+                </button>
                 <div class="relative z-0">
                   <FormInput
                     id="LoginForm-password"
