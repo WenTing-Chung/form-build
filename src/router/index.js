@@ -27,14 +27,22 @@ const routes = [
     ],
   },
   {
-    path: '/form-list',
+    path: '/',
     component: () => import('@/layout/Index.vue'),
     children: [
       {
-        path: '/general-list',
+        path: '/',
         name: 'GeneralList',
+        component: () => import('@/views/GeneralList.vue'),
+        meta: {
+          requireAuth: true,
+        },
       },
     ],
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    redirect: '/',
   },
 ]
 

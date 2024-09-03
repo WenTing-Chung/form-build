@@ -25,7 +25,7 @@
               <label for="LoginForm-password">
                 <span class="text-lg">密碼</span>
                 <button
-                  class="inline ml-4 text-violet underline hover:font-bold hover:underline"
+                  class="inline ml-4 text-[#54588c] underline hover:font-bold hover:underline"
                   type="button"
                   @click.prevent="$store.dispatch('isModal', true)"
                 >
@@ -59,8 +59,8 @@
         <input id="is-remember" v-model="is_remember" type="checkbox" class="hidden" />
         <label for="is-remember" class="pl-8 checkbox-control">記住帳號</label>
       </div>
-      <button class="mb-10 py-3 w-full rounded-full bg-violet hover:bg-[#3A3B72] text-white font-bold text-2xl" type="button">立即登入</button>
-      <router-link :to="{ name: 'Register' }" class="inline text-violet text-lg underline hover:font-bold hover:underline">立即註冊</router-link>
+      <button class="mb-10 py-3 w-full rounded-full bg-[#54588c] hover:bg-[#3a3b72] text-white font-bold text-2xl" type="button">立即登入</button>
+      <router-link :to="{ name: 'Register' }" class="inline text-[#54588c] text-lg underline hover:font-bold hover:underline">立即註冊</router-link>
     </div>
   </div>
 </template>

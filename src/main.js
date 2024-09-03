@@ -3,6 +3,7 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import axios from './axios'
+import VCalendar from 'v-calendar'
 import { localize, ValidationObserver, ValidationProvider, extend } from 'vee-validate'
 import * as rules from 'vee-validate/dist/rules'
 import zh from 'vee-validate/dist/locale/zh_TW.json'
@@ -41,10 +42,12 @@ Object.keys(rules).forEach((rule) => extend(rule, rules[rule]))
 
 Vue.use(Toasted, { theme: 'outline', position: 'top-center', duration: 3000 })
 Vue.use(VueCookies)
+Vue.use(VCalendar)
 Vue.use(VueMeta)
 
 Vue.config.productionTip = false
 Vue.prototype.axios = axios
+Vue.prototype.$EventBus = new Vue()
 
 new Vue({
   router,

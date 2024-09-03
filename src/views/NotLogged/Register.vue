@@ -106,8 +106,8 @@
           </ValidationProvider>
         </form>
       </ValidationObserver>
-      <button class="mb-6 py-3 w-full rounded-full bg-violet hover:bg-[#3A3B72] text-white font-bold text-2xl" type="button">註冊</button>
-      <router-link :to="{ name: 'Login' }" class="inline text-violet text-lg underline hover:font-bold hover:underline">立即登入</router-link>
+      <button class="mb-6 py-3 w-full rounded-full bg-[#54588c] hover:bg-[#3a3b72] text-white font-bold text-2xl" type="button">註冊</button>
+      <router-link :to="{ name: 'Login' }" class="inline text-[#54588c] text-lg underline hover:font-bold hover:underline">立即登入</router-link>
     </div>
   </div>
 </template>

@@ -1,5 +1,5 @@
 <template>
-  <header class="py-6 px-8 bg-white shadow-[0px_3px_6px_0_rgba(0,0,0,0.16)]">
+  <header class="relative py-6 px-8 w-full bg-white shadow-[0px_3px_6px_0_rgba(0,0,0,0.16)]">
     <div class="flex justify-between">
       <p class="text-[#52528c] font-bold text-2xl">表單設計</p>
       <div class="relative">
