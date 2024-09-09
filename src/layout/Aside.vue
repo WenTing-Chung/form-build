@@ -1,10 +1,10 @@
 <template>
-  <aside class="min-w-[300px] w-[300px] border-r border-solid border-[#d8d7e3] bg-[#d8d7e3]">
+  <aside class="w-[300px] border-r border-solid border-[#d8d7e3] bg-[#d8d7e3]">
     <router-link to="" id="add-btn" class="py-9 px-8 w-full bg-[#ecf371] text-left text-lg">
       <font-awesome-icon icon="fa-solid fa-plus" size="2xl" class="mr-5" />
       新增表單
     </router-link>
-    <div class="pt-4 overflow-y-auto folder-list">
+    <div class="pt-4 overflow-y-auto folder-list scroll-style">
       <div class="py-5 px-2.5 border-b border-solid border-[#cac9da]">
         <div
           class="relative py-2 pl-[72px] w-full rounded-md text-left text-lg cursor-pointer hover:bg-[#acaccc]/50 folder-kind"
@@ -15,6 +15,15 @@
         </div>
       </div>
       <ul v-if="list && list.length" class="py-6 px-2.5 border-b border-solid border-[#cac9da]">
+        <li>
+          <div
+            class="relative mb-5 py-2 pl-[72px] w-full rounded-md text-left text-lg cursor-pointer hover:bg-[#acaccc]/50 folder-kind"
+            title="新增資料夾"
+          >
+            <font-awesome-icon icon="fa-solid fa-folder-plus" size="xl" class="absolute left-6 text-[#797979] icon" />
+            新增資料夾
+          </div>
+        </li>
         <li v-for="item in list" :key="item.id">
           <div
             class="relative overflow-hidden mb-5 py-2 pl-[72px] w-full rounded-md text-left text-ellipsis whitespace-nowrap text-lg cursor-pointer hover:bg-[#acaccc]/50 folder-kind"
@@ -44,8 +53,10 @@ export default {
   name: 'TheAside',
   data: () => ({
     list: [
-      { id: 0, folder_name: '新增資料夾' },
-      { id: 1, folder_name: '活動報名' },
+      { id: 0, folder_name: '活動報名111' },
+      { id: 1, folder_name: '活動報名222' },
+      { id: 2, folder_name: '活動報名333' },
+      { id: 3, folder_name: '活動報名444' },
     ],
   }),
   mounted() {
@@ -73,16 +84,6 @@ export default {
 <style lang="scss" scoped>
 .folder-list {
   height: calc(100% - var(--list));
-  &::-webkit-scrollbar {
-    width: 15px;
-  }
-  &::-webkit-scrollbar-track {
-    background-color: #cecece;
-  }
-  &::-webkit-scrollbar-thumb {
-    border-radius: 8px;
-    background-color: #9c9ca0;
-  }
   .folder-kind:hover > .icon {
     color: #57588b;
   }
