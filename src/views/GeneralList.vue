@@ -26,14 +26,14 @@
         <button
           :class="['py-3 px-[18px]', show_type === 'card' ? 'bg-[#c8c8d5] text-[#57588b]' : 'bg-[#fafaf9] text-[#888]']"
           type="button"
-          @click.prevent="show_type = 'card'"
+          @click.prevent="type_reset('card')"
         >
           <font-awesome-icon icon="fa-brands fa-microsoft" size="2xl" />
         </button>
         <button
           :class="['py-3 px-[18px]', show_type === 'list' ? 'bg-[#c8c8d5] text-[#57588b]' : 'bg-[#fafaf9] text-[#888]']"
           type="button"
-          @click.prevent="show_type = 'list'"
+          @click.prevent="type_reset('list')"
         >
           <font-awesome-icon icon="fa-solid fa-bars" size="2xl" />
         </button>
@@ -114,7 +114,6 @@ export default {
     },
     /**@切換收藏 */
     is_collect(i) {
-      console.log('star: ', i)
       this.list[i].is_star = !this.list[i].is_star
     },
     /**@刪除勾選 */
@@ -123,6 +122,11 @@ export default {
         let index = this.delList.findIndex((x) => x === i)
         this.delList.splice(index, 1)
       } else this.delList.push(i)
+    },
+    /**@切換顯示形式 */
+    type_reset(kind) {
+      this.show_type = kind
+      this.list.map((x) => (x.config = false))
     },
   },
   beforeDestroy() {
