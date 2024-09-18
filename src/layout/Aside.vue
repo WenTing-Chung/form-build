@@ -1,6 +1,6 @@
 <template>
   <aside class="w-[300px] border-r border-solid border-[#d8d7e3] bg-[#d8d7e3]">
-    <router-link to="" id="add-btn" class="py-9 px-8 w-full bg-[#ecf371] text-left text-lg">
+    <router-link :to="{ name: 'FormCreate' }" id="add-btn" class="py-9 px-8 w-full bg-[#ecf371] text-left text-lg">
       <font-awesome-icon icon="fa-solid fa-plus" size="2xl" class="mr-5" />
       新增表單
     </router-link>

@@ -38,6 +38,38 @@ const routes = [
           requireAuth: true,
         },
       },
+      {
+        path: '/account-setting',
+        name: 'AccountSetting',
+        component: () => import('@/views/Setting.vue'),
+        meta: {
+          requireAuth: true,
+        },
+      },
+      {
+        path: '/form/create',
+        name: 'FormCreate',
+        component: () => import('@/views/Form/Create.vue'),
+        meta: {
+          requireAuth: true,
+        },
+      },
+      {
+        path: '/form/settings',
+        name: 'FormSettings',
+        component: () => import('@/views/Form/Settings.vue'),
+        meta: {
+          requireAuth: true,
+        },
+      },
+      {
+        path: '/form/release',
+        name: 'FormRelease',
+        component: () => import('@/views/Form/Release.vue'),
+        meta: {
+          requireAuth: true,
+        },
+      },
     ],
   },
   {

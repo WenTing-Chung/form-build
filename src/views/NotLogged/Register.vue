@@ -1,9 +1,9 @@
 <template>
-  <div class="ml-auto w-full xl:w-1/2">
+  <div class="overflow-y-auto ml-auto py-10 xl:py-0 w-full max-h-screen xl:w-1/2 scroll-style">
     <div class="mx-auto w-2/3 sm:w-1/2">
       <p class="mb-8 font-bold text-3xl">歡迎加入</p>
       <ValidationObserver ref="RegisterForm">
-        <form class="mb-40">
+        <form class="mb-10 xl:mb-40">
           <ValidationProvider name="帳號" rules="required">
             <div class="mb-5" slot-scope="{ valid, errors }">
               <label for="RegisterForm-account">
