@@ -79,6 +79,9 @@ export default {
     is_show: false,
     is_remember: false,
   }),
+  metaInfo: {
+    title: '登入',
+  },
 }
 </script>
 

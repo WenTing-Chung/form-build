@@ -11,6 +11,12 @@ import Loading from 'vue-loading-overlay'
 
 export default {
   components: { Loading },
+  metaInfo: {
+    // if no subcomponents specify a metaInfo.title, this title will be used
+    // title: 'Default Title',
+    // all titles will be injected into this template
+    titleTemplate: `%s - ${process.env.VUE_APP_TITLE}`,
+  },
   computed: {
     ...mapState({
       loading: (state) => state.isLoading,

@@ -22,35 +22,39 @@ export default {
     },
   },
   data: () => ({
-    screenW: 0,
+    screenW: null,
   }),
-  created() {
-    this.screenW = Math.floor(document.documentElement.scrollWidth * 0.9)
-    console.log(this.screenW)
-  },
   mounted() {
-    const { x, y } = this.location
-    const operate = document.querySelector('.moreOperate')
-    if (this.listType === 'card') {
-      if (y > 600) {
-        operate.style.top = ''
-        operate.style.bottom = '100px'
-      } else {
-        operate.style.top = '250px'
-        operate.style.bottom = ''
-      }
+    this.resizeFunction()
+    window.addEventListener('resize', this.resizeFunction)
+  },
+  methods: {
+    resizeFunction() {
+      this.screenW = Math.floor(document.documentElement.scrollWidth * 0.8)
+      this.moreConfig()
+    },
+    moreConfig() {
+      const { x, y } = this.location
+      const operate = document.querySelector('.moreOperate')
+      if (this.listType === 'card') {
+        if (y > 600) operate.style.top = '-80px'
+        else operate.style.top = '250px'
 
-      if (x > this.screenW) {
-        operate.style.right = '-20px'
-        operate.style.left = ''
+        if (x > this.screenW) {
+          operate.style.right = '-20px'
+          operate.style.left = ''
+        } else {
+          operate.style.right = ''
+          operate.style.left = 'calc(100% - 40px)'
+        }
       } else {
-        operate.style.right = ''
-        operate.style.left = 'calc(100% - 40px)'
+        operate.style.right = '40px'
+        operate.style.top = 'calc(100% - 44px)'
       }
-    } else {
-      operate.style.right = '40px'
-      operate.style.top = 'calc(100% - 44px)'
-    }
+    },
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.resizeFunction)
   },
 }
 </script>

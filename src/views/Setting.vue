@@ -122,6 +122,9 @@ export default {
       check_pwd: '',
     },
   }),
+  metaInfo: {
+    title: '帳號設定',
+  },
 }
 </script>
 

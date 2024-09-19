@@ -15,6 +15,8 @@ import Toasted from 'vue-toasted'
 // [vue-toasted](https://www.npmjs.com/package/vue-toasted)
 import VueMeta from 'vue-meta'
 // [vue-meta](https://www.npmjs.com/package/vue-meta)
+import VueClipboard from 'vue-clipboard2'
+// [vue-meta](https://www.npmjs.com/package/vue-clipboard2)
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { fas } from '@fortawesome/free-solid-svg-icons'
@@ -44,6 +46,7 @@ Vue.use(Toasted, { theme: 'outline', position: 'top-center', duration: 3000 })
 Vue.use(VueCookies)
 Vue.use(VCalendar)
 Vue.use(VueMeta)
+Vue.use(VueClipboard)
 
 Vue.config.productionTip = false
 Vue.prototype.axios = axios

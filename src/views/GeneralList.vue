@@ -85,6 +85,9 @@ export default {
     show_type: 'card',
     folder_name: '',
   }),
+  metaInfo: {
+    title: '表單清單',
+  },
   created() {
     this.$EventBus.$on('folder-select', (val) => this.get_folderName(val))
   },

@@ -128,5 +128,8 @@ export default {
     },
     is_show: false,
   }),
+  metaInfo: {
+    title: '註冊',
+  },
 }
 </script>
