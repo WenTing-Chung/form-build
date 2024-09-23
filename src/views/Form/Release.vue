@@ -59,7 +59,7 @@ export default {
   },
   methods: {
     copy_success() {
-      this.$toasted.success('複製成功', { position: 'top-center' })
+      this.$toasted.info('複製成功', { position: 'top-center' })
     },
     copy_error() {
       this.$toasted.error('無法複製內容、瀏覽器不支援', { position: 'top-center' })
