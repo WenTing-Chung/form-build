@@ -35,26 +35,21 @@
 </template>
 
 <script>
+import questionList from '@/utils/question'
+
 export default {
   name: 'FormCreateBar',
+  props: {
+    add: {
+      type: Boolean,
+    },
+  },
   data: () => ({
+    questionList,
     list: [
       { text: '題目類型', value: 'question-type' },
       { text: '暫存區', value: 'staging-area' },
       { text: '主題', value: 'theme' },
-    ],
-    questionList: [
-      { text: '單行文字', img: require('@/assets/image/icon_input.svg') },
-      { text: '多行文字', img: require('@/assets/image/icon_textarea.svg') },
-      { text: '單選題', img: require('@/assets/image/icon_radio.svg') },
-      { text: '複選題', img: require('@/assets/image/icon_checkbox.svg') },
-      { text: '下拉式', img: require('@/assets/image/icon_select.svg') },
-      { text: '雲端上傳', img: require('@/assets/image/icon_file.svg') },
-      { text: '線性刻度', img: require('@/assets/image/icon_progress.svg') },
-      { text: '單選方塊', img: require('@/assets/image/icon_radio_ar.svg') },
-      { text: '複選方塊', img: require('@/assets/image/icon_checkbox_ar.svg') },
-      { text: '日期', img: require('@/assets/image/icon_date.svg') },
-      { text: '時間', img: require('@/assets/image/icon_time.svg') },
     ],
     active: 'question-type',
   }),
@@ -70,10 +65,10 @@ export default {
         bar.style.setProperty('--item', `${item}px`)
       })
     },
-    /**@拖曳開始 */
+    /**@拖曳目標開始 */
     handleDragStart(env, item) {
-      const info = JSON.stringify(item)
-      env.dataTransfer.setData('question', info)
+      env.dataTransfer.setData('question', item.value)
+      this.$emit('drag_add_question', true)
     },
   },
 }
