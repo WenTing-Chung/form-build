@@ -13,11 +13,8 @@ export default [
         italic: false, // 斜體
         underline: false, // 下底線
       },
-      picture: {
-        file: null,
-        link: '',
-      },
       question_desc: '', // 題目說明
+      image: '',
       value: '',
       max: '80',
     },
@@ -35,29 +32,31 @@ export default [
         italic: false, // 斜體
         underline: false, // 下底線
       },
-      picture: {
-        file: null,
-        link: '',
-      },
       question_desc: '', // 題目說明
+      image: '',
       value: '',
       max: '1000',
     },
   },
-  // {
-  //   value: 2,
-  //   text: '單選題',
-  //   img: require('@/assets/image/icon_radio.svg'),
-  //   data: {
-  //     required: false,
-  //     label: {
-  //       value: '',
-  //       bold: false,
-  //       italic: false,
-  //       underline: false,
-  //     },
-  //   },
-  // },
+  {
+    value: 2,
+    text: '單選題',
+    kind: 'radio',
+    img: require('@/assets/image/icon_radio.svg'),
+    data: {
+      required: false,
+      label: {
+        value: '',
+        bold: false, // 粗體
+        italic: false, // 斜體
+        underline: false, // 下底線
+      },
+      question_desc: '', // 題目說明
+      image: '',
+      value: '',
+      option: [{ value: '選項1' }],
+    },
+  },
   // {
   //   value: 3,
   //   text: '複選題',

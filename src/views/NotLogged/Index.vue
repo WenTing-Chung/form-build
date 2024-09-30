@@ -6,7 +6,7 @@
         {{ is_finish ? '已將新密碼寄至您的信箱，請確認並完成修改動作。' : '請填寫您的註冊信箱，確認無誤後將寄信至您的信箱，並完成密碼重置。' }}
       </p>
       <template v-if="is_finish">
-        <FormInput class="mb-4 rounded-full" :value="reset_email" :input-value="reset_email" disabled />
+        <FormInput class="mb-4 rounded-full" :value="email" :input-value="email" disabled />
         <button
           class="py-2.5 w-full border border-solid border-[#cbcccd] rounded-full bg-white hover:bg-[#52528C] text-[#777] hover:text-[#eee] font-bold text-2xl"
           type="button"
@@ -16,7 +16,7 @@
         </button>
       </template>
       <template v-else>
-        <FormInput class="mb-4 rounded-full" v-model="reset_email" placeholder="請輸入電子信箱" :input-value="reset_email" />
+        <FormInput class="mb-4 rounded-full" v-model="email" placeholder="請輸入電子信箱" :input-value="email" />
         <button class="py-3 w-full rounded-full bg-[#54588c] hover:bg-[#3a3b72] text-white font-bold text-2xl" type="button">送出</button>
       </template>
     </Modal>
@@ -33,13 +33,11 @@ export default {
   name: 'NotLogged',
   components: { Modal, FormInput },
   data: () => ({
-    reset_email: '',
+    email: '',
     is_finish: false,
   }),
   computed: {
-    ...mapState({
-      modal: (state) => state.isModal,
-    }),
+    ...mapState({ modal: (state) => state.isModal }),
   },
 }
 </script>

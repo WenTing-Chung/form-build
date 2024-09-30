@@ -57,7 +57,7 @@ service.interceptors.response.use(
         if (code === 401) {
           Vue.$cookies.remove(`${process.env.VUE_APP_COOKIES}_Token`)
           Vue.$cookies.remove(`${process.env.VUE_APP_COOKIES}_userID`)
-          if (router.currentRoute.name !== 'Home') router.push({ name: 'Home' })
+          if (router.currentRoute.name !== 'Login') router.push({ name: 'Login' })
         }
         break
     }

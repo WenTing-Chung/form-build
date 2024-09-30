@@ -94,7 +94,7 @@
                 <span class="text-lg">E-mail</span>
                 <FormInput
                   id="RegisterForm-email"
-                  v-model="form.name"
+                  v-model="form.email"
                   placeholder="請輸入電子信箱"
                   :input-value="form.email"
                   :is-errors="Boolean(errors[0])"

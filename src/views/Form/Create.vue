@@ -127,6 +127,42 @@
                           <input class="p-2.5 w-1/6 border-b border-solid border-[#0000001f] focus:shadow-md" v-model="item.data.max" type="number" />
                         </div>
                       </template>
+                      <!-- 單選題 ↓ -->
+                      <template v-else-if="item.kind === 'radio'">
+                        <ul class="text-sm">
+                          <li v-for="(opt, index) in item.data['option']" :key="index" class="flex items-center justify-between mb-3">
+                            <div class="mr-3.5 w-4 h-4 border border-solid border-[#888] rounded-full bg-white" />
+                            <input class="flex-1 py-0.5 border-solid border-[#888] focus:border-b" v-model="opt.value" type="text" />
+                            <font-awesome-icon
+                              v-if="active === i"
+                              icon="fa-solid fa-xmark"
+                              size="2xl"
+                              class="ml-3.5 text-[#888] cursor-pointer"
+                              @click.prevent="item.data['option'].splice(i, 1)"
+                            />
+                          </li>
+                          <li v-if="active === i" class="flex items-center">
+                            <div class="mr-3.5 w-4 h-4 border border-solid border-[#888] rounded-full bg-white" />
+                            <p>
+                              <span
+                                class="text-[#888]"
+                                role="button"
+                                @click.prevent="item.data['option'].push({ value: `選項${item.data['option'].length + 1}` })"
+                              >
+                                新增選項
+                              </span>
+                              或
+                              <span
+                                class="text-[#00a8ff] cursor-pointer"
+                                role="button"
+                                @click.prevent="item.data['option'].push({ value: '其他...' })"
+                              >
+                                新增「其他」
+                              </span>
+                            </p>
+                          </li>
+                        </ul>
+                      </template>
                     </div>
                     <template v-if="active === i">
                       <hr class="mt-5 border-[#c7c7c7]" />
