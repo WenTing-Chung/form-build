@@ -94,7 +94,7 @@
                     <!-- 標題說明 ↓ -->
                     <input
                       :class="['w-[min(80%,_600px)] mb-5 text-sm', { 'py-1 pl-3.5 border-b border-solid border-[#888]': active === i }]"
-                      v-model="item.data.question_desc"
+                      v-model="item.data['question_desc']"
                       type="text"
                       placeholder="說明"
                     />
@@ -132,13 +132,17 @@
                         <ul class="text-sm">
                           <li v-for="(opt, index) in item.data['option']" :key="index" class="flex items-center justify-between mb-3">
                             <div class="mr-3.5 w-4 h-4 border border-solid border-[#888] rounded-full bg-white" />
-                            <input class="flex-1 py-0.5 border-solid border-[#888] focus:border-b" v-model="opt.value" type="text" />
+                            <input
+                              class="flex-1 py-0.5 border-b border-solid border-transparent focus:border-[#888]"
+                              v-model="opt.value"
+                              type="text"
+                            />
                             <font-awesome-icon
                               v-if="active === i"
                               icon="fa-solid fa-xmark"
                               size="2xl"
                               class="ml-3.5 text-[#888] cursor-pointer"
-                              @click.prevent="item.data['option'].splice(i, 1)"
+                              @click.prevent="item.data['option'].splice(index, 1)"
                             />
                           </li>
                           <li v-if="active === i" class="flex items-center">
@@ -152,16 +156,93 @@
                                 新增選項
                               </span>
                               或
-                              <span
-                                class="text-[#00a8ff] cursor-pointer"
-                                role="button"
-                                @click.prevent="item.data['option'].push({ value: '其他...' })"
-                              >
+                              <span class="text-[#00a8ff]" role="button" @click.prevent="item.data['option'].push({ value: '其他...' })">
                                 新增「其他」
                               </span>
                             </p>
                           </li>
                         </ul>
+                      </template>
+                      <!-- 複選題 ↓ -->
+                      <template v-else-if="item.kind === 'checkbox'">
+                        <ul class="text-sm">
+                          <li v-for="(opt, index) in item.data['option']" :key="index" class="flex items-center justify-between mb-3">
+                            <div class="mr-3.5 w-4 h-4 border border-solid border-[#888] bg-white" />
+                            <input
+                              class="flex-1 py-0.5 border-b border-solid border-transparent focus:border-[#888]"
+                              v-model="opt.value"
+                              type="text"
+                            />
+                            <font-awesome-icon
+                              v-if="active === i"
+                              icon="fa-solid fa-xmark"
+                              size="2xl"
+                              class="ml-3.5 text-[#888] cursor-pointer"
+                              @click.prevent="item.data['option'].splice(index, 1)"
+                            />
+                          </li>
+                          <li v-if="active === i" class="flex items-center">
+                            <div class="mr-3.5 w-4 h-4 border border-solid border-[#888] bg-white" />
+                            <p>
+                              <span
+                                class="text-[#888]"
+                                role="button"
+                                @click.prevent="item.data['option'].push({ value: `選項${item.data['option'].length + 1}` })"
+                              >
+                                新增選項
+                              </span>
+                              或
+                              <span class="text-[#00a8ff]" role="button" @click.prevent="item.data['option'].push({ value: '其他...' })">
+                                新增「其他」
+                              </span>
+                            </p>
+                          </li>
+                        </ul>
+                      </template>
+                      <!-- 下拉式 ↓ -->
+                      <template v-else-if="item.kind === 'select'">
+                        <div>
+                          <ul class="text-sm">
+                            <li v-for="(opt, index) in item.data['option']" :key="index" class="flex items-center justify-between mb-3">
+                              <span class="mr-3">{{ index + 1 }}.</span>
+                              <input
+                                class="flex-1 py-0.5 border-b border-solid border-transparent focus:border-[#888]"
+                                v-model="opt.value"
+                                type="text"
+                              />
+                              <font-awesome-icon
+                                v-if="active === i"
+                                icon="fa-solid fa-xmark"
+                                size="2xl"
+                                class="ml-3.5 text-[#888] cursor-pointer"
+                                @click.prevent="item.data['option'].splice(index, 1)"
+                              />
+                            </li>
+                          </ul>
+                          <p v-if="active === i" class="flex items-center text-sm">
+                            <span
+                              class="text-[#888]"
+                              role="button"
+                              @click.prevent="item.data['option'].push({ value: `選項${item.data['option'].length + 1}` })"
+                            >
+                              新增選項
+                            </span>
+                          </p>
+                        </div>
+                      </template>
+                      <!-- 雲端上傳 ↓ -->
+                      <template v-else-if="item.kind === 'upload'">
+                        <div class="flex mb-6">
+                          <span class="w-1/5 text-sm">檔案類型</span>
+                          <div class="flex1 w-4/5">
+                            <div class="grid grid-flow-row grid-cols-5 gap-3">
+                              <div v-for="(media, j) in mediaList" :key="j">
+                                <input :id="`media${j}`" class="media" v-model="item.data.file['type']" type="checkbox" :value="media" />
+                                <label :for="`media${j}`" class="pl-8">{{ media }}</label>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       </template>
                     </div>
                     <template v-if="active === i">
@@ -242,6 +323,7 @@ export default {
   data: () => ({
     questionList: [],
     temporaryList: [],
+    mediaList: ['文件', '簡報', '試算表', '繪圖', 'PDF', '圖片', '影片', '音訊'],
     enabled: true,
     dragging: false,
     dragAdd: false,
@@ -312,5 +394,30 @@ export default {
 }
 .no-move {
   transition: transform 0s;
+}
+
+.checkbox-control {
+  &::before,
+  &::after {
+    display: block;
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+  }
+  &::before {
+    border: 1px solid #cbcccd;
+    background-color: #fff;
+  }
+}
+input[class='media']:checked + .checkbox-control {
+  &::before {
+    border-color: #52528c;
+    background-color: #52528c;
+  }
+  &::after {
+    background-color: #fff;
+
+    clip-path: polygon(15% 60%, 33% 80%, 85% 10%, 90% 15%, 33% 90%, 10% 65%);
+  }
 }
 </style>

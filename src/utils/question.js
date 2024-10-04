@@ -57,48 +57,65 @@ export default [
       option: [{ value: '選項1' }],
     },
   },
-  // {
-  //   value: 3,
-  //   text: '複選題',
-  //   img: require('@/assets/image/icon_checkbox.svg'),
-  //   data: {
-  //     required: false,
-  //     label: {
-  //       value: '',
-  //       bold: false,
-  //       italic: false,
-  //       underline: false,
-  //     },
-  //   },
-  // },
-  // {
-  //   value: 4,
-  //   text: '下拉式',
-  //   img: require('@/assets/image/icon_select.svg'),
-  //   data: {
-  //     required: false,
-  //     label: {
-  //       value: '',
-  //       bold: false,
-  //       italic: false,
-  //       underline: false,
-  //     },
-  //   },
-  // },
-  // {
-  //   value: 5,
-  //   text: '雲端上傳',
-  //   img: require('@/assets/image/icon_file.svg'),
-  //   data: {
-  //     required: false,
-  //     label: {
-  //       value: '',
-  //       bold: false,
-  //       italic: false,
-  //       underline: false,
-  //     },
-  //   },
-  // },
+  {
+    value: 3,
+    text: '複選題',
+    kind: 'checkbox',
+    img: require('@/assets/image/icon_checkbox.svg'),
+    data: {
+      required: false,
+      label: {
+        value: '',
+        bold: false, // 粗體
+        italic: false, // 斜體
+        underline: false, // 下底線
+      },
+      question_desc: '', // 題目說明
+      image: '',
+      value: '',
+      option: [{ value: '選項1' }],
+    },
+  },
+  {
+    value: 4,
+    text: '下拉式',
+    kind: 'select',
+    img: require('@/assets/image/icon_select.svg'),
+    data: {
+      required: false,
+      label: {
+        value: '',
+        bold: false, // 粗體
+        italic: false, // 斜體
+        underline: false, // 下底線
+      },
+      question_desc: '', // 題目說明
+      image: '',
+      value: '',
+      option: [{ value: '選項1' }],
+    },
+  },
+  {
+    value: 5,
+    text: '雲端上傳',
+    kind: 'upload',
+    img: require('@/assets/image/icon_file.svg'),
+    data: {
+      required: false,
+      label: {
+        value: '',
+        bold: false, // 粗體
+        italic: false, // 斜體
+        underline: false, // 下底線
+      },
+      question_desc: '', // 題目說明
+      file: {
+        size: '',
+        type: [],
+        link: '',
+      },
+    },
+  },
   // {
   //   value: 6,
   //   text: '線性刻度',
