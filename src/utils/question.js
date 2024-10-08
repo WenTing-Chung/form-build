@@ -110,26 +110,31 @@ export default [
       },
       question_desc: '', // 題目說明
       file: {
-        size: '',
+        size: '1',
         type: [],
-        link: '',
       },
     },
   },
-  // {
-  //   value: 6,
-  //   text: '線性刻度',
-  //   img: require('@/assets/image/icon_progress.svg'),
-  //   data: {
-  //     required: false,
-  //     label: {
-  //       value: '',
-  //       bold: false,
-  //       italic: false,
-  //       underline: false,
-  //     },
-  //   },
-  // },
+  {
+    value: 6,
+    text: '線性刻度',
+    kind: 'linearScale',
+    img: require('@/assets/image/icon_progress.svg'),
+    data: {
+      required: false,
+      label: {
+        value: '',
+        bold: false, // 粗體
+        italic: false, // 斜體
+        underline: false, // 下底線
+      },
+      question_desc: '', // 題目說明
+      min: 1, // 最小值
+      max: 5, // 最大值
+      min_text: '', // 最小顯示文字
+      max_text: '', // 最大顯示文字
+    },
+  },
   // {
   //   value: 7,
   //   text: '單選方塊',

@@ -13,7 +13,7 @@
             <draggable
               :list="questionList"
               :disabled="!enabled"
-              handle=".handle"
+              :handle="'.handle'"
               v-bind="dragOptions"
               @start="dragging = true"
               @end=";(dragging = false), dragEnd($event)"
@@ -232,18 +232,76 @@
                       </template>
                       <!-- 雲端上傳 ↓ -->
                       <template v-else-if="item.kind === 'upload'">
-                        <div class="flex mb-6">
-                          <span class="w-1/5 text-sm">檔案類型</span>
-                          <div class="flex1 w-4/5">
-                            <div class="grid grid-flow-row grid-cols-5 gap-3">
-                              <div v-for="(media, j) in mediaList" :key="j">
-                                <input :id="`media${j}`" class="media" v-model="item.data.file['type']" type="checkbox" :value="media" />
-                                <label :for="`media${j}`" class="pl-8">{{ media }}</label>
+                        <template v-if="active === i">
+                          <div class="flex mb-6 text-sm">
+                            <span class="w-1/5">檔案類型</span>
+                            <div class="flex1 w-4/5 2xl:w-1/2">
+                              <div class="grid grid-flow-row grid-cols-3 lg:grid-cols-5 gap-3">
+                                <div
+                                  v-for="(kind, j) in dropdown.mediaList"
+                                  :key="`${kind.value}-${j}`"
+                                  class="flex items-center cursor-pointer"
+                                  @click.prevent="mediaQuestion(item.data.file['type'], kind.value)"
+                                >
+                                  <div
+                                    :class="[
+                                      'mr-3 w-5 h-5 border border-solid transition-all ease-in-out duration-500',
+                                      item.data.file['type'].includes(kind.value) ? 'mediaChecked' : 'border-[#888]',
+                                    ]"
+                                  />
+                                  <p>{{ kind.text }}</p>
+                                </div>
                               </div>
                             </div>
                           </div>
-                        </div>
+                          <div class="flex text-sm">
+                            <span class="w-1/5">檔案大小限制</span>
+                            <div>
+                              <input
+                                id="file-size"
+                                class="mr-2.5 py-1.5 px-2.5 w-20 border-b border-solid border-[#888] bg-[#eee] text-center"
+                                v-model="item.data.file['size']"
+                                type="number"
+                                max="5"
+                              />
+                              <label for="file-size">MB <span class="text-[#aaa]">*檔案大小上限為 5 MB</span></label>
+                            </div>
+                          </div>
+                        </template>
+                        <template v-else>
+                          <div class="text-sm">
+                            <input id="upload" class="hidden" type="file" disabled />
+                            <label for="upload" class="mr-5 py-2 px-7 border border-solid border-[#888] rounded-md text-[#888]" type="button">
+                              新增檔案
+                            </label>
+                            <span class="text-[#888]">大小限制 {{ item.data.file['size'] }} MB</span>
+                          </div>
+                        </template>
                       </template>
+                      <template v-else-if="item.kind === 'linearScale'">
+                        <template v-if="active === i">
+                          <div class="flex items-center mb-4 text-sm">
+                            <select
+                              id="linearScale_min"
+                              class="mr-5 p-2.5 w-20 text-center hover:shadow-md"
+                              name="linearScale_min"
+                              v-model="item.data['min']"
+                            >
+                              <option v-for="num in [0, 1]" :key="num" :value="num">{{ num }}</option>
+                            </select>
+                            到
+                            <select
+                              id="linearScale_max"
+                              class="ml-5 p-2.5 w-20 text-center hover:shadow-md"
+                              name="linearScale_max"
+                              v-model="item.data['max']"
+                            >
+                              <option v-for="num in [2, 3, 4, 5, 6, 7, 8, 9, 10]" :key="num" :value="num">{{ num }}</option>
+                            </select>
+                          </div>
+                        </template>
+                      </template>
+                      <template v-else> </template>
                     </div>
                     <template v-if="active === i">
                       <hr class="mt-5 border-[#c7c7c7]" />
@@ -314,7 +372,7 @@
 <script>
 import draggable from 'vuedraggable'
 import question from '@/utils/question'
-import { inputType, inputType_to_text } from '@/utils/select'
+import { inputType, inputType_to_text, mediaList } from '@/utils/select'
 import FormCreateBar from '@/components/FormCreateBar.vue'
 
 export default {
@@ -323,13 +381,13 @@ export default {
   data: () => ({
     questionList: [],
     temporaryList: [],
-    mediaList: ['文件', '簡報', '試算表', '繪圖', 'PDF', '圖片', '影片', '音訊'],
     enabled: true,
     dragging: false,
     dragAdd: false,
     active: null, // 當前點擊問題Index
     dropdown: {
       inputType,
+      mediaList,
     },
     fn: {
       inputType_to_text,
@@ -384,6 +442,13 @@ export default {
     delete_question(i) {
       this.questionList.splice(i, 1)
     },
+    /**@雲端上傳問題限制類型 */
+    mediaQuestion(mediaArr, kind) {
+      if (mediaArr.includes(kind)) {
+        const i = mediaArr.findIndex((x) => x === kind)
+        mediaArr.splice(i, 1)
+      } else mediaArr.push(kind)
+    },
   },
 }
 </script>
@@ -396,26 +461,18 @@ export default {
   transition: transform 0s;
 }
 
-.checkbox-control {
-  &::before,
+.mediaChecked {
+  position: relative;
+  border-color: #52528c;
+  background-color: #52528c;
   &::after {
+    position: absolute;
+    top: 0;
     display: block;
-    width: 20px;
-    height: 20px;
-    border-radius: 4px;
-  }
-  &::before {
-    border: 1px solid #cbcccd;
+    width: 100%;
+    height: 100%;
     background-color: #fff;
-  }
-}
-input[class='media']:checked + .checkbox-control {
-  &::before {
-    border-color: #52528c;
-    background-color: #52528c;
-  }
-  &::after {
-    background-color: #fff;
+    content: '';
 
     clip-path: polygon(15% 60%, 33% 80%, 85% 10%, 90% 15%, 33% 90%, 10% 65%);
   }

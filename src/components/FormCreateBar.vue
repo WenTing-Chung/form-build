@@ -10,7 +10,8 @@
         {{ item.text }}
       </li>
     </ul>
-    <div class="overflow-y-auto py-8 bg-white scroll-style create-aside-content">
+    <div class="overflow-y-auto pb-8 bg-white scroll-style create-aside-content">
+      <p class="my-3.5 text-center font-bold">請拖曳至左側以新增題目</p>
       <template v-if="active === 'question-type'">
         <ul>
           <li
