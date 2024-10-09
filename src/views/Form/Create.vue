@@ -235,7 +235,7 @@
                         <template v-if="active === i">
                           <div class="flex mb-6 text-sm">
                             <span class="w-1/5">檔案類型</span>
-                            <div class="flex1 w-4/5 2xl:w-1/2">
+                            <div class="flex-1 w-4/5 2xl:w-1/2">
                               <div class="grid grid-flow-row grid-cols-3 lg:grid-cols-5 gap-3">
                                 <div
                                   v-for="(kind, j) in dropdown.mediaList"
@@ -278,17 +278,11 @@
                           </div>
                         </template>
                       </template>
+                      <!-- 線性刻度 ↓ -->
                       <template v-else-if="item.kind === 'linearScale'">
                         <template v-if="active === i">
                           <div class="flex items-center mb-4 text-sm">
-                            <select
-                              id="linearScale_min"
-                              class="mr-5 p-2.5 w-20 text-center hover:shadow-md"
-                              name="linearScale_min"
-                              v-model="item.data['min']"
-                            >
-                              <option v-for="num in [0, 1]" :key="num" :value="num">{{ num }}</option>
-                            </select>
+                            <span class="mr-5 p-2.5 w-20 text-center hover:shadow-md">{{ item.data['min'] }}</span>
                             到
                             <select
                               id="linearScale_max"
@@ -299,9 +293,81 @@
                               <option v-for="num in [2, 3, 4, 5, 6, 7, 8, 9, 10]" :key="num" :value="num">{{ num }}</option>
                             </select>
                           </div>
+                          <ul>
+                            <li class="flex items-center mb-7">
+                              <span class="mr-2.5 w-5">{{ item.data['min'] }}</span>
+                              <div class="flex justify-between py-1.5 px-8 w-[min(80%,_300px)] border-b border-solid border-[#c7c7c7]">
+                                <input v-model="item.data['min_text']" type="text" />
+                                <font-awesome-icon
+                                  icon="fa-solid fa-xmark"
+                                  size="2xl"
+                                  class="text-[#888] cursor-pointer"
+                                  @click.prevent="item.data['min_text'] = ''"
+                                />
+                              </div>
+                            </li>
+                            <li class="flex items-center">
+                              <span class="mr-2.5 w-5">{{ item.data['max'] }}</span>
+                              <div class="flex justify-between py-1.5 px-8 w-[min(80%,_300px)] border-b border-solid border-[#c7c7c7]">
+                                <input v-model="item.data['max_text']" type="text" />
+                                <font-awesome-icon
+                                  icon="fa-solid fa-xmark"
+                                  size="2xl"
+                                  class="text-[#888] cursor-pointer"
+                                  @click.prevent="item.data['max_text'] = ''"
+                                />
+                              </div>
+                            </li>
+                          </ul>
+                        </template>
+                        <template v-else>
+                          <div class="flex items-center justify-between">
+                            <span>{{ item.data['min_text'] }}</span>
+                            <div class="flex-1 flex justify-around mx-10 w-full">
+                              <div v-for="num in item.data['max'] - item.data['min'] + 1" :key="num">
+                                <p class="mb-4 text-center">{{ num }}</p>
+                                <div class="w-5 h-5 border border-solid border-[#888] rounded-full" />
+                              </div>
+                            </div>
+                            <span>{{ item.data['max_text'] }}</span>
+                          </div>
                         </template>
                       </template>
-                      <template v-else> </template>
+                      <!-- 單選方塊 ↓ -->
+                      <template v-else-if="item.kind === 'radioBox'">
+                        <template v-if="active === i">
+                          <div class="grid grid-cols-2 gap-x-5 w-9/12">
+                            <div>
+                              <span>列</span>
+                              <ul>
+                                <li v-for="(list_option, j) in item.data['list']" :key="j" class="flex items-center mb-5">
+                                  <span class="mr-2.5 w-5">{{ j + 1 }}.</span>
+                                  <div class="flex-1 flex justify-between py-1.5 px-4 border-b border-solid border-[#c7c7c7]">
+                                    <input class="flex-1 mr-2.5" v-model="list_option.value" type="text" />
+                                    <font-awesome-icon
+                                      v-if="item.data['list'] > 1"
+                                      icon="fa-solid fa-xmark"
+                                      size="2xl"
+                                      class="text-[#888] cursor-pointer"
+                                      @click.prevent="item.data['list'].splice(j, 1)"
+                                    />
+                                  </div>
+                                </li>
+                                <li class="flex items-center">
+                                  <span class="mr-2.5 w-5">{{ item.data['list'].length + 1 }}.</span>
+                                </li>
+                              </ul>
+                            </div>
+                            <div>
+                              <span>欄</span>
+                              <ul>
+                                <li></li>
+                              </ul>
+                            </div>
+                          </div>
+                        </template>
+                        <template v-else> </template>
+                      </template>
                     </div>
                     <template v-if="active === i">
                       <hr class="mt-5 border-[#c7c7c7]" />

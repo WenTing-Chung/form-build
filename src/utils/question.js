@@ -129,26 +129,32 @@ export default [
         underline: false, // 下底線
       },
       question_desc: '', // 題目說明
+      value: '',
       min: 1, // 最小值
       max: 5, // 最大值
       min_text: '', // 最小顯示文字
       max_text: '', // 最大顯示文字
     },
   },
-  // {
-  //   value: 7,
-  //   text: '單選方塊',
-  //   img: require('@/assets/image/icon_radio_ar.svg'),
-  //   data: {
-  //     required: false,
-  //     label: {
-  //       value: '',
-  //       bold: false,
-  //       italic: false,
-  //       underline: false,
-  //     },
-  //   },
-  // },
+  {
+    value: 7,
+    text: '單選方塊',
+    kind: 'radioBox',
+    img: require('@/assets/image/icon_radio_ar.svg'),
+    data: {
+      required: false,
+      label: {
+        value: '',
+        bold: false, // 粗體
+        italic: false, // 斜體
+        underline: false, // 下底線
+      },
+      question_desc: '', // 題目說明
+      value: [],
+      list: [{ value: '第1列' }], // 列
+      column: [{ value: '第1欄' }], // 欄
+    },
+  },
   // {
   //   value: 8,
   //   text: '複選方塊',
