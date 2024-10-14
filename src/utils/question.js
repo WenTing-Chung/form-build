@@ -155,20 +155,25 @@ export default [
       column: [{ value: '第1欄' }], // 欄
     },
   },
-  // {
-  //   value: 8,
-  //   text: '複選方塊',
-  //   img: require('@/assets/image/icon_checkbox_ar.svg'),
-  //   data: {
-  //     required: false,
-  //     label: {
-  //       value: '',
-  //       bold: false,
-  //       italic: false,
-  //       underline: false,
-  //     },
-  //   },
-  // },
+  {
+    value: 8,
+    text: '複選方塊',
+    kind: 'checkboxGroup',
+    img: require('@/assets/image/icon_checkbox_ar.svg'),
+    data: {
+      required: false,
+      label: {
+        value: '',
+        bold: false, // 粗體
+        italic: false, // 斜體
+        underline: false, // 下底線
+      },
+      question_desc: '', // 題目說明
+      value: [],
+      list: [{ value: '第1列' }], // 列
+      column: [{ value: '第1欄' }], // 欄
+    },
+  },
   // {
   //   value: 9,
   //   text: '日期',

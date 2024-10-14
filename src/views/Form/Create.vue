@@ -336,7 +336,93 @@
                       <!-- 單選方塊 ↓ -->
                       <template v-else-if="item.kind === 'radioBox'">
                         <template v-if="active === i">
-                          <div class="grid grid-cols-2 gap-x-5 w-9/12">
+                          <div class="grid grid-cols-2 gap-x-5 w-[min(100%,_600px)]">
+                            <div>
+                              <span>列</span>
+                              <ul>
+                                <li v-for="(list_option, j) in item.data['list']" :key="j" class="flex items-center mb-5">
+                                  <span class="inline-block mr-2.5 w-5">{{ j + 1 }}.</span>
+                                  <div class="flex-1 flex justify-between py-1.5 px-4 border-b border-solid border-[#c7c7c7]">
+                                    <input class="flex-1 mr-2.5" v-model="list_option.value" type="text" />
+                                    <font-awesome-icon
+                                      v-if="item.data['list'].length > 1"
+                                      icon="fa-solid fa-xmark"
+                                      size="xl"
+                                      class="text-[#888] cursor-pointer"
+                                      @click.prevent="item.data['list'].splice(j, 1)"
+                                    />
+                                  </div>
+                                </li>
+                                <li class="flex items-center">
+                                  <span class="inline-block mr-2.5 w-5">{{ item.data['list'].length + 1 }}.</span>
+                                  <div
+                                    class="py-1 px-7 border-b border-solid border-[#c7c7c7] text-[#888]"
+                                    @click.prevent="item.data['list'].push({ value: `第${item.data['list'].length + 1}列` })"
+                                  >
+                                    新增列
+                                  </div>
+                                </li>
+                              </ul>
+                            </div>
+                            <div>
+                              <span>欄</span>
+                              <ul>
+                                <li v-for="(column_option, j) in item.data['column']" :key="j" class="flex items-center mb-5">
+                                  <div class="mr-2.5 w-5 h-5 border border-solid border-[#888] rounded-full" />
+                                  <div class="flex-1 flex justify-between py-1.5 px-4 border-b border-solid border-[#c7c7c7]">
+                                    <input class="flex-1 mr-2.5" v-model="column_option.value" type="text" />
+                                    <font-awesome-icon
+                                      v-if="item.data['column'].length > 1"
+                                      icon="fa-solid fa-xmark"
+                                      size="xl"
+                                      class="text-[#888] cursor-pointer"
+                                      @click.prevent="item.data['column'].splice(j, 1)"
+                                    />
+                                  </div>
+                                </li>
+                                <li v-if="item.data['column'].length < 10" class="flex items-center">
+                                  <div class="mr-2.5 w-5 h-5 border border-solid border-[#888] rounded-full" />
+                                  <div
+                                    class="py-1 px-7 border-b border-solid border-[#c7c7c7] text-[#888]"
+                                    @click.prevent="item.data['column'].push({ value: `第${item.data['column'].length + 1}欄` })"
+                                  >
+                                    新增欄
+                                  </div>
+                                </li>
+                              </ul>
+                            </div>
+                          </div>
+                        </template>
+                        <template v-else>
+                          <div class="table w-full">
+                            <div class="table-row">
+                              <div class="table-cell p-1 min-w-[20%] h-12" />
+                              <div
+                                v-for="(column_item, j) in item.data['column']"
+                                :key="j"
+                                class="table-cell p-1 h-12 text-center leading-[48px] whitespace-nowrap"
+                              >
+                                {{ column_item.value }}
+                              </div>
+                            </div>
+                            <div v-for="(list_item, i) in item.data['list']" :key="i" class="table-row">
+                              <div class="table-cell p-1 min-w-[20%] h-12 leading-[48px] whitespace-nowrap">{{ list_item.value }}</div>
+                              <div
+                                v-for="(column_item, j) in item.data['column'].length"
+                                :key="j"
+                                class="table-cell p-1 h-12 align-middle"
+                                :data-column="column_item.value"
+                              >
+                                <div class="w-5 h-5 mx-auto border border-solid border-[#888] rounded-full bg-[#f9f9fb]" />
+                              </div>
+                            </div>
+                          </div>
+                        </template>
+                      </template>
+                      <!-- 複選方塊 ↓ -->
+                      <template v-else-if="item.kind === 'checkboxGroup'">
+                        <template v-if="active === i">
+                          <div class="grid grid-cols-2 gap-x-5 w-[min(100%,_600px)]">
                             <div>
                               <span>列</span>
                               <ul>
@@ -368,7 +454,7 @@
                               <span>欄</span>
                               <ul>
                                 <li v-for="(column_option, j) in item.data['column']" :key="j" class="flex items-center mb-5">
-                                  <span class="mr-2.5 w-5">{{ j + 1 }}.</span>
+                                  <div class="mr-2.5 w-5 h-5 border border-solid border-[#888] rounded-sm" />
                                   <div class="flex-1 flex justify-between py-1.5 px-4 border-b border-solid border-[#c7c7c7]">
                                     <input class="flex-1 mr-2.5" v-model="column_option.value" type="text" />
                                     <font-awesome-icon
@@ -381,7 +467,7 @@
                                   </div>
                                 </li>
                                 <li v-if="item.data['column'].length < 10" class="flex items-center">
-                                  <span class="mr-2.5 w-5">{{ item.data['column'].length + 1 }}.</span>
+                                  <div class="mr-2.5 w-5 h-5 border border-solid border-[#888] rounded-sm" />
                                   <div
                                     class="py-1 px-7 border-b border-solid border-[#c7c7c7] text-[#888]"
                                     @click.prevent="item.data['column'].push({ value: `第${item.data['column'].length + 1}欄` })"
@@ -396,7 +482,7 @@
                         <template v-else>
                           <div class="table w-full">
                             <div class="table-row">
-                              <div class="min-w-[20%]" />
+                              <div class="table-cell p-1 min-w-[20%] h-12" />
                               <div
                                 v-for="(column_item, j) in item.data['column']"
                                 :key="j"
@@ -410,15 +496,16 @@
                               <div
                                 v-for="(column_item, j) in item.data['column'].length"
                                 :key="j"
-                                class="table-cell p-1 h-12 align-middle text-center leading-[48px]"
+                                class="table-cell p-1 h-12 align-middle"
                                 :data-column="column_item.value"
                               >
-                                <div class="w-5 h-5 mx-auto border border-solid border-[#888] rounded-full bg-[#f9f9fb]" />
+                                <div class="w-5 h-5 mx-auto border border-solid border-[#888] rounded-sm bg-[#f9f9fb]" />
                               </div>
                             </div>
                           </div>
                         </template>
                       </template>
+                      <template v-else-if="item.kind === 'date'"></template>
                     </div>
                     <template v-if="active === i">
                       <hr class="mt-5 border-[#c7c7c7]" />
@@ -429,8 +516,7 @@
                             role="button"
                             title="圖片"
                           >
-                            <font-awesome-icon icon="fa-regular fa-image" size="xl" />
-                          </div> -->
+                          !v> -->
                           <div
                             class="flex items-center justify-center mr-1.5 w-10 h-10 rounded-md text-[#888] hover:bg-[#eee] hover:text-[#555]"
                             role="button"
