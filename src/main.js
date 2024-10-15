@@ -4,6 +4,9 @@ import router from './router'
 import store from './store'
 import axios from './axios'
 import VCalendar from 'v-calendar'
+// [v-calendar](https://www.npmjs.com/package/v-calendar)
+import DatePicker from 'vue2-datepicker'
+// [vue2-datepicker](https://www.npmjs.com/package/vue2-datepicker)
 import { localize, ValidationObserver, ValidationProvider, extend } from 'vee-validate'
 import * as rules from 'vee-validate/dist/rules'
 import zh from 'vee-validate/dist/locale/zh_TW.json'
@@ -29,8 +32,12 @@ import 'vue-loading-overlay/dist/vue-loading.css'
 // [vue-loading-overlay](https://www.npmjs.com/package/vue-loading-overlay)
 // [swiper](https://blog.csdn.net/tuzi007a/article/details/122646552)
 // [swiper](https://juejin.cn/post/7054034577009967117)
+import 'vue2-datepicker/index.css'
 import '@/assets/tailwind.css'
 import '@/assets/style/all.scss'
+
+/**@language */
+import 'vue2-datepicker/locale/zh-tw'
 
 /**@fontawesome */
 library.add(fas, far, fab)
@@ -45,6 +52,7 @@ Object.keys(rules).forEach((rule) => extend(rule, rules[rule]))
 Vue.use(Toasted, { theme: 'outline', position: 'top-center', duration: 3000 })
 Vue.use(VueCookies)
 Vue.use(VCalendar)
+Vue.use(DatePicker)
 Vue.use(VueMeta)
 Vue.use(VueClipboard)
 

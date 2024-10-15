@@ -505,7 +505,22 @@
                           </div>
                         </template>
                       </template>
-                      <template v-else-if="item.kind === 'date'"></template>
+                      <template v-else-if="item.kind === 'date'">
+                        <div class="inline-block">
+                          <div :class="['flex items-center py-0.5 border-b border-solid', { 'border-[#888]': active === i }]">
+                            <input class="mr-2.5 rounded-[10px] bg-white placeholder:text-[#888] text-sm" placeholder="年 / 月 / 日" disabled />
+                            <font-awesome-icon icon="fa-regular fa-calendar" size="lg" class="text-[#888]" />
+                          </div>
+                        </div>
+                      </template>
+                      <template v-else-if="item.kind === 'time'">
+                        <div class="inline-block">
+                          <div :class="['flex items-center py-0.5 border-b border-solid', { 'border-[#888]': active === i }]">
+                            <input class="mr-2.5 rounded-[10px] bg-white placeholder:text-[#888] text-sm" placeholder="時間" disabled />
+                            <font-awesome-icon icon="fa-regular fa-clock" size="lg" class="text-[#888]" />
+                          </div>
+                        </div>
+                      </template>
                     </div>
                     <template v-if="active === i">
                       <hr class="mt-5 border-[#c7c7c7]" />
@@ -516,7 +531,8 @@
                             role="button"
                             title="圖片"
                           >
-                          !v> -->
+                            <font-awesome-icon icon="fa-regular fa-image" size="xl" />
+                          </div> -->
                           <div
                             class="flex items-center justify-center mr-1.5 w-10 h-10 rounded-md text-[#888] hover:bg-[#eee] hover:text-[#555]"
                             role="button"

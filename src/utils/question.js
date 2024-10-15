@@ -174,32 +174,38 @@ export default [
       column: [{ value: '第1欄' }], // 欄
     },
   },
-  // {
-  //   value: 9,
-  //   text: '日期',
-  //   img: require('@/assets/image/icon_date.svg'),
-  //   data: {
-  //     required: false,
-  //     label: {
-  //       value: '',
-  //       bold: false,
-  //       italic: false,
-  //       underline: false,
-  //     },
-  //   },
-  // },
-  // {
-  //   value: 10,
-  //   text: '時間',
-  //   img: require('@/assets/image/icon_time.svg'),
-  //   data: {
-  //     required: false,
-  //     label: {
-  //       value: '',
-  //       bold: false,
-  //       italic: false,
-  //       underline: false,
-  //     },
-  //   },
-  // },
+  {
+    value: 9,
+    text: '日期',
+    kind: 'date',
+    img: require('@/assets/image/icon_date.svg'),
+    data: {
+      required: false,
+      label: {
+        value: '',
+        bold: false, // 粗體
+        italic: false, // 斜體
+        underline: false, // 下底線
+      },
+      question_desc: '', // 題目說明
+      value: '',
+    },
+  },
+  {
+    value: 10,
+    text: '時間',
+    kind: 'time',
+    img: require('@/assets/image/icon_time.svg'),
+    data: {
+      required: false,
+      label: {
+        value: '',
+        bold: false, // 粗體
+        italic: false, // 斜體
+        underline: false, // 下底線
+      },
+      question_desc: '', // 題目說明
+      value: '',
+    },
+  },
 ]
