@@ -589,6 +589,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import draggable from 'vuedraggable'
 import question from '@/utils/question'
 import { inputType, inputType_to_text, mediaList } from '@/utils/select'
@@ -616,6 +617,7 @@ export default {
     title: '表單問題設計',
   },
   computed: {
+    ...mapState({ stagingData: (state) => state.stagingData }),
     dragOptions() {
       return {
         animation: 200,
@@ -625,7 +627,6 @@ export default {
       }
     },
   },
-  mounted() {},
   methods: {
     /**@拖曳放下題目類型 */
     handleDrop(env) {
@@ -633,9 +634,18 @@ export default {
         const dropBox = env.dataTransfer.getData('question')
         const questionData = JSON.parse(JSON.stringify(question.find((x) => x.value == dropBox)))
         this.questionList.push({ ...questionData, id: Date.now() })
-        this.active = this.questionList.length - 1
-        this.dragAdd = false
-      } else return
+      } else {
+        /**@添加選中暫存選項 */
+        const staging = JSON.parse(env.dataTransfer.getData('question'))
+        this.questionList.push(staging)
+        /**@更新資料回存 */
+        const newData = JSON.parse(sessionStorage.getItem('temporary'))
+        const stgeItem_index = newData.findIndex((x) => x.id === staging.id)
+        newData.splice(stgeItem_index, 1)
+        sessionStorage.setItem('temporary', JSON.stringify(newData))
+        this.$store.dispatch('set_stagingData', newData)
+      }
+      this.active = this.questionList.length - 1
     },
     /**@拖曳排序重取ID */
     dragEnd(env) {
@@ -655,6 +665,7 @@ export default {
       if (sessionStorage.getItem('temporary') !== null) arr = JSON.parse(sessionStorage.getItem('temporary'))
       arr.push(item)
       sessionStorage.setItem('temporary', JSON.stringify(arr))
+      this.$store.dispatch('set_stagingData', arr)
       this.questionList.splice(i, 1)
     },
     /**@刪除問題 */

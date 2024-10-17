@@ -7,6 +7,7 @@ export default new Vuex.Store({
   state: {
     isLoading: false,
     isModal: false,
+    stagingData: sessionStorage.getItem('temporary') || [],
   },
   mutations: {
     IS_LOADING(state, status) {
@@ -14,6 +15,9 @@ export default new Vuex.Store({
     },
     IS_MODAL(state, status) {
       state.isModal = status
+    },
+    STAGING_DATA(state, data) {
+      state.stagingData = data
     },
   },
   actions: {
@@ -28,6 +32,9 @@ export default new Vuex.Store({
     },
     isModal({ commit }, status) {
       commit('IS_MODAL', status)
+    },
+    set_stagingData({ commit }, data) {
+      commit('STAGING_DATA', data)
     },
   },
   getters: {},
