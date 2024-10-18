@@ -7,7 +7,7 @@ export default new Vuex.Store({
   state: {
     isLoading: false,
     isModal: false,
-    stagingData: sessionStorage.getItem('temporary') || [],
+    stagingData: JSON.parse(sessionStorage.getItem('temporary')) || [],
   },
   mutations: {
     IS_LOADING(state, status) {

@@ -1,6 +1,6 @@
 <template>
   <section class="overflow-y-auto w-full h-full bg-[#eee] scroll-style">
-    <div class="mx-auto py-8 w-7/12">
+    <div class="mx-auto p-8 w-[min(100%,_1024px)]">
       <div class="mb-8 py-9 px-[54px] rounded-2xl bg-white">
         <p class="mb-5 text-[#555] text-2xl">
           <font-awesome-icon icon="fa-solid fa-link" class="mr-5" />

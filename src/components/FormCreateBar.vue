@@ -32,11 +32,11 @@
         </ul>
       </template>
       <template v-if="active === 'staging-area'">
-        <ul v-if="stagingData && stagingData.length">
+        <ul v-if="stagingData && stagingData.length" class="pt-6">
           <li
             v-for="info in stagingData"
             :key="info.id"
-            class="flex items-center py-4 pl-9 hover:bg-[#e4e4f1] cursor-pointer"
+            class="flex items-center py-4 pl-9 border-b border-solid border-[#d3d3d3] hover:bg-[#e4e4f1] cursor-pointer"
             draggable
             @dragstart="handleDragStart($event, info)"
           >
@@ -88,23 +88,14 @@ export default {
     },
     /**@拖曳目標開始 */
     handleDragStart(env, item) {
-      // if (this.active === 'question-type') {
-      //   env.dataTransfer.setData('question', item.value)
-      //   this.$emit('drag_add_question', true)
-      // } else if (this.active === 'staging-area') {
-      //   env.dataTransfer.setData('question', item)
-      //   this.$emit('drag_add_question', false)
-      // }
       switch (this.active) {
         case 'question-type':
-          env.dataTranㄑfer.setData('question', item.value)
+          env.dataTransfer.setData('question', item.value)
           this.$emit('drag_add_question', true)
           break
         case 'staging-area':
           env.dataTransfer.setData('question', JSON.stringify(item))
           this.$emit('drag_add_question', false)
-          break
-        default:
           break
       }
     },

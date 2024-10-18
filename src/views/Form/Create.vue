@@ -559,19 +559,7 @@
                           </div>
                           <div class="flex items-center py-3 px-4 border-l border-solid border-[#ccc]">
                             <p class="mr-2 text-[#333] text-sm">必填</p>
-                            <div
-                              :class="['w-10 h-3 rounded-md cursor-pointer', item.data['required'] ? 'bg-[#52528c]' : 'bg-[#888]']"
-                              @click.prevent="item.data['required'] = !item.data['required']"
-                            >
-                              <div
-                                :class="[
-                                  'w-5 h-5 rounded-full -translate-y-[20%] transition-all ease-in-out duration-300',
-                                  item.data['required']
-                                    ? 'ml-[calc(100%_-_20px)] bg-[#acaccc] shadow-[0_0_6px_0_rgba(82,82,140,0.6)]'
-                                    : 'bg-[#f9f9fb] shadow-[0_0_6px_0_rgba(85,85,85,0.5)]',
-                                ]"
-                              />
-                            </div>
+                            <SwitchElement :status="item.data['required']" @switch_status="switch_status($event, item)" />
                           </div>
                         </div>
                       </div>
@@ -580,7 +568,6 @@
                 </div>
               </transition-group>
             </draggable>
-            {{ questionList }}
           </template>
         </div>
       </div>
@@ -594,10 +581,11 @@ import draggable from 'vuedraggable'
 import question from '@/utils/question'
 import { inputType, inputType_to_text, mediaList } from '@/utils/select'
 import FormCreateBar from '@/components/FormCreateBar.vue'
+import SwitchElement from '@/components/Switch.vue'
 
 export default {
   name: 'FormCreate',
-  components: { draggable, FormCreateBar },
+  components: { draggable, FormCreateBar, SwitchElement },
   data: () => ({
     questionList: [],
     temporaryList: [],
@@ -630,22 +618,24 @@ export default {
   methods: {
     /**@拖曳放下題目類型 */
     handleDrop(env) {
-      if (this.dragAdd) {
-        const dropBox = env.dataTransfer.getData('question')
-        const questionData = JSON.parse(JSON.stringify(question.find((x) => x.value == dropBox)))
-        this.questionList.push({ ...questionData, id: Date.now() })
-      } else {
-        /**@添加選中暫存選項 */
-        const staging = JSON.parse(env.dataTransfer.getData('question'))
-        this.questionList.push(staging)
-        /**@更新資料回存 */
-        const newData = JSON.parse(sessionStorage.getItem('temporary'))
-        const stgeItem_index = newData.findIndex((x) => x.id === staging.id)
-        newData.splice(stgeItem_index, 1)
-        sessionStorage.setItem('temporary', JSON.stringify(newData))
-        this.$store.dispatch('set_stagingData', newData)
+      if (!this.dragging) {
+        if (this.dragAdd) {
+          const dropBox = env.dataTransfer.getData('question')
+          const questionData = JSON.parse(JSON.stringify(question.find((x) => x.value == dropBox)))
+          this.questionList.push({ ...questionData, id: Date.now() })
+        } else {
+          /**@添加選中暫存選項 */
+          const staging = JSON.parse(env.dataTransfer.getData('question'))
+          this.questionList.push(staging)
+          /**@更新資料回存 */
+          const newData = JSON.parse(sessionStorage.getItem('temporary'))
+          const stgeItem_index = newData.findIndex((x) => x.id === staging.id)
+          newData.splice(stgeItem_index, 1)
+          sessionStorage.setItem('temporary', JSON.stringify(newData))
+          this.$store.dispatch('set_stagingData', newData)
+        }
+        this.active = this.questionList.length - 1
       }
-      this.active = this.questionList.length - 1
     },
     /**@拖曳排序重取ID */
     dragEnd(env) {
@@ -678,6 +668,10 @@ export default {
         const i = mediaArr.findIndex((x) => x === kind)
         mediaArr.splice(i, 1)
       } else mediaArr.push(kind)
+    },
+    /**@切換開關 */
+    switch_status(val, info) {
+      info.data['required'] = val
     },
   },
 }
