@@ -5,7 +5,7 @@
         <div class="overflow-hidden rounded-2xl bg-white shadow-[4px_10px_10px_0_rgba(200,200,213,0.5)]">
           <div class="relative">
             <img
-              src="https://donate-api.saleproduct.com/storage/upload/notice/nqTUTlwIYH3hVSshz47jLxRzx7EEVu6sKfDItyLI.jpg"
+              src="https://cdn.cybassets.com/s/files/18098/ckeditor/pictures/content_c07533a8-24bd-4af6-b8ed-ba3912ff2f1c.jpg"
               class="w-full h-[200px]"
               alt="form-img"
             />

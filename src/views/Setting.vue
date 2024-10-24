@@ -101,7 +101,7 @@
               </ValidationProvider>
             </form>
           </ValidationObserver>
-          <button class="py-3 w-full rounded-full bg-[#57588b] hover:bg-[#3a3b72] text-white font-bold text-2xl" type="button">立即登入</button>
+          <button class="py-3 w-full rounded-full bg-[#57588b] hover:bg-[#3a3b72] text-white font-bold text-2xl" type="button">儲存變更</button>
         </div>
       </div>
     </div>
