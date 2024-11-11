@@ -7,19 +7,18 @@
             <font-awesome-icon icon="fa-regular fa-trash-can" size="2xl" />
           </button>
         </template>
-        <v-date-picker v-model="search.date" :model-config="{ type: 'string', mask: 'YYYY-MM-DD' }">
-          <template v-slot="{ inputValue, inputEvents }">
+        <date-picker class="mr-3" v-model="search.date" value-type="format" type="date">
+          <template #input>
             <input
-              class="mr-3 py-3.5 pl-5 rounded-[10px] bg-[#fafaf9] placeholder:text-[#888] text-lg"
-              :value="inputValue"
-              v-on="inputEvents"
+              class="py-3.5 pl-2.5 w-full rounded-[10px] bg-[#fafaf9] placeholder:text-[#888] text-lg"
+              :value="search.date"
               placeholder="創建日期"
             />
           </template>
-        </v-date-picker>
-        <label for="form-name" class="py-3.5 px-7 rounded-[10px] bg-[#fafaf9]">
+        </date-picker>
+        <label for="form-name" class="py-3.5 px-5 rounded-[10px] bg-[#fafaf9]">
           <font-awesome-icon icon="fa-solid fa-magnifying-glass" size="lg" class="mr-3.5 text-[#888]" />
-          <input id="form-name" class="bg-[#fafaf9] text-lg placeholder:text-[#ccc]" placeholder="查詢表單" />
+          <input id="form-name" class="bg-[#fafaf9] text-lg placeholder:text-[#888]" v-model="search.form_name" placeholder="查詢表單" />
         </label>
       </div>
       <div class="overflow-hidden rounded-[10px]">
@@ -65,7 +64,8 @@ export default {
   components: { FormCard },
   data: () => ({
     search: {
-      date: '',
+      date: null,
+      form_name: '',
     },
     list: [
       { id: 0, text: '標題名稱111', config: false, is_star: false },

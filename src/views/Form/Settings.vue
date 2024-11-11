@@ -65,50 +65,72 @@
           </ul>
         </div>
         <div class="py-10 px-[50px]">
-          <div class="flex items-center justify-between mb-8">
+          <div :class="['flex items-center justify-between', { 'mb-8': switch_timeValid }]">
             <div>
               <h3 class="mb-4 text-lg">時間效期</h3>
               <p>設定表單有效時間，過了時段就關閉</p>
             </div>
             <SwitchElement :status="switch_timeValid" @switch_status="timeValid_switch" />
           </div>
-          <ul class="pl-9 pr-5">
-            <li class="mb-7">
+          <ul
+            :class="['pl-9 pr-5 overflow-hidden', switch_timeValid ? 'max-h-[500px] h-auto transition-all ease-in-out duration-[500ms]' : 'max-h-0']"
+          >
+            <li>
               <p class="mb-3.5 text-[#888] text-xs">表單時間</p>
-              <div>
-                <v-date-picker
-                  v-model="start.date"
-                  mode="dateTime"
-                  :timezone="start.timezone"
-                  :model-config="{ type: 'string', mask: 'YYYY-MM-DD' }"
-                  is24hr
-                >
-                  <template v-slot="{ inputValue, inputEvents }">
-                    <input
-                      class="-ml-1 mr-3 p-1 rounded-[10px] bg-white placeholder:text-[#888] text-lg"
-                      :value="inputValue"
-                      v-on="inputEvents"
-                      placeholder="開始時間"
-                    />
-                  </template>
-                </v-date-picker>
-                <span>至</span>
-                <v-date-picker
-                  v-model="end.date"
-                  mode="dateTime"
-                  :timezone="end.timezone"
-                  :model-config="{ type: 'string', mask: 'YYYY-MM-DD' }"
-                  is24hr
-                >
-                  <template v-slot="{ inputValue, inputEvents }">
-                    <input
-                      class="ml-3 p-1 rounded-[10px] bg-white placeholder:text-[#888] text-lg"
-                      :value="inputValue"
-                      v-on="inputEvents"
-                      placeholder="結束時間"
-                    />
-                  </template>
-                </v-date-picker>
+              <div class="flex items-center justify-between">
+                <template v-if="edit_timeValid">
+                  <div class="flex-1 mr-5">
+                    <date-picker class="mr-3" v-model="dateRanger.start" value-type="format" type="date">
+                      <template #input>
+                        <input
+                          class="py-2 pl-2.5 w-full rounded-[10px] bg-[#fafaf9] placeholder:text-[#888] text-base"
+                          :value="dateRanger.start"
+                          placeholder="開始時間"
+                        />
+                      </template>
+                    </date-picker>
+                    <span>至</span>
+                    <date-picker class="ml-3" v-model="dateRanger.end" value-type="format" type="date">
+                      <template #input>
+                        <input
+                          class="py-2 pl-2.5 w-full rounded-[10px] bg-[#fafaf9] placeholder:text-[#888] text-base"
+                          :value="dateRanger.end"
+                          placeholder="結束時間"
+                        />
+                      </template>
+                    </date-picker>
+                  </div>
+                </template>
+                <template v-else>
+                  <input :value="dateShow" class="flex-1 mr-5 bg-white text-[#5f6368] italic text-sm" type="text" disabled />
+                </template>
+                <template v-if="edit_timeValid">
+                  <div class="flex">
+                    <button
+                      class="p-2 rounded text-[#0054ff] text-lg hover:bg-[rgba(66,133,244,0.04)]"
+                      type="button"
+                      @click.prevent="edit_timeValid = false"
+                    >
+                      儲存
+                    </button>
+                    <button
+                      class="p-2 rounded text-[#5f6368] text-lg hover:bg-[rgba(95,99,104,0.04)]"
+                      type="button"
+                      @click.prevent=";(dateRanger = { ...old_dateRanger }), (edit_timeValid = false)"
+                    >
+                      取消
+                    </button>
+                  </div>
+                </template>
+                <template v-else>
+                  <button
+                    class="p-2 rounded text-[#0054ff] text-lg hover:bg-[rgba(66,133,244,0.04)]"
+                    type="button"
+                    @click.prevent=";(old_dateRanger = { ...dateRanger }), (edit_timeValid = true)"
+                  >
+                    編輯
+                  </button>
+                </template>
               </div>
             </li>
           </ul>
@@ -130,17 +152,24 @@ export default {
     switch_progressBar: false,
     switch_timeValid: false,
     edit_message: false,
-    start: {
-      date: '',
-      timezone: null,
+    edit_timeValid: false,
+    dateRanger: {
+      start: null,
+      end: null,
     },
-    end: {
-      date: '',
-      timezone: null,
+    old_dateRanger: {
+      start: null,
+      end: null,
     },
   }),
   metaInfo: {
     title: '表單設定',
+  },
+  computed: {
+    dateShow() {
+      if (this.dateRanger.start && this.dateRanger.end) return `${this.dateRanger.start} ~ ${this.dateRanger.end}`
+      else return '選擇日期區間'
+    },
   },
   methods: {
     /**@顯示進度列開關 */
@@ -149,8 +178,21 @@ export default {
     },
     /**@時間效期開關 */
     timeValid_switch(val) {
+      this.edit_timeValid = false
       this.switch_timeValid = val
     },
+    // change_date(evn) {
+    //   let value = []
+    //   evn.forEach((x, i) => (value[i] = this.dateTime_format(x)))
+    //   this.format_dateTime = `${value[0]} ~ ${value[1]}`
+    // },
+    // dateTime_format(val) {
+    //   const Arr = val.toLocaleDateString().split('/')
+    //   const Y = Arr[0]
+    //   const M = Number(Arr[1]) < 10 ? `0${Arr[1]}` : Arr[1]
+    //   const D = Number(Arr[2]) < 10 ? `0${Arr[2]}` : Arr[2]
+    //   return `${Y}-${M}-${D}`
+    // },
   },
 }
 </script>

@@ -47,6 +47,14 @@ const routes = [
         },
       },
       {
+        path: '/form-render/:id',
+        name: 'FormRender',
+        component: () => import('@/views/FormRender.vue'),
+        meta: {
+          requireAuth: true,
+        },
+      },
+      {
         path: '/form/create',
         name: 'FormCreate',
         component: () => import('@/views/Form/Create.vue'),
