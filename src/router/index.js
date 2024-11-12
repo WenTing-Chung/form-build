@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import store from '@/store'
 
 Vue.use(VueRouter)
 
@@ -47,14 +48,6 @@ const routes = [
         },
       },
       {
-        path: '/form-render/:id',
-        name: 'FormRender',
-        component: () => import('@/views/FormRender.vue'),
-        meta: {
-          requireAuth: true,
-        },
-      },
-      {
         path: '/form/create',
         name: 'FormCreate',
         component: () => import('@/views/Form/Create.vue'),
@@ -81,6 +74,14 @@ const routes = [
     ],
   },
   {
+    path: '/form-render/:id',
+    name: 'FormRender',
+    component: () => import('@/views/FormRender.vue'),
+    meta: {
+      requireAuth: false,
+    },
+  },
+  {
     path: '/:pathMatch(.*)*',
     redirect: '/',
   },
@@ -94,6 +95,26 @@ const router = new VueRouter({
   scrollBehavior() {
     return { x: 0, y: 0, behavior: 'smooth' }
   },
+})
+
+router.beforeEach(async (to, from, next) => {
+  const LoginStatus = JSON.parse(localStorage.getItem(`${process.env.VUE_APP_COOKIES}_LoginStatus`))
+  const Token = Vue.$cookies.get(`${process.env.VUE_APP_COOKIES}_Token`) || undefined
+  if (Token) {
+    if (to.meta.requireAuth) {
+      if (Token && LoginStatus) next()
+      else {
+        localStorage.removeItem(`${process.env.VUE_APP_COOKIES}_LoginStatus`)
+        store.dispatch('changeLoginStatus', false)
+        store.dispatch('alert', { type: 'error', message: '請先登入帳號', duration: 3000 })
+        next({ name: 'GeneralList' })
+      }
+    } else next()
+  } else {
+    localStorage.removeItem(`${process.env.VUE_APP_COOKIES}_LoginStatus`)
+    store.dispatch('changeLoginStatus', false)
+    next()
+  }
 })
 
 router.afterEach(() => {

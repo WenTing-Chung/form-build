@@ -59,7 +59,13 @@
         <input id="is-remember" v-model="is_remember" type="checkbox" class="hidden" />
         <label for="is-remember" class="pl-8 checkbox-control">記住帳號</label>
       </div>
-      <button class="mb-10 py-3 w-full rounded-full bg-[#54588c] hover:bg-[#3a3b72] text-white font-bold text-2xl" type="button">立即登入</button>
+      <button
+        class="mb-10 py-3 w-full rounded-full bg-[#54588c] hover:bg-[#3a3b72] text-white font-bold text-2xl"
+        type="button"
+        @click.prevent="login"
+      >
+        立即登入
+      </button>
       <router-link :to="{ name: 'Register' }" class="inline text-[#54588c] text-lg underline hover:font-bold hover:underline">立即註冊</router-link>
     </div>
   </div>
@@ -78,9 +84,52 @@ export default {
     },
     is_show: false,
     is_remember: false,
+    cookies_IsRemember: `${process.env.VUE_APP_COOKIES}_IsRemember`,
+    cookies_Account: `${process.env.VUE_APP_COOKIES}_Account`,
   }),
   metaInfo: {
     title: '登入',
+  },
+  created() {
+    this.rememberStatus()
+  },
+  methods: {
+    /**@確認帳號記憶狀態 */
+    rememberStatus() {
+      const status = localStorage.getItem(this.cookies_IsRemember) ? true : false
+      if (status) {
+        this.form = this.$cookies.get(this.cookies_Account)
+        this.is_remember = true
+      }
+    },
+    /**@登入 */
+    login() {
+      this.$refs.LoginForm.validate().then((success) => {
+        if (!success) {
+          this.$toasted.error('登入資料未填寫完全', { position: 'top-center' })
+          return
+        } else {
+          this.axios.login(this.form).then((res) => {
+            const { code, data } = res.data
+            if (code === 200) {
+              if (this.is_remember) {
+                localStorage.setItem(this.cookies_IsRemember, '1')
+                this.$cookies.set(this.cookies_Account, JSON.stringify(this.form), -1)
+              } else {
+                localStorage.removeItem(this.cookies_IsRemember)
+                this.$cookies.remove(this.cookies_Account)
+              }
+              localStorage.setItem(`${process.env.VUE_APP_COOKIES}_LoginStatus`, true)
+              localStorage.setItem(`${process.env.VUE_APP_COOKIES}_User`, JSON.stringify({ id: data.id, name: data.name }))
+              this.$cookies.set(`${process.env.VUE_APP_COOKIES}_Token`, data.token, 60 * 60)
+              this.$store.dispatch('set_userInfo', { id: data.id, name: data.name })
+              this.$store.dispatch('changeLoginStatus', true)
+              this.$router.push({ name: 'GeneralList' })
+            }
+          })
+        }
+      })
+    },
   },
 }
 </script>

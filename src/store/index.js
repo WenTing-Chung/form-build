@@ -7,7 +7,10 @@ export default new Vuex.Store({
   state: {
     isLoading: false,
     isModal: false,
-    stagingData: JSON.parse(sessionStorage.getItem('temporary')) || [],
+    userInfo: JSON.parse(localStorage.getItem(`${process.env.VUE_APP_COOKIES}_User`)) || {},
+    loginStatus: JSON.parse(localStorage.getItem(`${process.env.VUE_APP_COOKIES}_LoginStatus`)) || false,
+    // 暫存區資料
+    temporaryData: JSON.parse(sessionStorage.getItem('temporary')) || [],
   },
   mutations: {
     IS_LOADING(state, status) {
@@ -16,8 +19,14 @@ export default new Vuex.Store({
     IS_MODAL(state, status) {
       state.isModal = status
     },
-    STAGING_DATA(state, data) {
-      state.stagingData = data
+    USERINFO(state, info) {
+      state.userInfo = info
+    },
+    LOGIN_STATUS(state, status) {
+      state.loginStatus = status
+    },
+    TEMPORARY_DATA(state, data) {
+      state.temporaryData = data
     },
   },
   actions: {
@@ -33,8 +42,14 @@ export default new Vuex.Store({
     isModal({ commit }, status) {
       commit('IS_MODAL', status)
     },
-    set_stagingData({ commit }, data) {
-      commit('STAGING_DATA', data)
+    set_userInfo({ commit }, data) {
+      commit('USERINFO', data)
+    },
+    set_temporaryData({ commit }, data) {
+      commit('TEMPORARY_DATA', data)
+    },
+    changeLoginStatus({ commit }, status) {
+      commit('LOGIN_STATUS', status)
     },
   },
   getters: {},
