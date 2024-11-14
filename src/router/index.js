@@ -32,7 +32,7 @@ const routes = [
     component: () => import('@/layout/Index.vue'),
     children: [
       {
-        path: '/',
+        path: '/form-list',
         name: 'GeneralList',
         component: () => import('@/views/GeneralList.vue'),
         meta: {
@@ -83,7 +83,7 @@ const routes = [
   },
   {
     path: '/:pathMatch(.*)*',
-    redirect: '/',
+    redirect: '/form-list',
   },
 ]
 
@@ -98,23 +98,16 @@ const router = new VueRouter({
 })
 
 router.beforeEach(async (to, from, next) => {
-  const LoginStatus = JSON.parse(localStorage.getItem(`${process.env.VUE_APP_COOKIES}_LoginStatus`))
-  const Token = Vue.$cookies.get(`${process.env.VUE_APP_COOKIES}_Token`) || undefined
-  if (Token) {
-    if (to.meta.requireAuth) {
-      if (Token && LoginStatus) next()
-      else {
-        localStorage.removeItem(`${process.env.VUE_APP_COOKIES}_LoginStatus`)
-        store.dispatch('changeLoginStatus', false)
-        store.dispatch('alert', { type: 'error', message: '請先登入帳號', duration: 3000 })
-        next({ name: 'GeneralList' })
-      }
-    } else next()
-  } else {
-    localStorage.removeItem(`${process.env.VUE_APP_COOKIES}_LoginStatus`)
-    store.dispatch('changeLoginStatus', false)
-    next()
-  }
+  if (to.meta.requireAuth) {
+    const token = Vue.$cookies.get(`${process.env.VUE_APP_COOKIES}_Token`) || undefined
+    if (token) next()
+    else {
+      localStorage.removeItem(`${process.env.VUE_APP_COOKIES}_LoginStatus`)
+      store.dispatch('alert', { type: 'error', message: '請先登入帳號', duration: 3000 })
+      store.dispatch('changeLoginStatus', false)
+      next({ name: 'Login' })
+    }
+  } else next()
 })
 
 router.afterEach(() => {

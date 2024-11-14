@@ -53,55 +53,88 @@
               </ValidationProvider>
               <ValidationProvider name="舊密碼" rules="required">
                 <div class="mb-5" slot-scope="{ valid, errors }">
-                  <label for="SettingForm-old_pwd">
+                  <label for="SettingForm-password">
                     <span class="text-lg">舊密碼</span>
-                    <FormInput
-                      id="SettingForm-old_pwd"
-                      v-model="form.old_pwd"
-                      placeholder="請輸入舊密碼"
-                      :input-value="form.old_pwd"
-                      :is-errors="Boolean(errors[0])"
-                      :state="errors[0] ? false : valid ? true : null"
-                    />
+                    <div class="relative">
+                      <FormInput
+                        id="SettingForm-password"
+                        v-model="form.password"
+                        placeholder="請輸入舊密碼"
+                        :input-type="is_show_oldPwd ? 'text' : 'password'"
+                        :input-value="form.password"
+                        :is-errors="Boolean(errors[0])"
+                        :state="errors[0] ? false : valid ? true : null"
+                      />
+                      <font-awesome-icon
+                        size="lg"
+                        class="absolute top-1/2 right-5 cursor-pointer -translate-y-1/2"
+                        :icon="['fa-regular', is_show_oldPwd ? 'fa-eye' : 'fa-eye-slash']"
+                        @click.prevent="is_show_oldPwd = !is_show_oldPwd"
+                      />
+                    </div>
                   </label>
                   <small :class="{ 'text-danger': errors[0] }">{{ errors[0] }}</small>
                 </div>
               </ValidationProvider>
               <ValidationProvider name="密碼" rules="required">
                 <div class="mb-5" slot-scope="{ valid, errors }">
-                  <label for="SettingForm-new_pwd">
+                  <label for="SettingForm-new_password">
                     <span class="text-lg">密碼</span>
-                    <FormInput
-                      id="SettingForm-new_pwd"
-                      v-model="form.new_pwd"
-                      placeholder="請輸入密碼"
-                      :input-value="form.new_pwd"
-                      :is-errors="Boolean(errors[0])"
-                      :state="errors[0] ? false : valid ? true : null"
-                    />
+                    <div class="relative">
+                      <FormInput
+                        id="SettingForm-new_password"
+                        v-model="form.new_password"
+                        placeholder="請輸入密碼"
+                        :input-type="is_show_pwd ? 'text' : 'password'"
+                        :input-value="form.new_password"
+                        :is-errors="Boolean(errors[0])"
+                        :state="errors[0] ? false : valid ? true : null"
+                      />
+                      <font-awesome-icon
+                        size="lg"
+                        class="absolute top-1/2 right-5 cursor-pointer -translate-y-1/2"
+                        :icon="['fa-regular', is_show_pwd ? 'fa-eye' : 'fa-eye-slash']"
+                        @click.prevent="is_show_pwd = !is_show_pwd"
+                      />
+                    </div>
                   </label>
                   <small :class="{ 'text-danger': errors[0] }">{{ errors[0] }}</small>
                 </div>
               </ValidationProvider>
               <ValidationProvider name="確認密碼" rules="required">
                 <div class="mb-5" slot-scope="{ valid, errors }">
-                  <label for="SettingForm-check_pwd">
-                    <span class="text-lg">密碼</span>
-                    <FormInput
-                      id="SettingForm-check_pwd"
-                      v-model="form.check_pwd"
-                      placeholder="請輸入確認密碼"
-                      :input-value="form.check_pwd"
-                      :is-errors="Boolean(errors[0])"
-                      :state="errors[0] ? false : valid ? true : null"
-                    />
+                  <label for="SettingForm-new_password_confirmation">
+                    <span class="text-lg">確認密碼</span>
+                    <div class="relative">
+                      <FormInput
+                        id="SettingForm-new_password_confirmation"
+                        v-model="form.new_password_confirmation"
+                        placeholder="請輸入確認密碼"
+                        :input-type="is_show_checkPwd ? 'text' : 'password'"
+                        :input-value="form.new_password_confirmation"
+                        :is-errors="Boolean(errors[0])"
+                        :state="errors[0] ? false : valid ? true : null"
+                      />
+                      <font-awesome-icon
+                        size="lg"
+                        class="absolute top-1/2 right-5 cursor-pointer -translate-y-1/2"
+                        :icon="['fa-regular', is_show_checkPwd ? 'fa-eye' : 'fa-eye-slash']"
+                        @click.prevent="is_show_checkPwd = !is_show_checkPwd"
+                      />
+                    </div>
                   </label>
                   <small :class="{ 'text-danger': errors[0] }">{{ errors[0] }}</small>
                 </div>
               </ValidationProvider>
             </form>
           </ValidationObserver>
-          <button class="py-3 w-full rounded-full bg-[#57588b] hover:bg-[#3a3b72] text-white font-bold text-2xl" type="button">儲存變更</button>
+          <button
+            class="py-3 w-full rounded-full bg-[#57588b] hover:bg-[#3a3b72] text-white font-bold text-2xl"
+            type="button"
+            @click.prevent="userInfo_modify"
+          >
+            儲存變更
+          </button>
         </div>
       </div>
     </div>
@@ -119,13 +152,37 @@ export default {
       name: '',
       account: '',
       email: '',
-      old_pwd: '',
-      new_pwd: '',
-      check_pwd: '',
     },
+    is_show_oldPwd: false,
+    is_show_pwd: false,
+    is_show_checkPwd: false,
   }),
   metaInfo: {
     title: '帳號設定',
+  },
+  created() {
+    this.userInfo()
+  },
+  methods: {
+    /**@帳號資料 */
+    userInfo() {
+      this.axios.userProfile().then((res) => {
+        const { code, data } = res.data
+        if (code === 200) this.form = data
+      })
+    },
+    /**@修改帳號資料 */
+    userInfo_modify() {
+      this.axios.userProfile_modify(this.form).then((res) => {
+        if (res.data.code === 200) {
+          const { id, name } = this.form
+          const storageUser = { id, name }
+          localStorage.setItem(`${process.env.VUE_APP_COOKIES}_User`, JSON.stringify(storageUser))
+          this.$store.dispatch('set_userInfo', storageUser)
+          this.userInfo()
+        }
+      })
+    },
   },
 }
 </script>
