@@ -2,7 +2,6 @@
   <main class="h-screen">
     <Header />
     <div class="flex content">
-      <Aside v-if="$route.name === 'GeneralList'" />
       <router-view />
     </div>
   </main>
@@ -10,11 +9,10 @@
 
 <script>
 import Header from '@/layout/Header.vue'
-import Aside from '@/layout/Aside.vue'
 
 export default {
   name: 'TheLayout',
-  components: { Header, Aside },
+  components: { Header },
   data: () => ({}),
   mounted() {
     this.is_contentHeight()

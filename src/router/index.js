@@ -105,6 +105,7 @@ router.beforeEach(async (to, from, next) => {
       localStorage.removeItem(`${process.env.VUE_APP_COOKIES}_LoginStatus`)
       store.dispatch('alert', { type: 'error', message: '請先登入帳號', duration: 3000 })
       store.dispatch('changeLoginStatus', false)
+      store.dispatch('isModal', false)
       next({ name: 'Login' })
     }
   } else next()

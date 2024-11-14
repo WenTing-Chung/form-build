@@ -16,8 +16,31 @@
         </button>
       </template>
       <template v-else>
-        <FormInput class="mb-4 rounded-full" v-model="email" placeholder="請輸入電子信箱" :input-value="email" />
-        <button class="py-3 w-full rounded-full bg-[#54588c] hover:bg-[#3a3b72] text-white font-bold text-2xl" type="button">送出</button>
+        <ValidationObserver ref="ForgetForm">
+          <ValidationProvider name="電子信箱" rules="required|email">
+            <div class="mb-4" slot-scope="{ valid, errors }">
+              <label for="ForgetForm-email">
+                <FormInput
+                  id="ForgetForm-email"
+                  class="rounded-full"
+                  v-model="email"
+                  placeholder="請輸入電子信箱"
+                  :input-value="email"
+                  :is-errors="Boolean(errors[0])"
+                  :state="errors[0] ? false : valid ? true : null"
+                />
+                <small :class="{ 'text-danger': errors[0] }">{{ errors[0] }}</small>
+              </label>
+            </div>
+          </ValidationProvider>
+        </ValidationObserver>
+        <button
+          class="py-3 w-full rounded-full bg-[#54588c] hover:bg-[#3a3b72] text-white font-bold text-2xl"
+          type="button"
+          @click.prevent="submit_forget"
+        >
+          送出
+        </button>
       </template>
     </Modal>
     <router-view />
@@ -38,6 +61,26 @@ export default {
   }),
   computed: {
     ...mapState({ modal: (state) => state.isModal }),
+  },
+  watch: {
+    modal(newVal) {
+      if (newVal) this.email = ''
+    },
+  },
+  methods: {
+    /**@忘記密碼送出 */
+    submit_forget() {
+      this.$refs.ForgetForm.validate().then((success) => {
+        if (!success) {
+          this.$toasted.error('請填寫電子信箱', { position: 'top-center' })
+          return
+        } else {
+          this.axios.forget({ email: this.email }).then((res) => {
+            if (res.data.code === 200) this.is_finish = true
+          })
+        }
+      })
+    },
   },
 }
 </script>

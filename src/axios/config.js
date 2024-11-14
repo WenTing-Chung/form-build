@@ -55,6 +55,7 @@ service.interceptors.response.use(
           })
         }
         if (code === 401) {
+          store.dispatch('isModal', false)
           Vue.$cookies.remove(`${process.env.VUE_APP_COOKIES}_Token`)
           Vue.$cookies.remove(`${process.env.VUE_APP_COOKIES}_userID`)
           if (router.currentRoute.name !== 'Login') router.push({ name: 'Login' })

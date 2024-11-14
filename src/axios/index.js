@@ -17,11 +17,24 @@ export default {
   forget(forgetForm) {
     return service.post('/forgot', forgetForm)
   },
-  /**@帳號設定_詳情 */
+  /**
+   * @資料夾清單
+   */
+  folderList() {
+    return service.get('/folder')
+  },
+  folderInfo(id) {
+    return service.get('/folder/modify', { params: id })
+  },
+  createdFolder(name) {
+    return service.post('/folder/create', name)
+  },
+  /**
+   * @帳號設定
+   */
   userProfile() {
     return service.get('/user/profile')
   },
-  /**@帳號設定_編輯 */
   userProfile_modify(form) {
     return service.put('/user/profile', form)
   },

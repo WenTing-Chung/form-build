@@ -7,38 +7,51 @@
     <div class="pt-4 overflow-y-auto folder-list scroll-style">
       <div class="py-5 px-2.5 border-b border-solid border-[#cac9da]">
         <div
-          class="relative py-2 pl-[72px] w-full rounded-md text-left text-lg cursor-pointer hover:bg-[#acaccc]/50 folder-kind"
-          @click.prevent="folder_select('all')"
+          :class="[
+            'relative py-2 pl-[72px] w-full rounded-md text-left text-lg cursor-pointer hover:bg-[#acaccc]/50 folder-kind',
+            { active: is_active === null },
+          ]"
+          @click.prevent="folder_select('all', null)"
         >
           <font-awesome-icon icon="fa-solid fa-file-lines" size="xl" class="absolute left-6 text-[#797979] icon" />
           全部
         </div>
       </div>
-      <ul v-if="list && list.length" class="py-6 px-2.5 border-b border-solid border-[#cac9da]">
+      <ul class="py-6 px-2.5 border-b border-solid border-[#cac9da]">
         <li>
           <div
-            class="relative mb-5 py-2 pl-[72px] w-full rounded-md text-left text-lg cursor-pointer hover:bg-[#acaccc]/50 folder-kind"
+            :class="[
+              'relative py-2 pl-[72px] w-full rounded-md text-left text-lg cursor-pointer hover:bg-[#acaccc]/50 folder-kind',
+              { 'mb-5': folderList.length },
+            ]"
             title="新增資料夾"
+            @click.prevent="folderEvent('add'), $store.dispatch('isModal', true)"
           >
             <font-awesome-icon icon="fa-solid fa-folder-plus" size="xl" class="absolute left-6 text-[#797979] icon" />
             新增資料夾
           </div>
         </li>
-        <li v-for="item in list" :key="item.id">
+        <li v-for="(folder, i) in folderList" :key="folder.id">
           <div
-            class="relative overflow-hidden mb-5 py-2 pl-[72px] w-full rounded-md text-left text-ellipsis whitespace-nowrap text-lg cursor-pointer hover:bg-[#acaccc]/50 folder-kind"
-            :title="item.folder_name"
-            @click.prevent="folder_select(item.folder_name)"
+            :class="[
+              'relative overflow-hidden py-2 pl-[72px] pr-8 w-full rounded-md text-left text-ellipsis whitespace-nowrap text-lg cursor-pointer hover:bg-[#acaccc]/50 folder-kind',
+              { 'mb-5': i !== folderList.length - 1, active: folder.id === is_active },
+            ]"
+            :title="folder.name"
+            @click.prevent="folder_select('folder', folder.id)"
           >
             <font-awesome-icon icon="fa-solid fa-folder" size="xl" class="absolute left-6 text-[#797979] icon" />
-            {{ item.folder_name }}
+            {{ folder.name }}
+            <div class="absolute top-1/2 right-1 flex items-center justify-center w-7 h-7 -translate-y-1/2">
+              <font-awesome-icon icon="fa-solid fa-ellipsis-vertical" class="text-[#797979]" />
+            </div>
           </div>
         </li>
       </ul>
       <div class="py-5 px-2.5">
         <div
-          class="relative py-2 pl-[72px] w-full rounded-md text-left text-lg hover:bg-[#acaccc]/50 folder-kind"
-          @click.prevent="folder_select('star')"
+          :class="['relative py-2 pl-[72px] w-full rounded-md text-left text-lg hover:bg-[#acaccc]/50 folder-kind', { active: is_active === 'star' }]"
+          @click.prevent="folder_select('star', 'star')"
         >
           <font-awesome-icon icon="fa-solid fa-star" size="xl" class="absolute left-6 text-[#797979] icon" />
           星號
@@ -51,13 +64,14 @@
 <script>
 export default {
   name: 'TheAside',
+  props: {
+    folderList: {
+      type: Array,
+      required: true,
+    },
+  },
   data: () => ({
-    list: [
-      { id: 0, folder_name: '活動報名111' },
-      { id: 1, folder_name: '活動報名222' },
-      { id: 2, folder_name: '活動報名333' },
-      { id: 3, folder_name: '活動報名444' },
-    ],
+    is_active: null,
   }),
   mounted() {
     this.is_listHeight()
@@ -74,8 +88,20 @@ export default {
     /**@選擇資料夾
      * @param {String} type
      */
-    folder_select(type) {
-      this.$EventBus.$emit('folder-select', type)
+    folder_select(type, val) {
+      this.is_active = val
+      switch (type) {
+        case 'folder':
+          break
+        case 'star':
+          break
+        case 'all':
+          break
+      }
+    },
+    /**@資料夾操作 */
+    folderEvent(type) {
+      this.$emit('folderEvent', type)
     },
   },
 }
