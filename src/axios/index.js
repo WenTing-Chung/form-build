@@ -29,6 +29,9 @@ export default {
   createdFolder(name) {
     return service.post('/folder/create', name)
   },
+  deleteFolder(id) {
+    return service.delete('/folder/delete', { params: id })
+  },
   /**
    * @帳號設定
    */

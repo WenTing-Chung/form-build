@@ -25,7 +25,7 @@
               { 'mb-5': folderList.length },
             ]"
             title="新增資料夾"
-            @click.prevent="folderEvent('add'), $store.dispatch('isModal', true)"
+            @click.prevent="folderEvent({ id: null, type: 'addFolder' }), $store.dispatch('isModal', true)"
           >
             <font-awesome-icon icon="fa-solid fa-folder-plus" size="xl" class="absolute left-6 text-[#797979] icon" />
             新增資料夾
@@ -34,16 +34,18 @@
         <li v-for="(folder, i) in folderList" :key="folder.id">
           <div
             :class="[
-              'relative overflow-hidden py-2 pl-[72px] pr-8 w-full rounded-md text-left text-ellipsis whitespace-nowrap text-lg cursor-pointer hover:bg-[#acaccc]/50 folder-kind',
+              'relative py-2 pl-[72px] pr-8 w-full rounded-md text-left  text-lg cursor-pointer hover:bg-[#acaccc]/50 folder-kind',
               { 'mb-5': i !== folderList.length - 1, active: folder.id === is_active },
             ]"
             :title="folder.name"
             @click.prevent="folder_select('folder', folder.id)"
           >
             <font-awesome-icon icon="fa-solid fa-folder" size="xl" class="absolute left-6 text-[#797979] icon" />
-            {{ folder.name }}
-            <div class="absolute top-1/2 right-1 flex items-center justify-center w-7 h-7 -translate-y-1/2">
-              <font-awesome-icon icon="fa-solid fa-ellipsis-vertical" class="text-[#797979]" />
+            <p class="overflow-hidden text-ellipsis whitespace-nowrap">{{ folder.name }}</p>
+            <div class="absolute top-1/2 right-1 -translate-y-1/2" @click.prevent="folderOperateCheck(folder, $event)">
+              <div class="relative flex items-center justify-center w-7 h-7">
+                <font-awesome-icon icon="fa-solid fa-ellipsis-vertical" class="text-[#797979]" />
+              </div>
             </div>
           </div>
         </li>
@@ -58,20 +60,30 @@
         </div>
       </div>
     </div>
+    <FolderOperate v-show="folderOperate_show" :location="folderOperate_active" @folderOperateEvent="folderOperateEvent" />
   </aside>
 </template>
 
 <script>
+import FolderOperate from '@/components/FolderOperate.vue'
+
 export default {
   name: 'TheAside',
+  components: { FolderOperate },
   props: {
     folderList: {
       type: Array,
       required: true,
     },
+    folderOperate_show: {
+      type: Boolean,
+      default: false,
+    },
   },
   data: () => ({
     is_active: null,
+    is_oldActive: null,
+    folderOperate_active: {},
   }),
   mounted() {
     this.is_listHeight()
@@ -102,6 +114,18 @@ export default {
     /**@資料夾操作 */
     folderEvent(type) {
       this.$emit('folderEvent', type)
+    },
+    folderOperateEvent(type) {
+      this.folderEvent(type)
+    },
+    /**@資校夾功能列 */
+    folderOperateCheck(info, e) {
+      this.is_oldActive = this.is_active
+      if (this.folderOperate_show) {
+        const is_show = info.id !== this.is_oldActive ? true : false
+        this.$emit('folderOperateShow', is_show)
+      } else this.$emit('folderOperateShow', true)
+      this.folderOperate_active = { id: info.id, name: info.name, y: e.clientY }
     },
   },
 }

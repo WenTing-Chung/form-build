@@ -32,7 +32,7 @@ const routes = [
     component: () => import('@/layout/Index.vue'),
     children: [
       {
-        path: '/form-list',
+        path: '/',
         name: 'GeneralList',
         component: () => import('@/views/GeneralList.vue'),
         meta: {
@@ -83,7 +83,7 @@ const routes = [
   },
   {
     path: '/:pathMatch(.*)*',
-    redirect: '/form-list',
+    redirect: '/',
   },
 ]
 
