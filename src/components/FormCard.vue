@@ -16,23 +16,23 @@
               @click.prevent="child_collect"
             />
           </div>
-          <div class="relative pl-3 pr-10 py-3.5">
-            <div class="absolute top-3.5 right-1">
-              <div
-                :class="[
-                  'relative flex justify-center items-center w-7 h-7 rounded-xl cursor-pointer',
-                  cardInfo.config ? 'bg-[#c8c8d5]' : 'bg-white',
-                ]"
-                @click.prevent="child_actionBar($event)"
-              >
-                <font-awesome-icon icon="fa-solid fa-ellipsis-vertical" />
-              </div>
+          <div class="flex px-3 py-3.5">
+            <div class="flex-1 mr-2">
+              <p class="break-words text-2xl">{{ cardInfo.text }}</p>
+              <p class="text-[#888] text-sm">{{ '2024-05-20' }} 至 {{ '2024-07-31' }}<br />已過期</p>
             </div>
-            <p class="break-words text-2xl">{{ cardInfo.text }}</p>
-            <p class="text-[#888] text-sm">{{ '2024-05-20' }} 至 {{ '2024-07-31' }}<br />已過期</p>
+            <button
+              :class="[
+                'relative flex justify-center items-center w-7 h-7 rounded-full cursor-pointer hover:bg-[#c8c8d5]',
+                { 'bg-[#c8c8d5]': cardInfo.id === activeFormOperate },
+              ]"
+              type="button"
+              @click.stop="child_actionBar($event)"
+            >
+              <font-awesome-icon icon="fa-solid fa-ellipsis-vertical" />
+            </button>
           </div>
         </div>
-        <MoreOperate v-if="cardInfo.config" :location="moreLocation" :list-type="listType" />
       </div>
     </template>
     <template v-else>
@@ -67,27 +67,23 @@
               <div :class="['flex items-center justify-center mx-16 w-10 h-10 rounded-full']">
                 <font-awesome-icon icon="fa-solid fa-chart-line" size="2xl" />
               </div>
-              <div
+              <button
                 :class="['flex items-center justify-center w-10 h-10 rounded-full', { 'bg-[#c8c8d5]/20': cardInfo.config }]"
-                @click.prevent="child_actionBar($event)"
+                @click.stop="child_actionBar($event)"
               >
                 <font-awesome-icon icon="fa-solid fa-ellipsis-vertical" size="2xl" />
-              </div>
+              </button>
             </div>
           </div>
         </div>
-        <MoreOperate v-if="cardInfo.config" :location="moreLocation" :list-type="listType" />
       </div>
     </template>
   </div>
 </template>
 
 <script>
-import MoreOperate from '@/components/MoreOperate.vue'
-
 export default {
   name: 'FormCard-component',
-  components: { MoreOperate },
   props: {
     listType: {
       type: String,
@@ -101,10 +97,10 @@ export default {
       required: true,
       default: () => [],
     },
+    activeFormOperate: {
+      type: Number,
+    },
   },
-  data: () => ({
-    moreLocation: {},
-  }),
   computed: {
     is_checked() {
       return this.delList.includes(this.cardInfo.id)
@@ -113,8 +109,7 @@ export default {
   methods: {
     /**@點擊3個點操作列_向上傳id */
     child_actionBar(e) {
-      this.moreLocation = { x: e.clientX, y: e.clientY }
-      this.$emit('child_actionBar', this.cardInfo.id)
+      this.$emit('child_actionBar', { id: this.cardInfo.id, x: e.clientX, y: e.clientY })
     },
     /**@星號 */
     child_collect() {

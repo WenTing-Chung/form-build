@@ -1,5 +1,5 @@
 <template>
-  <ul ref="FolderOperateList" class="folderOperateList">
+  <ul class="folderOperateList">
     <li @click.prevent="folderOperateEvent('create')">新增表單</li>
     <li @click.prevent="folderOperateEvent('rename')">重新命名</li>
     <li @click.prevent="folderOperateEvent('del')">刪除</li>

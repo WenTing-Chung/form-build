@@ -24,6 +24,11 @@ export default {
   data: () => ({
     screenW: null,
   }),
+  watch: {
+    location() {
+      this.moreConfig()
+    },
+  },
   mounted() {
     this.resizeFunction()
     window.addEventListener('resize', this.resizeFunction)
@@ -37,16 +42,11 @@ export default {
       const { x, y } = this.location
       const operate = document.querySelector('.moreOperate')
       if (this.listType === 'card') {
-        if (y > 600) operate.style.top = '-80px'
-        else operate.style.top = '250px'
+        operate.style.left = `${x}px`
+        if (y > 600) operate.style.top = `${y - 310}px`
+        else operate.style.top = `${y + 28}px`
 
-        if (x > this.screenW) {
-          operate.style.right = '-20px'
-          operate.style.left = ''
-        } else {
-          operate.style.right = ''
-          operate.style.left = 'calc(100% - 40px)'
-        }
+        if (x > this.screenW) operate.style.left = `${x - 180}px`
       } else {
         operate.style.right = '40px'
         operate.style.top = 'calc(100% - 44px)'

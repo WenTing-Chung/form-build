@@ -18,7 +18,7 @@ export default {
     return service.post('/forgot', forgetForm)
   },
   /**
-   * @資料夾清單
+   * @資料夾
    */
   folderList() {
     return service.get('/folder')
@@ -29,8 +29,20 @@ export default {
   createdFolder(name) {
     return service.post('/folder/create', name)
   },
+  folderName(id) {
+    return service.get('/folder/modify', { params: id })
+  },
+  modifyFolderName(form) {
+    return service.put('/folder/modify', form)
+  },
   deleteFolder(id) {
     return service.delete('/folder/delete', { params: id })
+  },
+  /**
+   * @表單
+   */
+  formList(searchForm) {
+    return service.get('/form', { params: searchForm })
   },
   /**
    * @帳號設定
