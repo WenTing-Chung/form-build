@@ -48,28 +48,34 @@ const routes = [
         },
       },
       {
-        path: '/form/create',
-        name: 'FormCreate',
-        component: () => import('@/views/Form/Create.vue'),
-        meta: {
-          requireAuth: true,
-        },
-      },
-      {
-        path: '/form/settings',
-        name: 'FormSettings',
-        component: () => import('@/views/Form/Settings.vue'),
-        meta: {
-          requireAuth: true,
-        },
-      },
-      {
-        path: '/form/release',
-        name: 'FormRelease',
-        component: () => import('@/views/Form/Release.vue'),
-        meta: {
-          requireAuth: true,
-        },
+        path: '/form',
+        component: () => import('@/views/Form/Index.vue'),
+        children: [
+          {
+            path: '/form/create/:id?',
+            name: 'FormCreate',
+            component: () => import('@/views/Form/Create.vue'),
+            meta: {
+              requireAuth: true,
+            },
+          },
+          {
+            path: '/form/settings',
+            name: 'FormSettings',
+            component: () => import('@/views/Form/Settings.vue'),
+            meta: {
+              requireAuth: true,
+            },
+          },
+          {
+            path: '/form/release',
+            name: 'FormRelease',
+            component: () => import('@/views/Form/Release.vue'),
+            meta: {
+              requireAuth: true,
+            },
+          },
+        ],
       },
     ],
   },

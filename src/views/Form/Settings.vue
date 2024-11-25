@@ -1,5 +1,5 @@
 <template>
-  <section class="overflow-y-auto w-full h-full bg-[#eee] scroll-style">
+  <div class="overflow-y-auto w-full h-full bg-[#eee] scroll-style">
     <div class="mx-auto p-8 w-[min(100%,_1024px)]">
       <div class="py-11 px-9 rounded-2xl bg-white">
         <h2 class="pb-5 border-b border-solid border-[#ccc] text-2xl">設定</h2>
@@ -137,7 +137,7 @@
         </div>
       </div>
     </div>
-  </section>
+  </div>
 </template>
 
 <script>

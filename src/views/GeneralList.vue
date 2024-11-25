@@ -183,21 +183,26 @@
         </div>
       </div>
       <div class="pt-3 px-6 pb-14 overflow-y-auto form-list scroll-style">
-        <div :class="show_type === 'card' ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols- xl:grid-cols-4 2xl:grid-cols-5 gap-4 auto-rows-auto' : ''">
+        <div
+          :class="[
+            'mb-6',
+            show_type === 'card' ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols- xl:grid-cols-4 2xl:grid-cols-5 gap-4 auto-rows-auto' : '',
+          ]"
+        >
           <FormCard
-            v-for="card in list"
+            v-for="card in formList"
             :key="card.id"
             :list-type="show_type"
             :card-info="card"
             :del-list="delList"
             :active-form-operate="formOperate.info['id']"
-            class="cursor-pointer"
             @child_actionBar="actionBar"
             @child_collect="is_collect"
             @child_del="is_delList"
           />
         </div>
-        <MoreOperate ref="MoreOperate" v-show="formOperate.show" :location="formOperate.info" />
+        <Pagination :page="page" :page-count="total_page" :item-count="total_count" />
+        <MoreOperate v-show="formOperate.show" :location="formOperate.info" />
       </div>
     </div>
   </section>
@@ -211,12 +216,14 @@ import FormCard from '@/components/FormCard.vue'
 import FormInput from '@/components/FormInput.vue'
 import MoreOperate from '@/components/MoreOperate.vue'
 import FolderOperate from '@/components/FolderOperate.vue'
+import Pagination from '@/components/Pagination/Pagination.vue'
 
 export default {
   name: 'GeneralList',
-  components: { Aside, Modal, FormCard, FormInput, MoreOperate, FolderOperate },
+  components: { Aside, Modal, FormCard, FormInput, MoreOperate, FolderOperate, Pagination },
   data: () => ({
     name: '', // 新增資料夾名稱
+    formList: [], // 表單列表
     folderList: [], // 資料夾列表
     folderEventType: null,
     folderOperate: {
@@ -238,7 +245,7 @@ export default {
       edited_to: null,
       expired_from: null,
       expired_to: null,
-      stared: false,
+      starred: 0,
     },
     searchDateType: 'creation_date', // 日期搜尋條件
     dateType: [
@@ -246,21 +253,10 @@ export default {
       { text: '最近編輯', value: 'recently_edited' },
       { text: '失效日期', value: 'expiration_date' },
     ],
+    page: 1,
+    total_page: 1,
+    total_count: 0,
     // -------
-    list: [
-      { id: 0, text: '標題名稱111', config: false, is_star: false },
-      { id: 1, text: '標題名稱222', config: false, is_star: true },
-      { id: 2, text: '標題名稱333', config: false, is_star: true },
-      { id: 3, text: '標題名稱444', config: false, is_star: false },
-      { id: 4, text: '標題名稱555', config: false, is_star: false },
-      { id: 5, text: '標題名稱666', config: false, is_star: false },
-      { id: 6, text: '標題名稱777', config: false, is_star: true },
-      { id: 7, text: '標題名稱888', config: false, is_star: false },
-      { id: 8, text: '標題名稱999', config: false, is_star: true },
-      { id: 9, text: '標題名稱101010', config: false, is_star: true },
-      { id: 10, text: '標題名稱111111', config: false, is_star: false },
-      { id: 11, text: '標題名稱121212', config: false, is_star: false },
-    ],
     delList: [],
     show_type: 'card',
   }),
@@ -348,7 +344,6 @@ export default {
     },
     /**@資料夾功能操作 */
     folderEvent(val) {
-      console.log('資料夾功能操作: ', val)
       this.folderEventType = val
       if (val.type === 'rename') this.folderInfo(val.id)
     },
@@ -358,11 +353,11 @@ export default {
       switch (kind) {
         case 'star':
           this.search.folder_id = null
-          this.search.stared = true
+          this.search.starred = 1
           break
         default:
           this.search.folder_id = value
-          this.search.stared = false
+          this.search.starred = 0
           break
       }
       this.get_formList()
@@ -370,7 +365,12 @@ export default {
     /**@表單功能 */
     get_formList() {
       this.axios.formList(this.search).then((res) => {
-        console.log('表單: ', res)
+        const { code, data } = res.data
+        if (code === 200) {
+          this.formList = data.list
+          this.total_page = data.total_page
+          this.total_count = data.total_count
+        }
       })
     },
     /**@切換日期搜尋條件並重製_OK */

@@ -1,5 +1,5 @@
 <template>
-  <header class="relative shadow-[0px_3px_6px_0_rgba(0,0,0,0.16)]">
+  <header :class="['relative', { 'shadow-[0px_3px_6px_0_rgba(0,0,0,0.16)]': !pathName.includes('form') }]">
     <div class="relative flex justify-between py-6 px-8 w-full bg-white">
       <router-link :to="{ name: 'GeneralList' }" class="text-[#52528c] font-bold text-2xl">表單設計</router-link>
       <div class="relative">
@@ -25,15 +25,6 @@
         </ul>
       </div>
     </div>
-    <div v-if="pathName.includes('form')" class="pt-2.5 border-t border-solid border-[#cbcccd]">
-      <div class="flex justify-between mx-auto w-10/12">
-        <ul class="flex">
-          <li v-for="item in formItemList" :key="item.link" :class="['relative form-item', { active: $route.name === item.link }]">
-            <router-link :to="{ name: item.link }" class="py-2.5 px-3">{{ item.text }}</router-link>
-          </li>
-        </ul>
-      </div>
-    </div>
   </header>
 </template>
 
@@ -44,11 +35,6 @@ export default {
   name: 'TheHeader',
   data: () => ({
     is_bar: false,
-    formItemList: [
-      { text: '問題設計', link: 'FormCreate' },
-      { text: '設定', link: 'FormSettings' },
-      { text: '發布', link: 'FormRelease' },
-    ],
   }),
   computed: {
     ...mapState({ userInfo: (state) => state.userInfo }),
@@ -73,27 +59,3 @@ export default {
   },
 }
 </script>
-
-<style lang="scss" scoped>
-.form-item {
-  &.active::before {
-    background-color: #52528c;
-  }
-  &::before {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    display: block;
-    width: 100%;
-    height: 4px;
-    border-radius: 2px 2px 0 0;
-    content: '';
-  }
-  &:hover::before {
-    background-color: rgba(#52528c, 0.5);
-  }
-  &:not(:last-child) {
-    margin-right: 14px;
-  }
-}
-</style>

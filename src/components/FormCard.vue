@@ -1,25 +1,36 @@
 <template>
   <div>
     <template v-if="listType === 'card'">
-      <div class="relative">
+      <div class="relative cursor-pointer" :title="cardInfo.description" @click="$router.push({ name: 'FormCreate', params: { id: cardInfo.id } })">
         <div class="overflow-hidden rounded-2xl bg-white shadow-[4px_10px_10px_0_rgba(200,200,213,0.5)]">
           <div class="relative">
-            <img
-              src="https://cdn.cybassets.com/s/files/18098/ckeditor/pictures/content_c07533a8-24bd-4af6-b8ed-ba3912ff2f1c.jpg"
-              class="w-full h-[200px]"
-              alt="form-img"
-            />
+            <template v-if="cardInfo.form_image">
+              <img :src="cardInfo.form_image" class="w-full h-[200px]" alt="form-img" />
+            </template>
+            <template v-else>
+              <div class="flex items-center justify-center w-full h-[200px]">
+                <p>無設置圖片</p>
+              </div>
+            </template>
             <font-awesome-icon
               icon="fa-solid fa-star"
               size="xl"
-              :class="['absolute left-3 bottom-3', cardInfo.is_star ? 'text-[#ecf371]' : 'text-[#eee]/70']"
+              :class="['absolute left-3 bottom-3', cardInfo.starred ? 'text-[#ecf371]' : 'text-[#eee]/70']"
               @click.prevent="child_collect"
             />
           </div>
           <div class="flex px-3 py-3.5">
             <div class="flex-1 mr-2">
-              <p class="break-words text-2xl">{{ cardInfo.text }}</p>
-              <p class="text-[#888] text-sm">{{ '2024-05-20' }} 至 {{ '2024-07-31' }}<br />已過期</p>
+              <p class="line-clamp-3 break-words text-2xl">{{ cardInfo.description }}</p>
+              <div class="text-[#888] text-sm">
+                <span>{{ dateFormat_compare(cardInfo.start_time) }}</span>
+                <span v-if="cardInfo.start_time && cardInfo.end_time">&ensp;至&ensp;</span>
+                <span>{{ dateFormat_compare(cardInfo.end_time) }}</span>
+                <template v-if="cardInfo.start_time && cardInfo.end_time">
+                  <br />
+                  已過期
+                </template>
+              </div>
             </div>
             <button
               :class="[
@@ -36,7 +47,7 @@
       </div>
     </template>
     <template v-else>
-      <div class="relative">
+      <div class="relative cursor-pointer" :title="cardInfo.description" @click="$router.push({ name: 'FormCreate', params: { id: cardInfo.id } })">
         <div
           class="relative overflow-hidden pl-2 rounded-2xl mb-2.5 bg-white shadow-[0px_1px_4px_0px_rgba(78,78,85,0.5)] before:content-[''] before:absolute before:block before:top-0 before:left-0 before:w-2 before:h-full before:bg-[#57588b]"
         >
@@ -118,6 +129,11 @@ export default {
     /**@刪除勾選 */
     child_del() {
       this.$emit('child_del', this.cardInfo.id)
+    },
+    /**@日期Format並比對當前時間 */
+    dateFormat_compare(val) {
+      if (val) return val.split(' ')[0]
+      else return null
     },
   },
 }
