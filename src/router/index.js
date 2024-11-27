@@ -79,6 +79,14 @@ const routes = [
       },
     ],
   },
+  // {
+  //   path: '/form-preview',
+  //   name: 'FormPreview',
+  //   component: () => import(''),
+  //   meta: {
+  //     requireAuth: true,
+  //   },
+  // },
   {
     path: '/form-render/:id',
     name: 'FormRender',

@@ -12,16 +12,25 @@
                 <p>無設置圖片</p>
               </div>
             </template>
-            <font-awesome-icon
-              icon="fa-solid fa-star"
-              size="xl"
-              :class="['absolute left-3 bottom-3', cardInfo.starred ? 'text-[#ecf371]' : 'text-[#eee]/70']"
-              @click.prevent="child_collect"
-            />
+            <button class="absolute left-3 bottom-3" type="button" @click.stop="child_collect">
+              <font-awesome-icon icon="fa-solid fa-star" size="xl" :class="cardInfo.starred ? 'text-[#ecf371]' : 'text-[#eee]/70'" />
+            </button>
           </div>
-          <div class="flex px-3 py-3.5">
-            <div class="flex-1 mr-2">
-              <p class="line-clamp-3 break-words text-2xl">{{ cardInfo.description }}</p>
+          <div class="flex px-2.5 py-3">
+            <div class="flex-1">
+              <div class="flex justify-between">
+                <p class="flex-1 mr-1 line-clamp-3 break-words text-2xl">{{ cardInfo.description }}</p>
+                <button
+                  :class="[
+                    'flex justify-center items-center w-7 h-7 rounded-full cursor-pointer hover:bg-[#c8c8d5]',
+                    { 'bg-[#c8c8d5]': cardInfo.id === activeFormOperate },
+                  ]"
+                  type="button"
+                  @click.stop="child_actionBar($event)"
+                >
+                  <font-awesome-icon icon="fa-solid fa-ellipsis-vertical" />
+                </button>
+              </div>
               <div class="text-[#888] text-sm">
                 <span>{{ dateFormat_compare(cardInfo.start_time) }}</span>
                 <span v-if="cardInfo.start_time && cardInfo.end_time">&ensp;至&ensp;</span>
@@ -32,16 +41,6 @@
                 </template>
               </div>
             </div>
-            <button
-              :class="[
-                'relative flex justify-center items-center w-7 h-7 rounded-full cursor-pointer hover:bg-[#c8c8d5]',
-                { 'bg-[#c8c8d5]': cardInfo.id === activeFormOperate },
-              ]"
-              type="button"
-              @click.stop="child_actionBar($event)"
-            >
-              <font-awesome-icon icon="fa-solid fa-ellipsis-vertical" />
-            </button>
           </div>
         </div>
       </div>
@@ -57,12 +56,9 @@
                 <input id="is-delete" class="hidden" v-model="is_checked" type="checkbox" />
                 <label for="is-delete" class="checkbox-control" @click.prevent="child_del" />
               </div>
-              <font-awesome-icon
-                icon="fa-solid fa-star"
-                size="xl"
-                :class="['mr-8 ml-16', cardInfo.is_star ? 'text-[#ecf371]' : 'text-[#dddee8]']"
-                @click.prevent="child_collect"
-              />
+              <button class="mr-8 ml-16" type="button" @click.stop="child_collect">
+                <font-awesome-icon icon="fa-solid fa-star" size="xl" :class="cardInfo.is_star ? 'text-[#ecf371]' : 'text-[#dddee8]'" />
+              </button>
               <div>
                 <p class="mb-1 text-2xl">{{ cardInfo.text }}</p>
                 <p class="text-sm text-[#888]">

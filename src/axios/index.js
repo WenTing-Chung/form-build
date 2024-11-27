@@ -44,6 +44,9 @@ export default {
   formList(searchForm) {
     return service.get('/form', { params: searchForm })
   },
+  formStar(id) {
+    return service.post('/form/switch', id)
+  },
   /**
    * @帳號設定
    */

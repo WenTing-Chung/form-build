@@ -1,119 +1,115 @@
 export default [
   {
-    value: 0,
-    text: '單行文字',
-    kind: 'input',
-    img: require('@/assets/image/icon_input.svg'),
     data: {
-      required: false,
+      config: {
+        bold: false, // 粗體
+        italic: false, // 斜體
+        max: 80,
+        type: 'text',
+        underline: false, // 下底線
+      },
+      description: '', // 題目說明
+      is_required: false,
+      title: '',
       type: 'text',
-      label: {
-        value: '',
-        bold: false, // 粗體
-        italic: false, // 斜體
-        underline: false, // 下底線
-      },
-      question_desc: '', // 題目說明
-      image: '',
-      value: '',
-      max: '80',
     },
+    img: require('@/assets/image/icon_input.svg'),
+    kind: 'input',
+    text: '單行文字',
+    value: 0,
   },
   {
-    value: 1,
-    text: '多行文字',
-    kind: 'textarea',
+    data: {
+      config: {
+        bold: false, // 粗體
+        italic: false, // 斜體
+        max: 1000,
+        underline: false, // 下底線
+      },
+      description: '', // 題目說明
+      is_required: false,
+      title: '',
+      type: 'textarea',
+    },
     img: require('@/assets/image/icon_textarea.svg'),
+    kind: 'textarea',
+    text: '多行文字',
+    value: 1,
+  },
+  {
     data: {
-      required: false,
-      label: {
-        value: '',
+      config: {
         bold: false, // 粗體
         italic: false, // 斜體
         underline: false, // 下底線
       },
-      question_desc: '', // 題目說明
-      image: '',
-      value: '',
-      max: '1000',
+      description: '', // 題目說明
+      is_required: false,
+      title: '',
+      type: 'radio',
+      option: [{ value: '選項1' }],
     },
-  },
-  {
-    value: 2,
-    text: '單選題',
-    kind: 'radio',
     img: require('@/assets/image/icon_radio.svg'),
+    kind: 'radio',
+    text: '單選題',
+    value: 2,
+  },
+  {
     data: {
-      required: false,
-      label: {
-        value: '',
+      config: {
         bold: false, // 粗體
         italic: false, // 斜體
         underline: false, // 下底線
       },
-      question_desc: '', // 題目說明
-      image: '',
-      value: '',
+      description: '', // 題目說明
+      is_required: false,
+      title: '',
+      type: 'checkbox',
       option: [{ value: '選項1' }],
     },
-  },
-  {
-    value: 3,
-    text: '複選題',
-    kind: 'checkbox',
     img: require('@/assets/image/icon_checkbox.svg'),
+    kind: 'checkbox',
+    text: '複選題',
+    value: 3,
+  },
+  {
     data: {
-      required: false,
-      label: {
-        value: '',
+      config: {
         bold: false, // 粗體
         italic: false, // 斜體
         underline: false, // 下底線
       },
-      question_desc: '', // 題目說明
-      image: '',
-      value: '',
+      description: '', // 題目說明
+      is_required: false,
+      title: '',
+      type: 'select',
       option: [{ value: '選項1' }],
     },
-  },
-  {
-    value: 4,
-    text: '下拉式',
-    kind: 'select',
     img: require('@/assets/image/icon_select.svg'),
-    data: {
-      required: false,
-      label: {
-        value: '',
-        bold: false, // 粗體
-        italic: false, // 斜體
-        underline: false, // 下底線
-      },
-      question_desc: '', // 題目說明
-      image: '',
-      value: '',
-      option: [{ value: '選項1' }],
-    },
+    kind: 'select',
+    text: '下拉式',
+    value: 4,
   },
   {
-    value: 5,
-    text: '雲端上傳',
-    kind: 'upload',
-    img: require('@/assets/image/icon_file.svg'),
     data: {
-      required: false,
-      label: {
-        value: '',
+      config: {
         bold: false, // 粗體
         italic: false, // 斜體
         underline: false, // 下底線
+        file: {
+          size: 1,
+          type: [],
+        },
       },
-      question_desc: '', // 題目說明
-      file: {
-        size: '1',
-        type: [],
-      },
+      description: '', // 題目說明
+      is_required: false,
+      title: '',
+      type: 'file',
     },
+    img: require('@/assets/image/icon_file.svg'),
+    kind: 'upload',
+    text: '雲端上傳',
+    value: 5,
   },
   {
     value: 6,
@@ -128,7 +124,7 @@ export default [
         italic: false, // 斜體
         underline: false, // 下底線
       },
-      question_desc: '', // 題目說明
+      description: '', // 題目說明
       value: '',
       min: 1, // 最小值
       max: 5, // 最大值
@@ -149,7 +145,7 @@ export default [
         italic: false, // 斜體
         underline: false, // 下底線
       },
-      question_desc: '', // 題目說明
+      description: '', // 題目說明
       value: [],
       list: [{ value: '第1列' }], // 列
       column: [{ value: '第1欄' }], // 欄
@@ -168,7 +164,7 @@ export default [
         italic: false, // 斜體
         underline: false, // 下底線
       },
-      question_desc: '', // 題目說明
+      description: '', // 題目說明
       value: [],
       list: [{ value: '第1列' }], // 列
       column: [{ value: '第1欄' }], // 欄
@@ -187,7 +183,7 @@ export default [
         italic: false, // 斜體
         underline: false, // 下底線
       },
-      question_desc: '', // 題目說明
+      description: '', // 題目說明
       value: '',
     },
   },
@@ -204,7 +200,7 @@ export default [
         italic: false, // 斜體
         underline: false, // 下底線
       },
-      question_desc: '', // 題目說明
+      description: '', // 題目說明
       value: '',
     },
   },

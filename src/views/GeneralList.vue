@@ -247,6 +247,7 @@ export default {
       expired_to: null,
       starred: 0,
     },
+    show_type: 'card', // 表單呈現方式
     searchDateType: 'creation_date', // 日期搜尋條件
     dateType: [
       { text: '創建日期', value: 'creation_date' },
@@ -258,7 +259,6 @@ export default {
     total_count: 0,
     // -------
     delList: [],
-    show_type: 'card',
   }),
   metaInfo: {
     title: '表單清單',
@@ -294,7 +294,7 @@ export default {
       })
     },
     /**@資料夾功能 */
-    // 新增資料夾
+    // 新增資料夾_OK
     createFolder() {
       this.axios.createdFolder({ name: this.name }).then((res) => {
         if (res.data.code === 200) {
@@ -305,7 +305,7 @@ export default {
         }
       })
     },
-    // 更多操作_刪除資料夾
+    // 更多操作_刪除資料夾_OK
     deleteFolder(id) {
       this.axios.deleteFolder({ id }).then((res) => {
         if (res.data.code === 200) {
@@ -316,7 +316,7 @@ export default {
         }
       })
     },
-    // 更多操作_重新命名
+    // 更多操作_重新命名_OK
     folderInfo(id) {
       this.axios.folderName({ id }).then((res) => {
         const { code, data } = res.data
@@ -362,7 +362,7 @@ export default {
       }
       this.get_formList()
     },
-    /**@表單功能 */
+    /**@表單功能_OK */
     get_formList() {
       this.axios.formList(this.search).then((res) => {
         const { code, data } = res.data
@@ -385,18 +385,18 @@ export default {
     // ---------- ---------- ----------
     /**@表單卡片點擊3個點操作列_OK */
     actionBar(val) {
-      if (val['id'] !== this.formOperate.info['id'] && this.formOperate.info['id'] !== undefined) {
-        this.formOperate['info'] = val
-      } else if (val['id'] === this.formOperate.info['id'] && this.formOperate['show']) {
-        this.formOperate = { show: false, info: {} }
-      } else {
+      if (val['id'] !== this.formOperate.info['id'] && this.formOperate.info['id'] !== undefined) this.formOperate['info'] = val
+      else if (val['id'] === this.formOperate.info['id'] && this.formOperate['show']) this.formOperate = { show: false, info: {} }
+      else {
         this.formOperate.show = true
         this.formOperate.info = val
       }
     },
-    /**@切換收藏 */
+    /**@切換收藏_OK */
     is_collect(i) {
-      this.list[i].is_star = !this.list[i].is_star
+      this.axios.formStar({ id: i }).then((res) => {
+        if (res.data.code === 200) this.get_formList()
+      })
     },
     /**@刪除勾選 */
     is_delList(i) {
@@ -408,7 +408,7 @@ export default {
     /**@切換顯示形式 */
     type_reset(kind) {
       this.show_type = kind
-      this.list.map((x) => (x.config = false))
+      // this.formList.map((x) => (x.config = false))
     },
   },
 }

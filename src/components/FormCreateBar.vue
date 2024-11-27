@@ -1,6 +1,6 @@
 <template>
-  <div class="border-l border-solid border-[#cbcccd] create-aside">
-    <ul class="flex create-aside-item">
+  <div class="w-[350px] border-l border-solid border-[#cbcccd] create-aside">
+    <ul class="flex justify-around create-aside-item">
       <li
         v-for="item in list"
         :key="item.value"
@@ -32,18 +32,21 @@
         </ul>
       </template>
       <template v-if="active === 'staging-area'">
-        <ul v-if="stagingData && stagingData.length" class="pt-6">
+        <ul v-if="temporaryData && temporaryData.length" class="pt-6">
           <li
-            v-for="info in stagingData"
+            v-for="info in temporaryData"
             :key="info.id"
-            class="flex items-center py-4 pl-9 border-b border-solid border-[#d3d3d3] hover:bg-[#e4e4f1] cursor-pointer"
+            class="flex items-center py-4 px-9 border-b border-solid border-[#d3d3d3] hover:bg-[#e4e4f1] cursor-pointer"
+            :title="info.data['title']"
             draggable
             @dragstart="handleDragStart($event, info)"
           >
             <div class="flex items-center justify-center mr-7 w-14 h-14 rounded-md bg-[#52528c]">
               <img :src="info.img" :alt="info.img" />
             </div>
-            {{ info.data.label['value'] }}
+            <p class="flex-1 text-ellipsis overflow-hidden">
+              {{ info.data['title'] }}
+            </p>
           </li>
         </ul>
       </template>
@@ -67,7 +70,7 @@ export default {
     list: [
       { text: '題目類型', value: 'question-type' },
       { text: '暫存區', value: 'staging-area' },
-      { text: '主題', value: 'theme' },
+      // { text: '主題', value: 'theme' },
     ],
     active: 'question-type',
   }),
@@ -75,7 +78,7 @@ export default {
     this.createBarHeight()
   },
   computed: {
-    ...mapState({ stagingData: (state) => state.stagingData }),
+    ...mapState({ temporaryData: (state) => state.temporaryData }),
   },
   methods: {
     /**@計算高度 */
