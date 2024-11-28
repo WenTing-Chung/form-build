@@ -30,7 +30,7 @@ export default {
     /**@資料夾事件 */
     folderOperateEvent(val) {
       const { id, name } = this.location
-      this.$store.dispatch('isModal', true)
+      if (['rename', 'del'].includes(val)) this.$store.dispatch('isModal', true)
       this.$emit('folderOperateEvent', { id, name, type: val })
     },
     /**@判斷更多操作顯示位置 */

@@ -265,17 +265,19 @@ export default {
   },
   mounted() {
     this.is_containerHeight()
-    document.addEventListener('click', (e) => {
-      const folder_operate = document.querySelector('.folderOperateList')
-      const more_operate = document.querySelector('.moreOperate')
-      if (this.folderOperate.show && !folder_operate.contains(e.target)) this.folderOperate = { show: false, info: {} }
-      if (this.formOperate.show && !more_operate.contains(e.target)) this.formOperate = { show: false, info: {} }
-    })
+    document.addEventListener('click', this.operateList)
   },
   computed: {
     ...mapState({ modal: (state) => state.isModal }),
   },
   methods: {
+    /**@更多3個點操作顯示 */
+    operateList(e) {
+      const folder_operate = document.querySelector('.folderOperateList')
+      const more_operate = document.querySelector('.moreOperate')
+      if (this.folderOperate.show && !folder_operate.contains(e.target)) this.folderOperate = { show: false, info: {} }
+      if (this.formOperate.show && !more_operate.contains(e.target)) this.formOperate = { show: false, info: {} }
+    },
     /**@計算高度_OK */
     is_containerHeight() {
       this.$nextTick(() => {
@@ -345,7 +347,8 @@ export default {
     /**@資料夾功能操作 */
     folderEvent(val) {
       this.folderEventType = val
-      if (val.type === 'rename') this.folderInfo(val.id)
+      if (val.type === 'create') this.$router.push({ name: 'FormCreate', query: { folderId: val.id } })
+      else if (val.type === 'rename') this.folderInfo(val.id)
     },
     // 點擊資料夾_OK
     folderSelect(val) {
@@ -408,8 +411,10 @@ export default {
     /**@切換顯示形式 */
     type_reset(kind) {
       this.show_type = kind
-      // this.formList.map((x) => (x.config = false))
     },
+  },
+  beforeDestroy() {
+    document.removeEventListener('click', this.operateList)
   },
 }
 </script>

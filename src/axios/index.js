@@ -47,6 +47,9 @@ export default {
   formStar(id) {
     return service.post('/form/switch', id)
   },
+  createdForm(form) {
+    return service.post('/form/create', form)
+  },
   /**
    * @帳號設定
    */

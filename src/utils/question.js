@@ -1,207 +1,181 @@
 export default [
   {
-    data: {
-      config: {
-        bold: false, // 粗體
-        italic: false, // 斜體
-        max: 80,
-        type: 'text',
-        underline: false, // 下底線
-      },
-      description: '', // 題目說明
-      is_required: false,
-      title: '',
+    config: {
+      bold: false, // 粗體
+      italic: false, // 斜體
+      max: 80,
       type: 'text',
+      underline: false, // 下底線
     },
+    description: '', // 題目說明
     img: require('@/assets/image/icon_input.svg'),
-    kind: 'input',
+    is_required: false,
     text: '單行文字',
+    title: '',
+    type: 'text',
     value: 0,
   },
   {
-    data: {
-      config: {
-        bold: false, // 粗體
-        italic: false, // 斜體
-        max: 1000,
-        underline: false, // 下底線
-      },
-      description: '', // 題目說明
-      is_required: false,
-      title: '',
-      type: 'textarea',
+    config: {
+      bold: false, // 粗體
+      italic: false, // 斜體
+      max: 1000,
+      underline: false, // 下底線
     },
+    description: '', // 題目說明
     img: require('@/assets/image/icon_textarea.svg'),
-    kind: 'textarea',
+    is_required: false,
     text: '多行文字',
+    title: '',
+    type: 'textarea',
     value: 1,
   },
   {
-    data: {
-      config: {
-        bold: false, // 粗體
-        italic: false, // 斜體
-        underline: false, // 下底線
-      },
-      description: '', // 題目說明
-      is_required: false,
-      title: '',
-      type: 'radio',
-      option: [{ value: '選項1' }],
+    config: {
+      bold: false, // 粗體
+      italic: false, // 斜體
+      underline: false, // 下底線
     },
+    description: '', // 題目說明
     img: require('@/assets/image/icon_radio.svg'),
-    kind: 'radio',
+    is_required: false,
+    option: [{ value: '選項1' }],
     text: '單選題',
+    title: '',
+    type: 'radio',
     value: 2,
   },
   {
-    data: {
-      config: {
-        bold: false, // 粗體
-        italic: false, // 斜體
-        underline: false, // 下底線
-      },
-      description: '', // 題目說明
-      is_required: false,
-      title: '',
-      type: 'checkbox',
-      option: [{ value: '選項1' }],
+    config: {
+      bold: false, // 粗體
+      italic: false, // 斜體
+      underline: false, // 下底線
     },
+    description: '', // 題目說明
     img: require('@/assets/image/icon_checkbox.svg'),
-    kind: 'checkbox',
+    is_required: false,
+    option: [{ value: '選項1' }],
     text: '複選題',
+    title: '',
+    type: 'checkbox',
     value: 3,
   },
   {
-    data: {
-      config: {
-        bold: false, // 粗體
-        italic: false, // 斜體
-        underline: false, // 下底線
-      },
-      description: '', // 題目說明
-      is_required: false,
-      title: '',
-      type: 'select',
-      option: [{ value: '選項1' }],
+    config: {
+      bold: false, // 粗體
+      italic: false, // 斜體
+      underline: false, // 下底線
     },
+    description: '', // 題目說明
     img: require('@/assets/image/icon_select.svg'),
+    is_required: false,
     kind: 'select',
+    option: [{ value: '選項1' }],
     text: '下拉式',
+    title: '',
+    type: 'select',
     value: 4,
   },
   {
-    data: {
-      config: {
-        bold: false, // 粗體
-        italic: false, // 斜體
-        underline: false, // 下底線
-        file: {
-          size: 1,
-          type: [],
-        },
+    config: {
+      bold: false, // 粗體
+      italic: false, // 斜體
+      underline: false, // 下底線
+      file: {
+        size: 1,
+        type: [],
       },
-      description: '', // 題目說明
-      is_required: false,
-      title: '',
-      type: 'file',
     },
+    description: '', // 題目說明
     img: require('@/assets/image/icon_file.svg'),
-    kind: 'upload',
+    is_required: false,
     text: '雲端上傳',
+    title: '',
+    type: 'file',
     value: 5,
   },
   {
-    value: 6,
-    text: '線性刻度',
-    kind: 'linearScale',
-    img: require('@/assets/image/icon_progress.svg'),
-    data: {
-      required: false,
-      label: {
-        value: '',
-        bold: false, // 粗體
-        italic: false, // 斜體
-        underline: false, // 下底線
-      },
-      description: '', // 題目說明
-      value: '',
-      min: 1, // 最小值
+    config: {
+      bold: false, // 粗體
+      italic: false, // 斜體
       max: 5, // 最大值
-      min_text: '', // 最小顯示文字
       max_text: '', // 最大顯示文字
+      min: 1, // 最小值
+      min_text: '', // 最小顯示文字
+      underline: false, // 下底線
     },
+    description: '', // 題目說明
+    img: require('@/assets/image/icon_progress.svg'),
+    is_required: false,
+    text: '線性刻度',
+    title: '',
+    type: 'range',
+    value: 6,
   },
   {
-    value: 7,
-    text: '單選方塊',
-    kind: 'radioBox',
+    config: {
+      bold: false, // 粗體
+      italic: false, // 斜體
+      underline: false, // 下底線
+    },
+    description: '', // 題目說明
     img: require('@/assets/image/icon_radio_ar.svg'),
-    data: {
-      required: false,
-      label: {
-        value: '',
-        bold: false, // 粗體
-        italic: false, // 斜體
-        underline: false, // 下底線
-      },
-      description: '', // 題目說明
-      value: [],
+    is_required: false,
+    kind: 'radioBox',
+    option: {
       list: [{ value: '第1列' }], // 列
       column: [{ value: '第1欄' }], // 欄
     },
+    text: '單選方塊',
+    title: '',
+    type: 'single',
+    value: 7,
   },
   {
-    value: 8,
-    text: '複選方塊',
-    kind: 'checkboxGroup',
+    config: {
+      bold: false, // 粗體
+      italic: false, // 斜體
+      underline: false, // 下底線
+    },
+    description: '', // 題目說明
     img: require('@/assets/image/icon_checkbox_ar.svg'),
-    data: {
-      required: false,
-      label: {
-        value: '',
-        bold: false, // 粗體
-        italic: false, // 斜體
-        underline: false, // 下底線
-      },
-      description: '', // 題目說明
-      value: [],
+    is_required: false,
+    kind: 'checkboxGroup',
+    option: {
       list: [{ value: '第1列' }], // 列
       column: [{ value: '第1欄' }], // 欄
     },
+    text: '複選方塊',
+    title: '',
+    type: 'multiple',
+    value: 8,
   },
   {
-    value: 9,
-    text: '日期',
-    kind: 'date',
+    config: {
+      bold: false, // 粗體
+      italic: false, // 斜體
+      underline: false, // 下底線
+    },
+    description: '', // 題目說明
     img: require('@/assets/image/icon_date.svg'),
-    data: {
-      required: false,
-      label: {
-        value: '',
-        bold: false, // 粗體
-        italic: false, // 斜體
-        underline: false, // 下底線
-      },
-      description: '', // 題目說明
-      value: '',
-    },
+    is_required: false,
+    text: '日期',
+    title: '',
+    type: 'date',
+    value: 9,
   },
   {
-    value: 10,
-    text: '時間',
-    kind: 'time',
-    img: require('@/assets/image/icon_time.svg'),
-    data: {
-      required: false,
-      label: {
-        value: '',
-        bold: false, // 粗體
-        italic: false, // 斜體
-        underline: false, // 下底線
-      },
-      description: '', // 題目說明
-      value: '',
+    config: {
+      bold: false, // 粗體
+      italic: false, // 斜體
+      underline: false, // 下底線
     },
+    description: '', // 題目說明
+    img: require('@/assets/image/icon_time.svg'),
+    is_required: false,
+    text: '時間',
+    title: '',
+    type: 'time',
+    value: 10,
   },
 ]

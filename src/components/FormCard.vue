@@ -1,7 +1,11 @@
 <template>
   <div>
     <template v-if="listType === 'card'">
-      <div class="relative cursor-pointer" :title="cardInfo.description" @click="$router.push({ name: 'FormCreate', params: { id: cardInfo.id } })">
+      <div
+        class="relative cursor-pointer"
+        :title="cardInfo.description"
+        @click="$router.push({ name: 'FormCreate', query: { formId: cardInfo.id } })"
+      >
         <div class="overflow-hidden rounded-2xl bg-white shadow-[4px_10px_10px_0_rgba(200,200,213,0.5)]">
           <div class="relative">
             <template v-if="cardInfo.form_image">

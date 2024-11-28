@@ -52,7 +52,7 @@ const routes = [
         component: () => import('@/views/Form/Index.vue'),
         children: [
           {
-            path: '/form/create/:id?',
+            path: '/form/create',
             name: 'FormCreate',
             component: () => import('@/views/Form/Create.vue'),
             meta: {
