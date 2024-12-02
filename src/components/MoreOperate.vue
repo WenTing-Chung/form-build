@@ -1,11 +1,11 @@
 <template>
   <ul class="moreOperate">
-    <li>重新命名</li>
-    <li>新分頁開啟</li>
-    <li>編輯</li>
-    <li>紀錄</li>
-    <li>移動到資料夾</li>
-    <li>刪除</li>
+    <!-- <li>重新命名</li> -->
+    <li @click.prevent="formOperateEvent('blank')">新分頁開啟</li>
+    <!-- <li>編輯</li> -->
+    <li @click.prevent="formOperateEvent('log')">紀錄</li>
+    <li @click.prevent="formOperateEvent('move')">移動到資料夾</li>
+    <li @click.prevent="formOperateEvent('del')">刪除</li>
   </ul>
 </template>
 
@@ -38,19 +38,25 @@ export default {
       this.screenW = Math.floor(document.documentElement.scrollWidth * 0.8)
       this.moreConfig()
     },
+    /**@計算更多功能顯示位置_OK */
     moreConfig() {
       const { x, y } = this.location
       const operate = document.querySelector('.moreOperate')
       if (this.listType === 'card') {
         operate.style.left = `${x}px`
-        if (y > 600) operate.style.top = `${y - 310}px`
-        else operate.style.top = `${y + 28}px`
+        // if (y > 600) operate.style.top = `${y - 310}px`
+        if (y > 600) operate.style.top = `${y - 210}px`
+        else operate.style.top = `${y + 25}px`
 
         if (x > this.screenW) operate.style.left = `${x - 180}px`
       } else {
         operate.style.right = '40px'
         operate.style.top = 'calc(100% - 44px)'
       }
+    },
+    formOperateEvent(val) {
+      if (['log', 'move', 'del'].includes(val)) this.$store.dispatch('isModal', true)
+      this.$emit('formOperateEvent', { id: this.location.id, name: this.location.name, type: val })
     },
   },
   beforeDestroy() {

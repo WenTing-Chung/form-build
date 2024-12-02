@@ -28,7 +28,7 @@
                 <div
                   :class="['flex items-center justify-center mr-2 w-10 h-10 rounded-[10px] text-white', active === i ? 'bg-[#52528c]' : 'bg-[#888]']"
                 >
-                  <img :src="item.img" width="50%" :alt="item.img" />
+                  <img :src="require(`@/assets/image/${item.other['icon']}`)" width="50%" alt="表單縮圖" />
                 </div>
                 <div class="flex-1 py-5 px-7 rounded-lg bg-white" @click.prevent="active = i">
                   <span v-if="item['is_required'] && active !== i" class="mr-2 text-danger">*</span>
@@ -37,9 +37,9 @@
                       'mb-1 w-[min(80%,_600px)]',
                       {
                         'py-2.5 pl-3.5 border-b border-solid border-[#888] bg-[#eee]': active === i,
-                        'font-bold': item.config['bold'],
-                        italic: item.config['italic'],
-                        underline: item.config['underline'],
+                        'font-bold': item.other.config['bold'],
+                        italic: item.other.config['italic'],
+                        underline: item.other.config['underline'],
                       },
                     ]"
                     v-model="item['title']"
@@ -51,33 +51,33 @@
                     <div
                       :class="[
                         'flex items-center justify-center mr-1.5 w-9 h-9 rounded-md',
-                        item.config['bold'] ? 'bg-[#eee] text-[#555]' : 'text-[#888]',
+                        item.other.config['bold'] ? 'bg-[#eee] text-[#555]' : 'text-[#888]',
                       ]"
                       role="button"
                       title="粗體"
-                      @click.prevent="item.config['bold'] = !item.config['bold']"
+                      @click.prevent="item.other.config['bold'] = !item.other.config['bold']"
                     >
                       <font-awesome-icon icon="fa-solid fa-bold" size="lg" />
                     </div>
                     <div
                       :class="[
                         'flex items-center justify-center mr-1.5 w-9 h-9 rounded-md',
-                        item.config['italic'] ? 'bg-[#eee] text-[#555]' : 'text-[#888]',
+                        item.other.config['italic'] ? 'bg-[#eee] text-[#555]' : 'text-[#888]',
                       ]"
                       role="button"
                       title="斜體"
-                      @click.prevent="item.config['italic'] = !item.config['italic']"
+                      @click.prevent="item.other.config['italic'] = !item.other.config['italic']"
                     >
                       <font-awesome-icon icon="fa-solid fa-italic" size="lg" />
                     </div>
                     <div
                       :class="[
                         'flex items-center justify-center mr-1.5 w-9 h-9 rounded-md',
-                        item.config['underline'] ? 'bg-[#eee] text-[#555]' : 'text-[#888]',
+                        item.other.config['underline'] ? 'bg-[#eee] text-[#555]' : 'text-[#888]',
                       ]"
                       role="button"
                       title="底線"
-                      @click.prevent="item.config['underline'] = !item.config['underline']"
+                      @click.prevent="item.other.config['underline'] = !item.other.config['underline']"
                     >
                       <font-awesome-icon icon="fa-solid fa-underline" size="lg" />
                     </div>
@@ -85,7 +85,9 @@
                       class="flex items-center justify-center mr-1.5 w-9 h-9 text-[#888]"
                       role="button"
                       title="移除文字效果"
-                      @click.prevent=";(item.config['bold'] = false), (item.config['italic'] = false), (item.config['underline'] = false)"
+                      @click.prevent="
+                        ;(item.other.config['bold'] = false), (item.other.config['italic'] = false), (item.other.config['underline'] = false)
+                      "
                     >
                       <font-awesome-icon icon="fa-solid fa-text-slash" size="lg" />
                     </div>
@@ -106,13 +108,13 @@
                         disabled
                       />
                       <div v-if="active === i" class="flex text-sm">
-                        <select id="inputType" class="mr-5 p-2.5 w-1/5 hover:shadow-md" name="inputType" v-model="item.config['type']">
+                        <select id="inputType" class="mr-5 p-2.5 w-1/5 hover:shadow-md" name="inputType" v-model="item.other.config['type']">
                           <option v-for="kind in dropdown.inputType" :key="kind.value" :value="kind.value">{{ kind.text }}</option>
                         </select>
                         <span class="inline-block p-2.5">最大字元數</span>
                         <input
                           class="p-2.5 w-1/6 border-b border-solid border-[#0000001f] focus:shadow-md"
-                          v-model.number="item.config['max']"
+                          v-model.number="item.other.config['max']"
                           type="number"
                         />
                       </div>
@@ -124,7 +126,7 @@
                         <span class="inline-block p-2.5">最大字元數</span>
                         <input
                           class="p-2.5 w-1/6 border-b border-solid border-[#0000001f] focus:shadow-md"
-                          v-model.number="item.config['max']"
+                          v-model.number="item.other.config['max']"
                           type="number"
                         />
                       </div>
@@ -231,12 +233,12 @@
                                 v-for="(kind, j) in dropdown.mediaList"
                                 :key="`${kind.value}-${j}`"
                                 class="flex items-center cursor-pointer"
-                                @click.prevent="mediaQuestion(item.config.file['type'], kind.value)"
+                                @click.prevent="mediaQuestion(item.other.config.file['type'], kind.value)"
                               >
                                 <div
                                   :class="[
                                     'mr-3 w-5 h-5 border border-solid transition-all ease-in-out duration-500',
-                                    item.config.file['type'].includes(kind.value) ? 'mediaChecked' : 'border-[#888]',
+                                    item.other.config.file['type'].includes(kind.value) ? 'mediaChecked' : 'border-[#888]',
                                   ]"
                                 />
                                 <p>{{ kind.text }}</p>
@@ -250,7 +252,7 @@
                             <input
                               id="file-size"
                               class="mr-2.5 py-1.5 px-2.5 w-20 border-b border-solid border-[#888] bg-[#eee] text-center"
-                              v-model.number="item.config.file['size']"
+                              v-model.number="item.other.config.file['size']"
                               type="number"
                               :max="5"
                             />
@@ -264,7 +266,7 @@
                           <label for="upload" class="mr-5 py-2 px-7 border border-solid border-[#888] rounded-md text-[#888]" type="button">
                             新增檔案
                           </label>
-                          <span class="text-[#888]">大小限制 {{ item.config.file['size'] }} MB</span>
+                          <span class="text-[#888]">大小限制 {{ item.other.config.file['size'] }} MB</span>
                         </div>
                       </template>
                     </template>
@@ -272,34 +274,39 @@
                     <template v-else-if="item.type === 'range'">
                       <template v-if="active === i">
                         <div class="flex items-center mb-4 text-sm">
-                          <span class="mr-5 p-2.5 w-20 text-center hover:shadow-md">{{ item.config['min'] }}</span>
+                          <span class="mr-5 p-2.5 w-20 text-center hover:shadow-md">{{ item.other.config['min'] }}</span>
                           到
-                          <select id="range_max" class="ml-5 p-2.5 w-20 text-center hover:shadow-md" name="range_max" v-model="item.config['max']">
+                          <select
+                            id="range_max"
+                            class="ml-5 p-2.5 w-20 text-center hover:shadow-md"
+                            name="range_max"
+                            v-model="item.other.config['max']"
+                          >
                             <option v-for="num in [2, 3, 4, 5, 6, 7, 8, 9, 10]" :key="num" :value="num">{{ num }}</option>
                           </select>
                         </div>
                         <ul>
                           <li class="flex items-center mb-7">
-                            <span class="mr-2.5 w-5">{{ item.config['min'] }}</span>
+                            <span class="mr-2.5 w-5">{{ item.other.config['min'] }}</span>
                             <div class="flex justify-between py-1.5 px-8 w-[min(80%,_300px)] border-b border-solid border-[#c7c7c7]">
-                              <input v-model="item.config['min_text']" type="text" placeholder="最小值顯示文字" />
+                              <input v-model="item.other.config['min_text']" type="text" placeholder="最小值顯示文字" />
                               <font-awesome-icon
                                 icon="fa-solid fa-xmark"
                                 size="2xl"
                                 class="text-[#888] cursor-pointer"
-                                @click.prevent="item.config['min_text'] = ''"
+                                @click.prevent="item.other.config['min_text'] = ''"
                               />
                             </div>
                           </li>
                           <li class="flex items-center">
-                            <span class="mr-2.5 w-5">{{ item.config['max'] }}</span>
+                            <span class="mr-2.5 w-5">{{ item.other.config['max'] }}</span>
                             <div class="flex justify-between py-1.5 px-8 w-[min(80%,_300px)] border-b border-solid border-[#c7c7c7]">
-                              <input v-model="item.config['max_text']" type="text" placeholder="最大值顯示文字" />
+                              <input v-model="item.other.config['max_text']" type="text" placeholder="最大值顯示文字" />
                               <font-awesome-icon
                                 icon="fa-solid fa-xmark"
                                 size="2xl"
                                 class="text-[#888] cursor-pointer"
-                                @click.prevent="item.config['max_text'] = ''"
+                                @click.prevent="item.other.config['max_text'] = ''"
                               />
                             </div>
                           </li>
@@ -307,14 +314,14 @@
                       </template>
                       <template v-else>
                         <div class="flex items-center justify-between">
-                          <span>{{ item.config['min_text'] }}</span>
+                          <span>{{ item.other.config['min_text'] }}</span>
                           <div class="flex-1 flex justify-around mx-10 w-full">
-                            <div v-for="num in item.config['max'] - item.config['min'] + 1" :key="num">
+                            <div v-for="num in item.other.config['max'] - item.other.config['min'] + 1" :key="num">
                               <p class="mb-4 text-center">{{ num }}</p>
                               <div class="w-5 h-5 border border-solid border-[#888] rounded-full" />
                             </div>
                           </div>
-                          <span>{{ item.config['max_text'] }}</span>
+                          <span>{{ item.other.config['max_text'] }}</span>
                         </div>
                       </template>
                     </template>
@@ -560,6 +567,7 @@
           v-if="$route.query.formId"
           class="py-2.5 px-12 border border-solid border-[#52528c] rounded-full bg-[#52528c] hover:bg-[#424281] text-white font-bold text-2xl"
           type="button"
+          @click.prevent="modifyForm()"
         >
           儲存
         </button>
@@ -609,8 +617,10 @@ export default {
     title: '表單問題設計',
   },
   created() {
-    if (this.$route.query.formId) this.form.id = Number(this.$route.query.formId)
-    else if (this.$route.query.folderId) this.form.folder_id = Number(this.$route.query.folderId)
+    if (this.$route.query.formId) {
+      const id = Number(this.$route.query.formId)
+      this.getFormInfo(id)
+    } else if (this.$route.query.folderId) this.form.folder_id = Number(this.$route.query.folderId)
   },
   computed: {
     ...mapState({ temporaryData: (state) => state.temporaryData }),
@@ -624,13 +634,26 @@ export default {
     },
   },
   methods: {
+    /**@取得表單資訊 */
+    getFormInfo(id) {
+      this.axios.formInfo({ id }).then((res) => {
+        const { code, data } = res.data
+        console.log(data)
+        if (code === 200) {
+          this.form = data
+          this.form['id'] = id
+          delete this.form.created_at
+          delete this.form.updated_at
+        }
+      })
+    },
     /**@拖曳放下題目類型_OK */
     handleDrop(env) {
       if (!this.dragging) {
         if (this.dragAdd) {
           const dropBox = env.dataTransfer.getData('question')
-          const questionData = JSON.parse(JSON.stringify(question.find((x) => x.value == dropBox)))
-          questionData['id'] = Date.now()
+          const questionData = JSON.parse(JSON.stringify(question.find((x) => x.other['value'] === Number(dropBox))))
+          questionData.other['id'] = Date.now()
           this.form['questions'].push(questionData)
         } else {
           /**@添加選中暫存選項 */
@@ -638,7 +661,7 @@ export default {
           this.form['questions'].push(staging)
           /**@更新資料回存 */
           const newData = JSON.parse(sessionStorage.getItem('temporary'))
-          const stgeItem_index = newData.findIndex((x) => x.id === staging.id)
+          const stgeItem_index = newData.findIndex((x) => x.other['id'] === staging.other['id'])
           newData.splice(stgeItem_index, 1)
           sessionStorage.setItem('temporary', JSON.stringify(newData))
           this.$store.dispatch('set_temporaryData', newData)
@@ -656,7 +679,8 @@ export default {
     /**@複製問題_OK */
     copy_question(item, i) {
       const copyItem = JSON.parse(JSON.stringify(item))
-      copyItem['id'] = Date.now()
+      copyItem.other['id'] = Date.now()
+      if (copyItem.form_question_id) delete copyItem.form_question_id
       this.form['questions'].splice(i + 1, 0, copyItem)
       this.active = i + 1
     },
@@ -673,22 +697,32 @@ export default {
     delete_question(i) {
       this.form['questions'].splice(i, 1)
     },
+    /**@切換開關_OK */
+    switch_status(val, info) {
+      info['is_required'] = val
+    },
+    /**@新增表單_OK */
+    createForm() {
+      this.axios.createdForm(this.form).then((res) => {
+        if (res.data.code === 200) {
+          sessionStorage.removeItem('temporary')
+          this.$store.dispatch('set_temporaryData', [])
+          this.$router.push({ name: 'GeneralList' })
+        }
+      })
+    },
+    /**@修改表單_OK */
+    modifyForm() {
+      this.axios.modifyForm(this.form).then((res) => {
+        if (res.data.code === 200) this.getFormInfo(this.form.id)
+      })
+    },
     /**@雲端上傳問題限制類型 */
     mediaQuestion(mediaArr, kind) {
       if (mediaArr.includes(kind)) {
         const i = mediaArr.findIndex((x) => x === kind)
         mediaArr.splice(i, 1)
       } else mediaArr.push(kind)
-    },
-    /**@切換開關_OK */
-    switch_status(val, info) {
-      info['is_required'] = val
-    },
-    /**@新增表單 */
-    createForm() {
-      this.axios.createdForm(this.form).then((res) => {
-        if (res.data.code === 200) this.$router.push({ name: 'GeneralList' })
-      })
     },
   },
 }

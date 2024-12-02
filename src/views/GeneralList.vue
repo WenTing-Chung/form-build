@@ -1,67 +1,132 @@
 <template>
   <section class="flex w-full">
-    <Modal v-if="modal">
-      <template v-if="folderEventType.type === 'addFolder'">
-        <p class="mb-5 text-[#54588c] font-bold text-3xl">新增資料夾</p>
-        <FormInput class="mb-4 rounded-full" v-model="name" placeholder="請輸入資料夾名稱" />
-        <div class="flex">
-          <button
-            class="mr-5 py-2.5 px-12 border border-solid border-[#cbcccd] hover:border-[#e4e4f1] rounded-full bg-white hover:bg-[#e4e4f1] text-[#777] font-bold text-2xl"
-            type="button"
-            @click.prevent=";(folderEventType = null), (name = ''), $store.dispatch('isModal', false)"
-          >
-            取消
-          </button>
-          <button
-            class="py-2.5 px-12 border border-solid border-[#52528c] rounded-full bg-[#52528c] hover:bg-[#424281] text-white font-bold text-2xl"
-            type="button"
-            @click.prevent="createFolder"
-          >
-            確認
-          </button>
-        </div>
+    <Modal v-if="modal" @closeModal=";(folderEventType = null), (formEventType = null)">
+      <template v-if="folderEventType">
+        <template v-if="folderEventType.type === 'addFolder'">
+          <p class="mb-5 text-[#54588c] font-bold text-3xl">新增資料夾</p>
+          <FormInput class="mb-4 rounded-full" v-model="name" placeholder="請輸入資料夾名稱" />
+          <div class="flex">
+            <button
+              class="mr-5 py-2.5 px-12 border border-solid border-[#cbcccd] hover:border-[#e4e4f1] rounded-full bg-white hover:bg-[#e4e4f1] text-[#777] font-bold text-2xl"
+              type="button"
+              @click.prevent=";(folderEventType = null), (name = ''), $store.dispatch('isModal', false)"
+            >
+              取消
+            </button>
+            <button
+              class="py-2.5 px-12 border border-solid border-[#52528c] rounded-full bg-[#52528c] hover:bg-[#424281] text-white font-bold text-2xl"
+              type="button"
+              @click.prevent="createFolder"
+            >
+              確認
+            </button>
+          </div>
+        </template>
+        <template v-else-if="folderEventType.type === 'rename'">
+          <p class="mb-5 text-[#54588c] font-bold text-3xl">重新命名資料夾</p>
+          <FormInput class="mb-4 rounded-full" v-model="name" placeholder="請輸入資料夾名稱" />
+          <div class="flex">
+            <button
+              class="mr-5 py-2.5 px-12 border border-solid border-[#cbcccd] hover:border-[#e4e4f1] rounded-full bg-white hover:bg-[#e4e4f1] text-[#777] font-bold text-2xl"
+              type="button"
+              @click.prevent=";(folderEventType = null), (name = ''), $store.dispatch('isModal', false)"
+            >
+              取消
+            </button>
+            <button
+              class="py-2.5 px-12 border border-solid border-[#52528c] rounded-full bg-[#52528c] hover:bg-[#424281] text-white font-bold text-2xl"
+              type="button"
+              @click.prevent="modifyFolderName({ id: folderEventType.id, name })"
+            >
+              確認
+            </button>
+          </div>
+        </template>
+        <template v-else-if="folderEventType.type === 'del'">
+          <p class="mb-5 text-[#54588c] font-bold text-3xl">刪除資料夾</p>
+          <p class="mb-5 text-2xl">
+            確定要刪除<span class="text-danger text-3xl"> {{ folderEventType.name }} </span>資料夾嗎?
+          </p>
+          <div class="flex">
+            <button
+              class="mr-5 py-2.5 px-12 border border-solid border-[#cbcccd] hover:border-[#e4e4f1] rounded-full bg-white hover:bg-[#e4e4f1] text-[#777] font-bold text-2xl"
+              type="button"
+              @click.prevent=";(folderEventType = null), $store.dispatch('isModal', false)"
+            >
+              取消
+            </button>
+            <button
+              class="py-2.5 px-12 border border-solid border-[#52528c] rounded-full bg-[#52528c] hover:bg-[#424281] text-white font-bold text-2xl"
+              type="button"
+              @click.prevent="deleteFolder(folderEventType.id)"
+            >
+              確認
+            </button>
+          </div>
+        </template>
       </template>
-      <template v-if="folderEventType.type === 'rename'">
-        <p class="mb-5 text-[#54588c] font-bold text-3xl">重新命名資料夾</p>
-        <FormInput class="mb-4 rounded-full" v-model="name" placeholder="請輸入資料夾名稱" />
-        <div class="flex">
-          <button
-            class="mr-5 py-2.5 px-12 border border-solid border-[#cbcccd] hover:border-[#e4e4f1] rounded-full bg-white hover:bg-[#e4e4f1] text-[#777] font-bold text-2xl"
-            type="button"
-            @click.prevent=";(folderEventType = null), (name = ''), $store.dispatch('isModal', false)"
-          >
-            取消
-          </button>
-          <button
-            class="py-2.5 px-12 border border-solid border-[#52528c] rounded-full bg-[#52528c] hover:bg-[#424281] text-white font-bold text-2xl"
-            type="button"
-            @click.prevent="modifyFolderName({ id: folderEventType.id, name })"
-          >
-            確認
-          </button>
-        </div>
-      </template>
-      <template v-if="folderEventType.type === 'del'">
-        <p class="mb-5 text-[#54588c] font-bold text-3xl">刪除資料夾</p>
-        <p class="mb-5 text-2xl">
-          確定要刪除<span class="text-danger text-3xl"> {{ folderEventType.name }} </span>資料夾嗎?
-        </p>
-        <div class="flex">
-          <button
-            class="mr-5 py-2.5 px-12 border border-solid border-[#cbcccd] hover:border-[#e4e4f1] rounded-full bg-white hover:bg-[#e4e4f1] text-[#777] font-bold text-2xl"
-            type="button"
-            @click.prevent=";(folderEventType = null), $store.dispatch('isModal', false)"
-          >
-            取消
-          </button>
-          <button
-            class="py-2.5 px-12 border border-solid border-[#52528c] rounded-full bg-[#52528c] hover:bg-[#424281] text-white font-bold text-2xl"
-            type="button"
-            @click.prevent="deleteFolder(folderEventType.id)"
-          >
-            確認
-          </button>
-        </div>
+      <template v-if="formEventType">
+        <template v-if="formEventType.type === 'move'">
+          <p class="mb-5 text-[#54588c] font-bold text-3xl">移動表單</p>
+          <ul class="mb-5">
+            <li v-for="fold in folderList" :key="fold.id" class="mb-3">
+              <input
+                :id="`fold-${fold['name']}`"
+                class="hidden"
+                v-model.number="moveFolderInfo['folder_id']"
+                :value="fold.id"
+                type="radio"
+                name="foldID"
+              />
+              <label
+                :for="`fold-${fold['name']}`"
+                :class="[
+                  'py-3 pl-10 w-full text-left text-2xl before:rounded-full before:top-1/2 before:left-0 before:-translate-y-1/2 before:w-6 before:h-6 before:border before:border-solid before:border-[#d8d7e3] radio-control',
+                ]"
+              >
+                {{ fold['name'] }}
+              </label>
+            </li>
+          </ul>
+          <div class="flex">
+            <button
+              class="mr-5 py-2.5 px-12 border border-solid border-[#cbcccd] hover:border-[#e4e4f1] rounded-full bg-white hover:bg-[#e4e4f1] text-[#777] font-bold text-2xl"
+              type="button"
+              @click.prevent=";(formEventType = null), $store.dispatch('isModal', false)"
+            >
+              取消
+            </button>
+            <button
+              class="py-2.5 px-12 border border-solid border-[#52528c] rounded-full bg-[#52528c] hover:bg-[#424281] text-white font-bold text-2xl"
+              type="button"
+              @click.prevent="moveFormRoFolder"
+            >
+              確認
+            </button>
+          </div>
+        </template>
+        <template v-else-if="formEventType.type === 'del'">
+          <p class="mb-5 text-[#54588c] font-bold text-3xl">刪除表單</p>
+          <p class="mb-5 text-2xl">
+            確定要刪除<span class="text-danger text-3xl"> {{ formEventType.name }} </span>表單嗎?
+          </p>
+          <div class="flex">
+            <button
+              class="mr-5 py-2.5 px-12 border border-solid border-[#cbcccd] hover:border-[#e4e4f1] rounded-full bg-white hover:bg-[#e4e4f1] text-[#777] font-bold text-2xl"
+              type="button"
+              @click.prevent=";(formEventType = null), $store.dispatch('isModal', false)"
+            >
+              取消
+            </button>
+            <button
+              class="py-2.5 px-12 border border-solid border-[#52528c] rounded-full bg-[#52528c] hover:bg-[#424281] text-white font-bold text-2xl"
+              type="button"
+              @click.prevent="deleteForm(formEventType.id)"
+            >
+              確認
+            </button>
+          </div>
+        </template>
       </template>
     </Modal>
     <Aside
@@ -202,7 +267,7 @@
           />
         </div>
         <Pagination :page="page" :page-count="total_page" :item-count="total_count" @changePage="changePage" />
-        <MoreOperate v-show="formOperate.show" :location="formOperate.info" />
+        <MoreOperate v-show="formOperate.show" :location="formOperate.info" @formOperateEvent="formEvent" />
       </div>
     </div>
   </section>
@@ -231,6 +296,7 @@ export default {
       show: false,
       info: {},
     },
+    formEventType: null,
     formOperate: {
       // 表單操作顯示狀態
       show: false,
@@ -254,6 +320,10 @@ export default {
       { text: '最近編輯', value: 'recently_edited' },
       { text: '失效日期', value: 'expiration_date' },
     ],
+    moveFolderInfo: {
+      id: null,
+      folder_id: null,
+    },
     page: 1,
     total_page: 1,
     total_count: 0,
@@ -365,7 +435,8 @@ export default {
       }
       this.get_formList()
     },
-    /**@表單功能_OK */
+    /**@表單功能 */
+    // 表單列表清單_OK
     get_formList() {
       this.axios.formList(this.search).then((res) => {
         const { code, data } = res.data
@@ -373,6 +444,24 @@ export default {
           this.formList = data.list
           this.total_page = data.total_page
           this.total_count = data.total_count
+        }
+      })
+    },
+    // 刪除表單
+    deleteForm(id) {
+      this.axios.deleteForm({ id }).then((res) => {
+        if (res.data.code === 200) {
+          this.$store.dispatch('isModal', false)
+          this.get_formList()
+        }
+      })
+    },
+    // 表單移動至資料夾
+    moveFormRoFolder() {
+      this.axios.moveForm(this.moveFolderInfo).then((res) => {
+        if (res.data.code === 200) {
+          this.$store.dispatch('isModal', false)
+          this.get_formList()
         }
       })
     },
@@ -392,8 +481,7 @@ export default {
       this.get_formList()
       cardList.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
     },
-    // ---------- ---------- ----------
-    /**@表單卡片點擊3個點操作列_OK */
+    /**@表單卡片點擊3個點操作是否顯示_OK */
     actionBar(val) {
       if (val['id'] !== this.formOperate.info['id'] && this.formOperate.info['id'] !== undefined) this.formOperate['info'] = val
       else if (val['id'] === this.formOperate.info['id'] && this.formOperate['show']) this.formOperate = { show: false, info: {} }
@@ -401,6 +489,12 @@ export default {
         this.formOperate.show = true
         this.formOperate.info = val
       }
+    },
+    /**@表單卡片更多功能操作 */
+    formEvent(val) {
+      if (val.type === 'blank') window.open(`${location.origin}/form/create?formId=${val.id}`).location
+      if (val.type === 'move') this.moveFolderInfo.id = val.id
+      this.formEventType = val
     },
     /**@切換收藏_OK */
     is_collect(i) {

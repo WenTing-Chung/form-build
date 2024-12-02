@@ -53,6 +53,15 @@ export default {
   formInfo(id) {
     return service.get('/form/modify', { params: id })
   },
+  modifyForm(form) {
+    return service.put('/form/modify', form)
+  },
+  deleteForm(id) {
+    return service.delete('/form/delete', { params: id })
+  },
+  moveForm(form) {
+    return service.post('/form/movement', form)
+  },
   /**
    * @帳號設定
    */
