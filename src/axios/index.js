@@ -50,6 +50,9 @@ export default {
   createdForm(form) {
     return service.post('/form/create', form)
   },
+  formInfo(id) {
+    return service.get('/form/modify', { params: id })
+  },
   /**
    * @帳號設定
    */

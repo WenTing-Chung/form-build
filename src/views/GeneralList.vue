@@ -165,7 +165,7 @@
           </label> -->
           <button class="px-2.5 rounded-[10px] bg-[#54588c] hover:bg-[#3a3b72] text-white font-bold text-xl" type="button">查詢</button>
         </div>
-        <div class="overflow-hidden rounded-[10px]">
+        <!-- <div class="overflow-hidden rounded-[10px]">
           <button
             :class="['py-2 px-3', show_type === 'card' ? 'bg-[#c8c8d5] text-[#57588b]' : 'bg-[#fafaf9] text-[#888]']"
             type="button"
@@ -180,7 +180,7 @@
           >
             <font-awesome-icon icon="fa-solid fa-bars" size="2xl" />
           </button>
-        </div>
+        </div> -->
       </div>
       <div class="pt-3 px-6 pb-14 overflow-y-auto form-list scroll-style">
         <div
@@ -201,7 +201,7 @@
             @child_del="is_delList"
           />
         </div>
-        <Pagination :page="page" :page-count="total_page" :item-count="total_count" />
+        <Pagination :page="page" :page-count="total_page" :item-count="total_count" @changePage="changePage" />
         <MoreOperate v-show="formOperate.show" :location="formOperate.info" />
       </div>
     </div>
@@ -384,6 +384,13 @@ export default {
       this.search.edited_to = null
       this.search.expired_from = null
       this.search.expired_to = null
+    },
+    /**@切換分頁_OK */
+    changePage(val) {
+      const cardList = document.querySelector('.form-list')
+      this.page = val
+      this.get_formList()
+      cardList.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
     },
     // ---------- ---------- ----------
     /**@表單卡片點擊3個點操作列_OK */

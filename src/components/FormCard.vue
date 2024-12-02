@@ -1,15 +1,11 @@
 <template>
   <div>
     <template v-if="listType === 'card'">
-      <div
-        class="relative cursor-pointer"
-        :title="cardInfo.description"
-        @click="$router.push({ name: 'FormCreate', query: { formId: cardInfo.id } })"
-      >
+      <div class="relative cursor-pointer" :title="cardInfo['name']" @click="$router.push({ name: 'FormCreate', query: { formId: cardInfo.id } })">
         <div class="overflow-hidden rounded-2xl bg-white shadow-[4px_10px_10px_0_rgba(200,200,213,0.5)]">
           <div class="relative">
             <template v-if="cardInfo.form_image">
-              <img :src="cardInfo.form_image" class="w-full h-[200px]" alt="form-img" />
+              <img :src="cardInfo.form_image['path']" class="w-full h-[200px]" alt="form-img" />
             </template>
             <template v-else>
               <div class="flex items-center justify-center w-full h-[200px]">
@@ -23,7 +19,7 @@
           <div class="flex px-2.5 py-3">
             <div class="flex-1">
               <div class="flex justify-between">
-                <p class="flex-1 mr-1 line-clamp-3 break-words text-2xl">{{ cardInfo.description }}</p>
+                <p class="flex-1 mr-1 line-clamp-3 break-words text-2xl">{{ cardInfo['name'] }}</p>
                 <button
                   :class="[
                     'flex justify-center items-center w-7 h-7 rounded-full cursor-pointer hover:bg-[#c8c8d5]',
@@ -50,7 +46,7 @@
       </div>
     </template>
     <template v-else>
-      <div class="relative cursor-pointer" :title="cardInfo.description" @click="$router.push({ name: 'FormCreate', params: { id: cardInfo.id } })">
+      <div class="relative cursor-pointer" :title="cardInfo['name']" @click="$router.push({ name: 'FormCreate', params: { id: cardInfo.id } })">
         <div
           class="relative overflow-hidden pl-2 rounded-2xl mb-2.5 bg-white shadow-[0px_1px_4px_0px_rgba(78,78,85,0.5)] before:content-[''] before:absolute before:block before:top-0 before:left-0 before:w-2 before:h-full before:bg-[#57588b]"
         >

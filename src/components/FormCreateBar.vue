@@ -18,16 +18,16 @@
             v-for="(item, i) in questionList"
             :key="i"
             :class="[
-              'flex items-center py-4 pl-9 hover:bg-[#e4e4f1] cursor-pointer',
+              'flex items-center py-4 px-9 hover:bg-[#e4e4f1] cursor-pointer',
               { 'border-b border-solid border-[#d3d3d3]': [1, 4, 5, 8].includes(i) },
             ]"
             draggable
             @dragstart="handleDragStart($event, item)"
           >
             <div class="flex items-center justify-center mr-7 w-14 h-14 rounded-md bg-[#52528c]">
-              <img :src="item.img" :alt="item.img" />
+              <img :src="require(`@/assets/image/${item.other['icon']}`)" alt="題目類型圖示" />
             </div>
-            {{ item.text }}
+            <p class="flex-1">{{ item.other['text'] }}</p>
           </li>
         </ul>
       </template>
@@ -35,18 +35,16 @@
         <ul v-if="temporaryData && temporaryData.length" class="pt-6">
           <li
             v-for="info in temporaryData"
-            :key="info.id"
+            :key="info.other['id']"
             class="flex items-center py-4 px-9 border-b border-solid border-[#d3d3d3] hover:bg-[#e4e4f1] cursor-pointer"
-            :title="info.data['title']"
+            :title="info['title']"
             draggable
             @dragstart="handleDragStart($event, info)"
           >
             <div class="flex items-center justify-center mr-7 w-14 h-14 rounded-md bg-[#52528c]">
-              <img :src="info.img" :alt="info.img" />
+              <img :src="require(`@/assets/image/${info.other['icon']}`)" alt="題目類型圖示" />
             </div>
-            <p class="flex-1 text-ellipsis overflow-hidden">
-              {{ info.data['title'] }}
-            </p>
+            <p class="flex-1 text-ellipsis overflow-hidden">{{ info['title'] ? info['title'] : '未命名問題' }}</p>
           </li>
         </ul>
       </template>
@@ -93,7 +91,7 @@ export default {
     handleDragStart(env, item) {
       switch (this.active) {
         case 'question-type':
-          env.dataTransfer.setData('question', item.value)
+          env.dataTransfer.setData('question', item.other.value)
           this.$emit('drag_add_question', true)
           break
         case 'staging-area':
