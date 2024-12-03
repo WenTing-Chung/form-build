@@ -31,6 +31,8 @@ export default {
     folderOperateEvent(val) {
       const { id, name } = this.location
       if (['rename', 'del'].includes(val)) this.$store.dispatch('isModal', true)
+      this.$store.dispatch('modify_config_id', { folderId: id })
+      localStorage.setItem(`${process.env.VUE_APP_COOKIES}_Config`, JSON.stringify({ folderId: id }))
       this.$emit('folderOperateEvent', { id, name, type: val })
     },
     /**@判斷更多操作顯示位置 */

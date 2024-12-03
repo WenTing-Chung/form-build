@@ -9,6 +9,7 @@ export default new Vuex.Store({
     isModal: false,
     userInfo: JSON.parse(localStorage.getItem(`${process.env.VUE_APP_COOKIES}_User`)) || {},
     loginStatus: JSON.parse(localStorage.getItem(`${process.env.VUE_APP_COOKIES}_LoginStatus`)) || false,
+    configID: JSON.parse(localStorage.getItem(`${process.env.VUE_APP_COOKIES}_Config`)) || {},
     // 暫存區資料
     temporaryData: JSON.parse(sessionStorage.getItem('temporary')) || [],
   },
@@ -24,6 +25,9 @@ export default new Vuex.Store({
     },
     LOGIN_STATUS(state, status) {
       state.loginStatus = status
+    },
+    CONFIG_ID(state, id) {
+      state.configID = id
     },
     TEMPORARY_DATA(state, data) {
       state.temporaryData = data
@@ -47,6 +51,9 @@ export default new Vuex.Store({
     },
     set_temporaryData({ commit }, data) {
       commit('TEMPORARY_DATA', data)
+    },
+    modify_config_id({ commit }, data) {
+      commit('CONFIG_ID', data)
     },
     changeLoginStatus({ commit }, status) {
       commit('LOGIN_STATUS', status)

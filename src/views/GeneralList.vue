@@ -228,7 +228,13 @@
             <font-awesome-icon icon="fa-solid fa-magnifying-glass" size="lg" class="mr-3.5 text-[#888]" />
             <input id="form-name" class="bg-[#fafaf9] text-lg placeholder:text-[#888]" v-model="search.form_name" placeholder="查詢表單" />
           </label> -->
-          <button class="px-2.5 rounded-[10px] bg-[#54588c] hover:bg-[#3a3b72] text-white font-bold text-xl" type="button">查詢</button>
+          <button
+            class="px-2.5 rounded-[10px] bg-[#54588c] hover:bg-[#3a3b72] text-white font-bold text-xl"
+            type="button"
+            @click.prevent="get_formList"
+          >
+            查詢
+          </button>
         </div>
         <!-- <div class="overflow-hidden rounded-[10px]">
           <button

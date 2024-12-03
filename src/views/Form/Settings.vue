@@ -13,7 +13,14 @@
               <p class="mb-3.5 text-[#888] text-xs">表單呈現方式</p>
               <div class="flex items-center justify-between">
                 <p>顯示進度列</p>
-                <SwitchElement :status="switch_progressBar" @switch_status="progress_switch" />
+                <SwitchElement :status="form['progress_bar']" @switch_status="switchControl($event, 'progress_bar')" />
+              </div>
+            </li>
+            <li class="mb-7">
+              <p class="mb-3.5 text-[#888] text-xs">題號顯示</p>
+              <div class="flex items-center justify-between">
+                <p>題號顯示與不顯示</p>
+                <SwitchElement :status="form['question_number']" @switch_status="switchControl($event, 'question_number')" />
               </div>
             </li>
             <li>
@@ -24,7 +31,7 @@
                 </p>
                 <div class="flex items-center justify-between">
                   <input
-                    v-model="message"
+                    v-model="form['submit_message']"
                     :class="[
                       'flex-1 mr-5 rounded bg-white',
                       edit_message ? 'p-4 border border-solid border-[#dadce0]' : 'text-[#5f6368] italic text-sm',
@@ -44,7 +51,7 @@
                       <button
                         class="p-2 rounded text-[#5f6368] text-lg hover:bg-[rgba(95,99,104,0.04)]"
                         type="button"
-                        @click.prevent=";(message = old_message), (edit_message = false)"
+                        @click.prevent=";(form['submit_message'] = oldData['submit_message']), (edit_message = false)"
                       >
                         取消
                       </button>
@@ -54,7 +61,7 @@
                     <button
                       class="p-2 rounded text-[#0054ff] text-lg hover:bg-[rgba(66,133,244,0.04)]"
                       type="button"
-                      @click.prevent=";(old_message = message), (edit_message = true)"
+                      @click.prevent=";(oldData['submit_message'] = form['submit_message']), (edit_message = true)"
                     >
                       編輯
                     </button>
@@ -64,37 +71,43 @@
             </li>
           </ul>
         </div>
-        <div class="py-10 px-[50px]">
-          <div :class="['flex items-center justify-between', { 'mb-8': switch_timeValid }]">
+        <div class="mb-10 py-10 px-[50px]">
+          <div :class="['flex items-center justify-between', { 'mb-8': form['time_enable_status'] }]">
             <div>
               <h3 class="mb-4 text-lg">時間效期</h3>
               <p>設定表單有效時間，過了時段就關閉</p>
             </div>
-            <SwitchElement :status="switch_timeValid" @switch_status="timeValid_switch" />
+            <SwitchElement
+              :status="form['time_enable_status']"
+              @switch_status=";(edit_timeValid = false), switchControl($event, 'time_enable_status')"
+            />
           </div>
           <ul
-            :class="['pl-9 pr-5 overflow-hidden', switch_timeValid ? 'max-h-[500px] h-auto transition-all ease-in-out duration-[500ms]' : 'max-h-0']"
+            :class="[
+              'pl-9 pr-5 overflow-hidden',
+              form['time_enable_status'] ? 'max-h-[500px] h-auto transition-all ease-in-out duration-[500ms]' : 'max-h-0',
+            ]"
           >
             <li>
               <p class="mb-3.5 text-[#888] text-xs">表單時間</p>
               <div class="flex items-center justify-between">
                 <template v-if="edit_timeValid">
                   <div class="flex-1 mr-5">
-                    <date-picker class="mr-3" v-model="dateRanger.start" value-type="format" type="date">
+                    <date-picker class="mr-3" v-model="form['start_time']" value-type="format" type="datetime">
                       <template #input>
                         <input
                           class="py-2 pl-2.5 w-full rounded-[10px] bg-[#fafaf9] placeholder:text-[#888] text-base"
-                          :value="dateRanger.start"
+                          :value="form['start_time']"
                           placeholder="開始時間"
                         />
                       </template>
                     </date-picker>
                     <span>至</span>
-                    <date-picker class="ml-3" v-model="dateRanger.end" value-type="format" type="date">
+                    <date-picker class="ml-3" v-model="form['end_time']" value-type="format" type="datetime">
                       <template #input>
                         <input
                           class="py-2 pl-2.5 w-full rounded-[10px] bg-[#fafaf9] placeholder:text-[#888] text-base"
-                          :value="dateRanger.end"
+                          :value="form['end_time']"
                           placeholder="結束時間"
                         />
                       </template>
@@ -116,7 +129,9 @@
                     <button
                       class="p-2 rounded text-[#5f6368] text-lg hover:bg-[rgba(95,99,104,0.04)]"
                       type="button"
-                      @click.prevent=";(dateRanger = { ...old_dateRanger }), (edit_timeValid = false)"
+                      @click.prevent="
+                        ;(form['start_time'] = oldData['start_time']), (form['end_time'] = oldData['end_time']), (edit_timeValid = false)
+                      "
                     >
                       取消
                     </button>
@@ -126,7 +141,7 @@
                   <button
                     class="p-2 rounded text-[#0054ff] text-lg hover:bg-[rgba(66,133,244,0.04)]"
                     type="button"
-                    @click.prevent=";(old_dateRanger = { ...dateRanger }), (edit_timeValid = true)"
+                    @click.prevent=";(oldData['start_time'] = form['start_time']), (oldData['end_time'] = form['end_time']), (edit_timeValid = true)"
                   >
                     編輯
                   </button>
@@ -134,6 +149,15 @@
               </div>
             </li>
           </ul>
+        </div>
+        <div class="flex justify-center">
+          <button
+            class="py-2.5 px-12 border border-solid border-[#52528c] rounded-full bg-[#52528c] hover:bg-[#424281] text-white font-bold text-2xl"
+            type="button"
+            @click.prevent="saveSetting"
+          >
+            儲存設定
+          </button>
         </div>
       </div>
     </div>
@@ -147,52 +171,60 @@ export default {
   name: 'FormSettings',
   components: { SwitchElement },
   data: () => ({
-    message: '我們已經收到你回覆的表單',
-    old_message: '', // 回復訊息暫存
-    switch_progressBar: false,
-    switch_timeValid: false,
     edit_message: false,
     edit_timeValid: false,
-    dateRanger: {
-      start: null,
-      end: null,
+    form: {
+      end_time: null,
+      is_required_default: false,
+      progress_bar: false, // 是否顯示進度條
+      start_time: null,
+      submit_message: '我們已經收到你回覆的表單',
+      time_enable_status: false,
+      question_number: false,
     },
-    old_dateRanger: {
-      start: null,
-      end: null,
+    oldData: {
+      end_time: null,
+      start_time: null,
+      submit_message: '',
     },
   }),
   metaInfo: {
     title: '表單設定',
   },
+  created() {
+    if (this.$route.query.formId) {
+      const id = Number(this.$route.query.formId)
+      this.getSettingInfo(id)
+    }
+  },
   computed: {
     dateShow() {
-      if (this.dateRanger.start && this.dateRanger.end) return `${this.dateRanger.start} ~ ${this.dateRanger.end}`
+      if (this.form['start_time'] && this.form['end_time']) return `${this.form['start_time']} ~ ${this.form['end_time']}`
       else return '選擇日期區間'
     },
   },
   methods: {
-    /**@顯示進度列開關 */
-    progress_switch(val) {
-      this.switch_progressBar = val
+    /**@取得設定資訊 */
+    getSettingInfo(id) {
+      this.axios.settingInfo({ id }).then((res) => {
+        const { code, data } = res.data
+        if (code === 200) {
+          this.form = data
+          this.form['submit_message'] = '我們已經收到你回覆的表單'
+        }
+      })
     },
-    /**@時間效期開關 */
-    timeValid_switch(val) {
-      this.edit_timeValid = false
-      this.switch_timeValid = val
+    /**@開關切換 */
+    switchControl(env, key) {
+      this.form[key] = env
     },
-    // change_date(evn) {
-    //   let value = []
-    //   evn.forEach((x, i) => (value[i] = this.dateTime_format(x)))
-    //   this.format_dateTime = `${value[0]} ~ ${value[1]}`
-    // },
-    // dateTime_format(val) {
-    //   const Arr = val.toLocaleDateString().split('/')
-    //   const Y = Arr[0]
-    //   const M = Number(Arr[1]) < 10 ? `0${Arr[1]}` : Arr[1]
-    //   const D = Number(Arr[2]) < 10 ? `0${Arr[2]}` : Arr[2]
-    //   return `${Y}-${M}-${D}`
-    // },
+    /**@儲存設定 */
+    saveSetting() {
+      this.form['id'] = this.$route.query['formId']
+      this.axios.saveSetting(this.form).then((res) => {
+        if (res.dat.code === 200) this.getSettingInfo()
+      })
+    },
   },
 }
 </script>

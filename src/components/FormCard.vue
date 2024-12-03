@@ -1,7 +1,7 @@
 <template>
   <div>
     <template v-if="listType === 'card'">
-      <div class="relative cursor-pointer" :title="cardInfo['name']" @click="$router.push({ name: 'FormCreate', query: { formId: cardInfo.id } })">
+      <div class="relative cursor-pointer" :title="cardInfo['name']" @click.prevent="saveFormInfo">
         <div class="overflow-hidden rounded-2xl bg-white shadow-[4px_10px_10px_0_rgba(200,200,213,0.5)]">
           <div class="relative">
             <template v-if="cardInfo.form_image">
@@ -35,7 +35,7 @@
                 <span>{{ dateFormat_compare(cardInfo.start_time) }}</span>
                 <span v-if="cardInfo.start_time && cardInfo.end_time">&ensp;至&ensp;</span>
                 <span>{{ dateFormat_compare(cardInfo.end_time) }}</span>
-                <template v-if="cardInfo.start_time && cardInfo.end_time">
+                <template v-if="cardInfo.start_time && cardInfo.end_time && isExpired">
                   <br />
                   已過期
                 </template>
@@ -112,6 +112,11 @@ export default {
     is_checked() {
       return this.delList.includes(this.cardInfo.id)
     },
+    /**@判斷是否過期 */
+    isExpired() {
+      const expiredDate = new Date(this.cardInfo.end_time)
+      return expiredDate.getTime() < Date.now()
+    },
   },
   methods: {
     /**@點擊3個點操作列_向上傳id */
@@ -130,6 +135,11 @@ export default {
     dateFormat_compare(val) {
       if (val) return val.split(' ')[0]
       else return null
+    },
+    saveFormInfo() {
+      this.$store.dispatch('modify_config_id', { formId: this.cardInfo.id })
+      localStorage.setItem(`${process.env.VUE_APP_COOKIES}_Config`, JSON.stringify({ formId: this.cardInfo.id }))
+      this.$router.push({ name: 'FormCreate', query: { formId: this.cardInfo.id } })
     },
   },
 }

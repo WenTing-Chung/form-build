@@ -4,7 +4,9 @@
       <div class="flex justify-between mx-auto w-10/12">
         <ul class="flex">
           <li v-for="item in formItemList" :key="item.link" :class="['relative form-item', { active: $route.name === item.link }]">
-            <router-link :to="{ name: item.link }" class="py-2.5 px-3">{{ item.text }}</router-link>
+            <router-link v-show="item.show" :to="{ name: item.link, query: item.query }" class="py-2.5 px-3">
+              {{ item.text }}
+            </router-link>
           </li>
         </ul>
       </div>
@@ -14,22 +16,31 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
   name: 'FormIndex',
-  data: () => ({
-    formItemList: [
-      { text: '問題設計', link: 'FormCreate' },
-      { text: '設定', link: 'FormSettings' },
-      { text: '發布', link: 'FormRelease' },
-    ],
-  }),
   mounted() {
     this.formConfig_wrap_height()
   },
   computed: {
-    pathName() {
-      const name = this.$route.fullPath.slice(1)
-      return name.split('/')
+    ...mapState({ configID: (state) => state.configID }),
+    formItemList() {
+      return [
+        { text: '問題設計', link: 'FormCreate', query: this.configID, show: true },
+        {
+          text: '設定',
+          link: 'FormSettings',
+          query: this.configID,
+          show: this.configID.folderId || !Object.keys(this.configID).length ? false : true,
+        },
+        {
+          text: '發布',
+          link: 'FormRelease',
+          query: this.configID,
+          show: this.configID.folderId || !Object.keys(this.configID).length ? false : true,
+        },
+      ]
     },
   },
   methods: {
@@ -41,6 +52,9 @@ export default {
         configWrap.style.setProperty('--operateList', `${operateList + 1}px`)
       })
     },
+  },
+  beforeDestroy() {
+    localStorage.removeItem(`${process.env.VUE_APP_COOKIES}_Config`)
   },
 }
 </script>

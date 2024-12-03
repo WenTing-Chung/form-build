@@ -638,7 +638,6 @@ export default {
     getFormInfo(id) {
       this.axios.formInfo({ id }).then((res) => {
         const { code, data } = res.data
-        console.log(data)
         if (code === 200) {
           this.form = data
           this.form['id'] = id

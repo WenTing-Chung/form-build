@@ -62,6 +62,18 @@ export default {
   moveForm(form) {
     return service.post('/form/movement', form)
   },
+  settingInfo(id) {
+    return service.get('/form/configure', { params: id })
+  },
+  saveSetting(form) {
+    return service.put('/form/configure', form)
+  },
+  publishInfo(id) {
+    return service.get('/form/publish', { params: id })
+  },
+  createPublishLink(id) {
+    return service.post('/form/publish', id)
+  },
   /**
    * @帳號設定
    */
