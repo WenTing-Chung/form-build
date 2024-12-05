@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="31" height="31" viewBox="0 0 31 31">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #fff;
+      }
+    </style>
+  </defs>
+  <path id="形狀_1213" data-name="形狀 1213" class="cls-1" d="M23.85,31V23.85H31V31ZM11.92,31V23.85H19.07V31ZM0,31V23.85h7.15V31ZM23.85,18.48V11.329H31V18.48Zm-11.929,0V11.329H19.07V18.48ZM0,18.48V11.329h7.15V18.48ZM23.85,7.15V0H31V7.15Zm-11.929,0V0H19.07V7.15ZM0,7.15V0h7.15V7.15Z" transform="translate(0 0)"/>
+</svg>
