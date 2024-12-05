@@ -5,7 +5,7 @@
         <div class="overflow-hidden rounded-2xl bg-white shadow-[4px_10px_10px_0_rgba(200,200,213,0.5)]">
           <div class="relative">
             <template v-if="cardInfo.form_image">
-              <img :src="cardInfo.form_image['path']" class="w-full h-[200px]" alt="form-img" />
+              <img :src="cardInfo.form_image['path']" class="w-full h-[200px] object-cover" alt="form-img" />
             </template>
             <template v-else>
               <div class="flex items-center justify-center w-full h-[200px]">

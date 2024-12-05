@@ -7,11 +7,11 @@
             <font-awesome-icon icon="fa-solid fa-link" class="mr-5" />
             分享您的問卷
           </p>
-          <FormInput id="share-link" class="mb-3.5 py-3 px-4 disabled:bg-[#eee]" :input-value="`${locationLink}${code.share_code}`" disabled />
+          <FormInput id="share-link" class="mb-3.5 py-3 px-4 disabled:bg-[#eee]" :input-value="shareCode" disabled />
           <button
             class="py-3 px-9 rounded-md bg-[#52528c] text-white"
             type="button"
-            v-clipboard:copy="`${locationLink}${code.share_code}`"
+            v-clipboard:copy="`${shareCode}`"
             v-clipboard:success="copy_success"
             v-clipboard:error="copy_error"
           >
@@ -26,14 +26,14 @@
           <textarea
             id="share-code"
             class="mb-3.5 py-3 px-4 w-full border border-solid border-[#cbcccd] rounded-[5px] disabled:bg-[#eee]"
-            :value="share_code"
+            :value="embedCode"
             disabled
             style="min-height: 150px"
           />
           <button
             class="py-3 px-9 rounded-md bg-[#52528c] text-white"
             type="button"
-            v-clipboard:copy="share_code"
+            v-clipboard:copy="`${embedCode}`"
             v-clipboard:success="copy_success"
             v-clipboard:error="copy_error"
           >
@@ -63,7 +63,7 @@ export default {
   name: 'FormRelease',
   components: { FormInput },
   data: () => ({
-    locationLink: `${location.origin}/form-preview/`,
+    locationLink: `${location.origin}/form-render`,
     code: '',
   }),
   metaInfo: {
@@ -76,8 +76,12 @@ export default {
     }
   },
   computed: {
-    share_code() {
-      return `<iframe width="560" height="315" src="${location.origin}/form-preview/${this.code.share_code}" title="${process.env.VUE_APP_TITLE}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`
+    shareCode() {
+      const id = Number(this.$route.query.formId)
+      return `${this.locationLink}?formId=${id}&code=${this.code['share_code']}`
+    },
+    embedCode() {
+      return `<iframe width="560" height="315" src="${this.shareCode}" title="${process.env.VUE_APP_TITLE}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`
     },
   },
   methods: {

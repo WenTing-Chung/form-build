@@ -9,7 +9,7 @@ const service = axios.create({
   headers: { 'Content-type': 'application/json;charset=utf-8' },
 })
 const tokenWhiteList = []
-const fileApiList = []
+const fileApiList = ['/upload']
 
 service.interceptors.request.use(
   (config) => {

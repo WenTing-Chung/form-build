@@ -13,7 +13,7 @@ export default {
   components: { Loading },
   metaInfo: {
     // if no subcomponents specify a metaInfo.title, this title will be used
-    // title: 'Default Title',
+    // title: `${process.env.VUE_APP_TITLE}`,
     // all titles will be injected into this template
     titleTemplate: `%s - ${process.env.VUE_APP_TITLE}`,
   },

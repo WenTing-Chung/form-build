@@ -1,24 +1,24 @@
 import service from './config.js'
 
 export default {
-  /**@登入 */
+  /**@param { 登入 } */
   login(loginForm) {
     return service.post('/login', loginForm)
   },
-  /**@登出 */
+  /**@param { 登出 } */
   logout() {
     return service.post('/logout')
   },
-  /**@註冊 */
+  /**@param { 註冊 } */
   register(registerForm) {
     return service.post('/register', registerForm)
   },
-  /**@忘記密碼 */
+  /**@param { 忘記密碼 } */
   forget(forgetForm) {
     return service.post('/forgot', forgetForm)
   },
   /**
-   * @資料夾
+   * @param { 資料夾 }
    */
   folderList() {
     return service.get('/folder')
@@ -39,7 +39,7 @@ export default {
     return service.delete('/folder/delete', { params: id })
   },
   /**
-   * @表單
+   * @param { 表單 }
    */
   formList(searchForm) {
     return service.get('/form', { params: searchForm })
@@ -74,13 +74,20 @@ export default {
   createPublishLink(id) {
     return service.post('/form/publish', id)
   },
+  renderInfo(form) {
+    return service.get('/submit', { params: form })
+  },
   /**
-   * @帳號設定
+   * @param { 帳號設定 }
    */
   userProfile() {
     return service.get('/user/profile')
   },
   userProfile_modify(form) {
     return service.put('/user/profile', form)
+  },
+  /**@param { 檔案上傳 } */
+  upload(file) {
+    return service.post('/upload', file)
   },
 }

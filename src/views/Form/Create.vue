@@ -13,6 +13,16 @@
           <hr class="mt-4 mb-7 bg-[#888]" />
           <input v-model="form.description" class="w-full placeholder:text-[#555] focus:placeholder:text-[#ccc]" type="text" placeholder="表單說明" />
         </div>
+        <div class="mb-7 p-7 rounded-2xl bg-white">
+          <p class="mb-5 font-bold text-2xl">上傳縮圖</p>
+          <template v-if="Object.keys(filePresentation).length">
+            <img class="mb-5" :src="filePresentation.url" :alt="filePresentation.name" style="height: 100px" />
+          </template>
+          <label for="coverImage" class="py-2 px-7 border border-solid border-[#888] rounded-md cursor-pointer">
+            <input id="coverImage" class="hidden" type="file" accept="image/*" @change.prevent="changeCoverImg($event)" />
+            選擇檔案
+          </label>
+        </div>
         <template v-if="form['questions'].length">
           <draggable
             :list="form['questions']"
@@ -605,6 +615,7 @@ export default {
     dragging: false,
     dragAdd: false,
     active: null, // 當前點擊問題Index
+    filePresentation: {},
     dropdown: {
       inputType,
       mediaList,
@@ -722,6 +733,22 @@ export default {
         const i = mediaArr.findIndex((x) => x === kind)
         mediaArr.splice(i, 1)
       } else mediaArr.push(kind)
+    },
+    /**@修改縮圖 */
+    changeCoverImg(env) {
+      const formData = new FormData()
+      const file = env.target.files[0]
+      if (file) {
+        formData.append('file[]', file)
+        formData.append('belong', 'form')
+        this.axios.upload(formData).then((res) => {
+          const { code, data } = res.data
+          if (code === 200) {
+            this.filePresentation = data
+            this.form['form_image'] = data.url
+          }
+        })
+      }
     },
   },
 }

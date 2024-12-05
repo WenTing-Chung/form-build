@@ -88,7 +88,7 @@ const routes = [
   //   },
   // },
   {
-    path: '/form-render/:id',
+    path: '/form-render',
     name: 'FormRender',
     component: () => import('@/views/FormRender.vue'),
     meta: {
