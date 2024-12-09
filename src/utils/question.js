@@ -2,6 +2,7 @@ export default [
   {
     description: '', // 題目說明
     is_required: false,
+    option: null,
     other: {
       config: {
         bold: false, // 粗體
@@ -20,6 +21,7 @@ export default [
   {
     description: '', // 題目說明
     is_required: false,
+    option: null,
     other: {
       config: {
         bold: false, // 粗體
@@ -37,7 +39,7 @@ export default [
   {
     description: '', // 題目說明
     is_required: false,
-    option: [{ value: '選項1' }],
+    option: [{ value: '選項1', text: '選項1' }],
     other: {
       config: {
         bold: false, // 粗體
@@ -54,7 +56,7 @@ export default [
   {
     description: '', // 題目說明
     is_required: false,
-    option: [{ value: '選項1' }],
+    option: [{ value: '選項1', text: '選項1' }],
     other: {
       config: {
         bold: false, // 粗體
@@ -71,7 +73,7 @@ export default [
   {
     description: '', // 題目說明
     is_required: false,
-    option: [{ value: '選項1' }],
+    option: [{ value: '選項1', text: '選項1' }],
     other: {
       config: {
         bold: false, // 粗體
@@ -88,15 +90,16 @@ export default [
   {
     description: '', // 題目說明
     is_required: false,
+    option: null,
     other: {
       config: {
         bold: false, // 粗體
         italic: false, // 斜體
         underline: false, // 下底線
-        file: {
-          size: 1,
-          type: [],
-        },
+      },
+      file: {
+        size: 1,
+        type: [],
       },
       icon: 'icon_file.svg',
       text: '雲端上傳',
@@ -108,6 +111,7 @@ export default [
   {
     description: '', // 題目說明
     is_required: false,
+    option: null,
     other: {
       config: {
         bold: false, // 粗體
@@ -168,6 +172,7 @@ export default [
   {
     description: '', // 題目說明
     is_required: false,
+    option: null,
     other: {
       config: {
         bold: false, // 粗體
@@ -184,6 +189,7 @@ export default [
   {
     description: '', // 題目說明
     is_required: false,
+    option: null,
     other: {
       config: {
         bold: false, // 粗體

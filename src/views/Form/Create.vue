@@ -16,7 +16,10 @@
         <div class="mb-7 p-7 rounded-2xl bg-white">
           <p class="mb-5 font-bold text-2xl">上傳縮圖</p>
           <template v-if="Object.keys(filePresentation).length">
-            <img class="mb-5" :src="filePresentation.url" :alt="filePresentation.name" style="height: 100px" />
+            <img class="mb-5 h-[200px]" :src="filePresentation.url" :alt="filePresentation.name" />
+          </template>
+          <template v-else>
+            <img class="mb-5 h-[200px]" :src="form.form_image" />
           </template>
           <label for="coverImage" class="py-2 px-7 border border-solid border-[#888] rounded-md cursor-pointer">
             <input id="coverImage" class="hidden" type="file" accept="image/*" @change.prevent="changeCoverImg($event)" />
@@ -161,12 +164,14 @@
                             <span
                               class="text-[#888]"
                               role="button"
-                              @click.prevent="item['option'].push({ value: `選項${item['option'].length + 1}` })"
+                              @click.prevent="
+                                item['option'].push({ value: `選項${item['option'].length + 1}`, text: `選項${item['option'].length + 1}` })
+                              "
                             >
                               新增選項
                             </span>
                             或
-                            <span class="text-[#00a8ff]" role="button" @click.prevent="item['option'].push({ value: '其他...' })">
+                            <span class="text-[#00a8ff]" role="button" @click.prevent="item['option'].push({ value: '其他', text: '其他' })">
                               新增「其他」
                             </span>
                           </p>
@@ -193,12 +198,14 @@
                             <span
                               class="text-[#888]"
                               role="button"
-                              @click.prevent="item['option'].push({ value: `選項${item['option'].length + 1}` })"
+                              @click.prevent="
+                                item['option'].push({ value: `選項${item['option'].length + 1}`, text: `選項${item['option'].length + 1}` })
+                              "
                             >
                               新增選項
                             </span>
                             或
-                            <span class="text-[#00a8ff]" role="button" @click.prevent="item['option'].push({ value: '其他...' })">
+                            <span class="text-[#00a8ff]" role="button" @click.prevent="item['option'].push({ value: '其他', text: '其他' })">
                               新增「其他」
                             </span>
                           </p>
@@ -226,7 +233,13 @@
                           </li>
                         </ul>
                         <p v-if="active === i" class="flex items-center text-sm">
-                          <span class="text-[#888]" role="button" @click.prevent="item['option'].push({ value: `選項${item['option'].length + 1}` })">
+                          <span
+                            class="text-[#888]"
+                            role="button"
+                            @click.prevent="
+                              item['option'].push({ value: `選項${item['option'].length + 1}`, text: `選項${item['option'].length + 1}` })
+                            "
+                          >
                             新增選項
                           </span>
                         </p>
@@ -243,12 +256,12 @@
                                 v-for="(kind, j) in dropdown.mediaList"
                                 :key="`${kind.value}-${j}`"
                                 class="flex items-center cursor-pointer"
-                                @click.prevent="mediaQuestion(item.other.config.file['type'], kind.value)"
+                                @click.prevent="mediaQuestion(item.other.file['type'], kind.value)"
                               >
                                 <div
                                   :class="[
                                     'mr-3 w-5 h-5 border border-solid transition-all ease-in-out duration-500',
-                                    item.other.config.file['type'].includes(kind.value) ? 'mediaChecked' : 'border-[#888]',
+                                    item.other.file['type'].includes(kind.value) ? 'mediaChecked' : 'border-[#888]',
                                   ]"
                                 />
                                 <p>{{ kind.text }}</p>
@@ -262,8 +275,9 @@
                             <input
                               id="file-size"
                               class="mr-2.5 py-1.5 px-2.5 w-20 border-b border-solid border-[#888] bg-[#eee] text-center"
-                              v-model.number="item.other.config.file['size']"
+                              v-model.number="item.other.file['size']"
                               type="number"
+                              :min="1"
                               :max="5"
                             />
                             <label for="file-size">MB <span class="text-[#aaa]">*檔案大小上限為 5 MB</span></label>
@@ -276,7 +290,7 @@
                           <label for="upload" class="mr-5 py-2 px-7 border border-solid border-[#888] rounded-md text-[#888]" type="button">
                             新增檔案
                           </label>
-                          <span class="text-[#888]">大小限制 {{ item.other.config.file['size'] }} MB</span>
+                          <span class="text-[#888]">大小限制 {{ item.other.file['size'] }} MB</span>
                         </div>
                       </template>
                     </template>
