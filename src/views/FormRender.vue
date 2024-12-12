@@ -13,9 +13,9 @@
           <p class="mb-4 font-bold text-4xl">{{ form_data['name'] }}</p>
           <p class="text-base">{{ form_data['description'] }}</p>
         </div>
-        <ul>
+        <ul class="pl-10 list-decimal">
           <ValidationObserver ref="renderForm">
-            <li v-for="item in form_data['questions']" :key="item['form_question_id']">
+            <li v-for="(item, index) in form_data['questions']" :key="item['form_question_id']">
               <div class="py-5 px-8">
                 <p class="mb-1.5 text-lg">
                   <span v-if="item['is_required']" class="mr-1 text-[#c81d25]">*</span>
@@ -35,7 +35,7 @@
                     <div slot-scope="{ valid, errors }">
                       <div>
                         <input
-                          v-model="form[item['title']]"
+                          v-model="form.answers[index][item['title']]"
                           :class="['pb-0.5 w-4/5 border-b border-solid bg-[#f9f9fb]', errors[0] ? 'border-danger' : 'border-[#cbcccd]']"
                           :maxlength="item.other.config['max']"
                           :type="item.other.config['type']"
@@ -52,7 +52,7 @@
                     <div slot-scope="{ valid, errors }">
                       <div>
                         <textarea
-                          v-model="form[item['title']]"
+                          v-model="form.answers[index][item['title']]"
                           :class="[
                             'w-full border-b border-solid bg-[#f9f9fb] resize-none focus-visible:outline-none',
                             errors[0] ? 'border-danger' : 'border-[#cbcccd]',
@@ -77,7 +77,7 @@
                       <div v-for="(radio, i) in item['option']" :key="i" class="[&:not(:last-child)]:mb-3">
                         <label :for="`${item['title']}-${radio.text}-${i}`" :class="['w-full text-left text-base']">
                           <input
-                            v-model="form[item['title']]"
+                            v-model="form.answers[index][item['title']]"
                             :id="`${item['title']}-${radio.text}-${i}`"
                             :name="item['title']"
                             :value="radio.value"
@@ -102,7 +102,7 @@
                       <div v-for="(checkbox, i) in item['option']" :key="i" class="[&:not(:last-child)]:mb-3">
                         <label :for="`${item['title']}-${checkbox.text}-${i}`" :class="['py-2 pl-10 cursor-pointer question-checkbox']">
                           <input
-                            v-model="form[item['title']]"
+                            v-model="form.answers[index][item['title']]"
                             :id="`${item['title']}-${checkbox.text}-${i}`"
                             :name="item['title']"
                             :value="checkbox.value"
@@ -122,9 +122,10 @@
                     <div slot-scope="{ valid, errors }">
                       <div class="relative overflow-hidden w-1/2 h-10 border border-solid border-[#cbcccd] rounded-md">
                         <select
+                          v-model="form.answers[index][item['title']]"
+                          class="px-5 w-full h-full outline-none border-0 select"
                           :name="`question-${item['title']}`"
                           :id="`question-${item['title']}`"
-                          class="px-5 w-full h-full outline-none border-0 select"
                           :state="errors[0] ? false : valid ? true : null"
                         >
                           <option value="" selected disabled>請選擇</option>
@@ -137,26 +138,96 @@
                   </ValidationProvider>
                 </template>
                 <template v-else-if="item['type'] === 'file'">
-                  <ValidationProvider :name="item['title']" :rules="{ required: item['is_required'], size: 100 }">
+                  <ValidationProvider :name="item['title']" :rules="{ required: item['is_required'] }">
                     <div slot-scope="{ valid, errors }">
-                      <label
-                        :for="`${item['title']}-file`"
-                        class="py-2 px-7 border border-solid border-[#888] hover:border-[#acaccc] rounded-md hover:bg-[#acaccc]/30 text-[#1c77c3] cursor-pointer"
-                      >
-                        <input
-                          class="hidden"
-                          type="file"
-                          :id="`${item['title']}-file`"
-                          :accept="formatFileType(item.other.file['type'])"
-                          :state="errors[0] ? false : valid ? true : null"
-                          @change.prevent="uploadFile($event, item['title'])"
-                        />
-                        <font-awesome-icon icon="fa-solid fa-arrow-up-from-bracket" class="mr-3" />
-                        <span>新增檔案</span>
-                      </label>
+                      <div class="flex items-center">
+                        <label
+                          :for="`${item['title']}-file`"
+                          class="mr-8 py-2 px-7 border border-solid border-[#888] hover:border-[#acaccc] rounded-md hover:bg-[#acaccc]/30 text-[#1c77c3] cursor-pointer"
+                        >
+                          <input
+                            class="hidden"
+                            type="file"
+                            :id="`${item['title']}-file`"
+                            :accept="formatFileType(item.other.file['type'])"
+                            :state="errors[0] ? false : valid ? true : null"
+                            @change.prevent="uploadFile($event, index, item)"
+                          />
+                          <font-awesome-icon icon="fa-solid fa-arrow-up-from-bracket" class="mr-3" />
+                          <span>新增檔案</span>
+                        </label>
+                        <small v-if="Object.keys(fileTemporaryInfo).length">{{ fileTemporaryInfo.name }}<br />{{ fileTemporaryInfo.size }} KB</small>
+                      </div>
+                      <small v-if="fileTemporaryInfo.size > item.other.file['size'] * 1024" class="text-danger">
+                        檔案大小不可超過 {{ item.other.file['size'] }} MB
+                      </small>
+                    </div>
+                  </ValidationProvider>
+                </template>
+                <template v-else-if="item['type'] === 'range'">
+                  <ValidationProvider :name="item['title']" :rules="{ required: item['is_required'] }">
+                    <div slot-scope="{ valid, errors }">
+                      <div class="flex overflow-x-auto items-center justify-between p-5 min-w-full">
+                        <p class="text-nowrap">{{ item.other.config['min_text'] }}</p>
+                        <div class="flex flex-1 justify-around mx-10">
+                          <div v-for="num in item.other.config['max']" :key="num" class="mx-2.5 min-w-10">
+                            <label :for="`${item['title']}-${num}`" class="block text-left text-base cursor-pointer">
+                              <input
+                                v-model="form.answers[index][item['title']]"
+                                :id="`${item['title']}-${num}`"
+                                :name="item['title']"
+                                :value="num"
+                                :state="errors[0] ? false : valid ? true : null"
+                                class="hidden"
+                                type="radio"
+                              />
+                              <p
+                                class="pb-10 text-center before:bottom-0 before:left-1/2 before:block before:w-5 before:h-5 before:border before:border-solid before:border-[#d8d7e3] before:rounded-full before:bg-white before:content-[''] before:-translate-x-1/2 radio-control"
+                              >
+                                {{ num }}
+                              </p>
+                            </label>
+                          </div>
+                        </div>
+                        <p class="text-nowrap">{{ item.other.config['max_text'] }}</p>
+                      </div>
                       <small :class="{ 'text-danger': errors[0] }">{{ errors[0] }}</small>
                     </div>
                   </ValidationProvider>
+                </template>
+                <template v-else-if="item['type'] === 'single'">
+                  <div class="overflow-x-auto whitespace-nowrap">
+                    <div class="table min-w-full table-auto border-spacing-y-2">
+                      <div class="table-row">
+                        <div class="table-cell p-1 w-20 h-12" />
+                        <div
+                          v-for="(column_item, i) in item.option['column']"
+                          :key="i"
+                          class="table-cell p-1 w-20 h-12 text-center leading-[48px] whitespace-nowrap"
+                        >
+                          {{ column_item.value }}
+                        </div>
+                      </div>
+                      <div v-for="(list, i) in Object.keys(item.option['Ar'])" :key="`${list}-${i}`" class="table-row bg-[#e0e0e0]/30">
+                        <div class="table-cell p-1 min-w-20 h-12 whitespace-nowrap leading-[48px]">{{ list }}</div>
+                        <div v-for="(column, j) in item.option['Ar'][list]" :key="`${column}-${j}`" class="table-cell p-1">
+                          <label :for="`${list}-${column}`" class="p-1 block cursor-pointer">
+                            <input
+                              v-model="form.answers[index][item['title']][list]"
+                              class="hidden"
+                              type="radio"
+                              :id="`${list}-${column}`"
+                              :name="`${list}`"
+                              :value="column"
+                            />
+                            <p
+                              class="relative mx-auto py-2 pl-10 before:absolute before:rounded-full before:top-full before:left-1/2 before:block before:w-5 before:h-5 before:border before:border-solid before:border-[#d8d7e3] before:bg-white before:content-[''] before:-translate-x-1/2 before:-translate-y-1/2 radio-control"
+                            />
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </template>
               </div>
             </li>
@@ -172,15 +243,26 @@ export default {
   name: 'FormRender',
   data: () => ({
     form_data: {}, // 問題資料
-    form: {}, // 送出答案
-    search: {},
+    form: {
+      // 送出答案
+      form_id: null,
+      answers: [],
+    },
+    fileTemporaryInfo: {},
   }),
-  created() {
+  mounted() {
     if (this.$route.query) {
       const form_id = Number(this.$route.query['formId'])
       const share_code = this.$route.query['code']
       this.formRenderInfo(form_id, share_code)
     }
+  },
+  computed: {
+    rangeWidth: function () {
+      return function (num) {
+        return { width: `calc(100% / ${num})` }
+      }
+    },
   },
   methods: {
     /**@取得表單資訊 */
@@ -189,10 +271,21 @@ export default {
         const { code, data } = res.data
         if (code === 200) {
           this.form_data = data
+          this.form['form_id'] = form_id
           document.title = `${data['name']} - ${process.env.VUE_APP_TITLE}`
           this.form_data['questions'].forEach((x) => {
-            if (x['type'] === 'checkbox') this.form[x['title']] = []
-            else this.form[x['title']] = ''
+            let obj = {}
+            obj['form_question_id'] = x['form_question_id']
+            if (x['type'] === 'checkbox') obj[x['title']] = []
+            else if (x['type'] === 'file') obj[x['title']] = null
+            else if (x['type'] === 'single') {
+              let ans = {}
+              Object.keys(x.option['Ar']).forEach((item) => {
+                ans[item] = null
+              })
+              obj[x['title']] = ans
+            } else obj[x['title']] = ''
+            this.form['answers'].push(obj)
           })
         }
       })
@@ -215,8 +308,19 @@ export default {
       return str
     },
     /**@檔案上傳設定key值 */
-    uploadFile(env, key) {
-      console.log(env, key)
+    uploadFile(env, i, info) {
+      const formData = new FormData()
+      const file = env.target.files[0]
+      const sizeFormat = Math.ceil(file.size / 1024)
+      this.fileTemporaryInfo = { size: sizeFormat, name: file.name }
+      if (file) {
+        formData.append('file[]', file)
+        formData.append('belong', 'answer')
+        this.axios.upload(formData).then((res) => {
+          const { code, data } = res.data
+          if (code === 200) this.form.answers[i][info['title']] = data.url
+        })
+      }
     },
   },
 }
