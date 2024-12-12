@@ -727,6 +727,7 @@ export default {
     },
     /**@新增表單_OK */
     createForm() {
+      this.formFormat(this.form)
       this.axios.createdForm(this.form).then((res) => {
         if (res.data.code === 200) {
           sessionStorage.removeItem('temporary')
@@ -737,8 +738,24 @@ export default {
     },
     /**@修改表單_OK */
     modifyForm() {
+      this.formFormat(this.form)
       this.axios.modifyForm(this.form).then((res) => {
         if (res.data.code === 200) this.getFormInfo(this.form.id)
+      })
+    },
+    /**@調整格式 */
+    formFormat(form) {
+      form['questions'].forEach((q) => {
+        if (q['type'] === 'single' || q['type'] === 'multiple') {
+          let obj = {}
+          q.option['list'].forEach((l) => {
+            obj[l.value] = []
+            q.option['column'].forEach((c) => {
+              obj[l.value].push(c.value)
+            })
+          })
+          q.option['Ar'] = obj
+        }
       })
     },
     /**@雲端上傳問題限制類型 */
