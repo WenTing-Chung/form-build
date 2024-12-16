@@ -9,7 +9,7 @@
         </button>
         <ul
           v-if="is_bar"
-          class="absolute top-[calc(100%_+_8px)] left-1/2 p-2 min-w-[calc(100%_+_20px)] rounded-[10px] bg-white shadow-[0px_3px_6px_0_rgba(0,0,0,0.16)] -translate-x-1/2 text-lg"
+          class="absolute top-[calc(100%_+_8px)] left-1/2 p-2 min-w-[calc(100%_+_20px)] rounded-[10px] bg-white shadow-[0px_3px_6px_0_rgba(0,0,0,0.16)] -translate-x-1/2 text-lg z-10"
         >
           <li @click.prevent="is_bar = false">
             <router-link

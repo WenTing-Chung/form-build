@@ -13,67 +13,64 @@
           <p class="mb-4 font-bold text-4xl">{{ form_data['name'] }}</p>
           <p class="text-base">{{ form_data['description'] }}</p>
         </div>
-        <ul class="pl-10 list-decimal">
+        <ul class="mb-5 pl-10 list-decimal">
           <ValidationObserver ref="renderForm">
             <li v-for="(item, index) in form_data['questions']" :key="item['form_question_id']">
-              <div class="py-5 px-8">
-                <p class="mb-1.5 text-lg">
-                  <span v-if="item['is_required']" class="mr-1 text-[#c81d25]">*</span>
-                  <span
-                    :class="{
-                      'font-bold': item.other.config['bold'],
-                      italic: item.other.config['italic'],
-                      underline: item.other.config['underline'],
-                    }"
-                  >
-                    {{ item['title'] }}
-                  </span>
-                </p>
-                <p class="mb-4">{{ item['description'] }}</p>
+              <div class="p-5 lg:px-6">
                 <template v-if="item['type'] === 'text'">
                   <ValidationProvider :name="item['title']" :rules="{ required: item['is_required'] }">
-                    <div slot-scope="{ valid, errors }">
+                    <div
+                      :class="['p-2 rounded-md border border-solid', errors[0] ? 'border-[#ff3a3a]' : 'border-[#f9f9fb]']"
+                      slot-scope="{ valid, errors }"
+                    >
+                      <QuestionTitle :info="item" />
                       <div>
                         <input
                           v-model="form.answers[index][item['title']]"
-                          :class="['pb-0.5 w-4/5 border-b border-solid bg-[#f9f9fb]', errors[0] ? 'border-danger' : 'border-[#cbcccd]']"
+                          :class="['pb-0.5 w-4/5 border-b border-solid bg-[#f9f9fb]', errors[0] ? 'border-[#ff3a3a]' : 'border-[#cbcccd]']"
                           :maxlength="item.other.config['max']"
                           :type="item.other.config['type']"
                           :state="errors[0] ? false : valid ? true : null"
                           placeholder="您的回答"
                         />
                       </div>
-                      <small :class="{ 'text-danger': errors[0] }">{{ errors[0] }}</small>
+                      <small :class="{ 'text-[#ff3a3a]': errors[0] }">{{ errors[0] }}</small>
                     </div>
                   </ValidationProvider>
                 </template>
                 <template v-else-if="item['type'] === 'textarea'">
                   <ValidationProvider :name="item['title']" :rules="{ required: item['is_required'] }">
-                    <div slot-scope="{ valid, errors }">
-                      <div>
-                        <textarea
-                          v-model="form.answers[index][item['title']]"
-                          :class="[
-                            'w-full border-b border-solid bg-[#f9f9fb] resize-none focus-visible:outline-none',
-                            errors[0] ? 'border-danger' : 'border-[#cbcccd]',
-                          ]"
-                          :id="`${item['title']}-${item.other['id']}`"
-                          :maxlength="item.other.config['max']"
-                          :state="errors[0] ? false : valid ? true : null"
-                          :style="{ height: item.other['style'] }"
-                          placeholder="您的回答"
-                          @keydown="textareaCount(item.other['id'])"
-                          @keyup="textareaCount(item.other['id'])"
-                          @keyup.enter="textareaCount(item.other['id'])"
-                        />
-                      </div>
-                      <small :class="{ 'text-danger': errors[0] }">{{ errors[0] }}</small>
+                    <div
+                      :class="['p-2 rounded-md border border-solid', errors[0] ? 'border-[#ff3a3a]' : 'border-[#f9f9fb]']"
+                      slot-scope="{ valid, errors }"
+                    >
+                      <QuestionTitle :info="item" />
+                      <textarea
+                        v-model="form.answers[index][item['title']]"
+                        :class="[
+                          'w-full border-b border-solid bg-[#f9f9fb] resize-none focus-visible:outline-none',
+                          errors[0] ? 'border-[#ff3a3a]' : 'border-[#cbcccd]',
+                        ]"
+                        :id="`${item['title']}-${item.other['id']}`"
+                        :maxlength="item.other.config['max']"
+                        :state="errors[0] ? false : valid ? true : null"
+                        :style="{ height: item.other['style'] }"
+                        placeholder="您的回答"
+                        @keydown="textareaCount(item.other['id'])"
+                        @keyup="textareaCount(item.other['id'])"
+                        @keyup.enter="textareaCount(item.other['id'])"
+                      />
+                      <small :class="{ 'text-[#ff3a3a]': errors[0] }">{{ errors[0] }}</small>
                     </div>
                   </ValidationProvider>
                 </template>
                 <template v-else-if="item['type'] === 'radio'">
                   <ValidationProvider :name="item['title']" :rules="{ required: item['is_required'] }">
-                    <div slot-scope="{ valid, errors }">
+                    <div
+                      :class="['p-2 rounded-md border border-solid', errors[0] ? 'border-[#ff3a3a]' : 'border-[#f9f9fb]']"
+                      slot-scope="{ valid, errors }"
+                    >
+                      <QuestionTitle :info="item" />
                       <div v-for="(radio, i) in item['option']" :key="i" class="[&:not(:last-child)]:mb-3">
                         <label :for="`${item['title']}-${radio.text}-${i}`" :class="['w-full text-left text-base']">
                           <input
@@ -92,13 +89,17 @@
                           </span>
                         </label>
                       </div>
-                      <small :class="{ 'text-danger': errors[0] }">{{ errors[0] }}</small>
+                      <small :class="{ 'text-[#ff3a3a]': errors[0] }">{{ errors[0] }}</small>
                     </div>
                   </ValidationProvider>
                 </template>
                 <template v-else-if="item['type'] === 'checkbox'">
                   <ValidationProvider :name="item['title']" :rules="{ required: item['is_required'] }">
-                    <div slot-scope="{ valid, errors }">
+                    <div
+                      :class="['p-2 rounded-md border border-solid', errors[0] ? 'border-[#ff3a3a]' : 'border-[#f9f9fb]']"
+                      slot-scope="{ valid, errors }"
+                    >
+                      <QuestionTitle :info="item" />
                       <div v-for="(checkbox, i) in item['option']" :key="i" class="[&:not(:last-child)]:mb-3">
                         <label :for="`${item['title']}-${checkbox.text}-${i}`" :class="['py-2 pl-10 cursor-pointer question-checkbox']">
                           <input
@@ -113,13 +114,17 @@
                           <span class="relative">{{ checkbox.text }}</span>
                         </label>
                       </div>
-                      <small :class="{ 'text-danger': errors[0] }">{{ errors[0] }}</small>
+                      <small :class="{ 'text-[#ff3a3a]': errors[0] }">{{ errors[0] }}</small>
                     </div>
                   </ValidationProvider>
                 </template>
                 <template v-else-if="item['type'] === 'select'">
                   <ValidationProvider :name="item['title']" :rules="{ required: item['is_required'] }">
-                    <div slot-scope="{ valid, errors }">
+                    <div
+                      :class="['p-2 rounded-md border border-solid', errors[0] ? 'border-[#ff3a3a]' : 'border-[#f9f9fb]']"
+                      slot-scope="{ valid, errors }"
+                    >
+                      <QuestionTitle :info="item" />
                       <div class="relative overflow-hidden w-1/2 h-10 border border-solid border-[#cbcccd] rounded-md">
                         <select
                           v-model="form.answers[index][item['title']]"
@@ -133,13 +138,20 @@
                         </select>
                         <font-awesome-icon icon="fa-solid fa-angle-down" class="absolute top-1/2 right-2.5 -translate-y-1/2" />
                       </div>
-                      <small :class="{ 'text-danger': errors[0] }">{{ errors[0] }}</small>
+                      <small :class="{ 'text-[#ff3a3a]': errors[0] }">{{ errors[0] }}</small>
                     </div>
                   </ValidationProvider>
                 </template>
                 <template v-else-if="item['type'] === 'file'">
                   <ValidationProvider :name="item['title']" :rules="{ required: item['is_required'] }">
-                    <div slot-scope="{ valid, errors }">
+                    <div
+                      :class="[
+                        'p-2 rounded-md border border-solid',
+                        errors[0] && !form.answers[index][item['title']] ? 'border-[#ff3a3a]' : 'border-[#f9f9fb]',
+                      ]"
+                      slot-scope="{ valid, errors }"
+                    >
+                      <QuestionTitle :info="item" />
                       <div class="flex items-center">
                         <label
                           :for="`${item['title']}-file`"
@@ -156,8 +168,15 @@
                           <font-awesome-icon icon="fa-solid fa-arrow-up-from-bracket" class="mr-3" />
                           <span>新增檔案</span>
                         </label>
-                        <small v-if="Object.keys(fileTemporaryInfo).length">{{ fileTemporaryInfo.name }}<br />{{ fileTemporaryInfo.size }} KB</small>
+                        <small v-if="Object.keys(fileTemporaryInfo).length">
+                          {{ fileTemporaryInfo.name }}<br />{{ fileTemporaryInfo.size }} KB
+                        </small>
                       </div>
+                      <small
+                        v-if="errors[0] && !form.answers[index][item['title']]"
+                        :class="{ 'text-[#ff3a3a]': errors[0] && !form.answers[index][item['title']] }"
+                        >{{ errors[0] }}</small
+                      >
                       <small v-if="fileTemporaryInfo.size > item.other.file['size'] * 1024" class="text-danger">
                         檔案大小不可超過 {{ item.other.file['size'] }} MB
                       </small>
@@ -166,7 +185,11 @@
                 </template>
                 <template v-else-if="item['type'] === 'range'">
                   <ValidationProvider :name="item['title']" :rules="{ required: item['is_required'] }">
-                    <div slot-scope="{ valid, errors }">
+                    <div
+                      :class="['p-2 rounded-md border border-solid', errors[0] ? 'border-[#ff3a3a]' : 'border-[#f9f9fb]']"
+                      slot-scope="{ valid, errors }"
+                    >
+                      <QuestionTitle :info="item" />
                       <div class="flex overflow-x-auto items-center justify-between p-5 min-w-full">
                         <p class="text-nowrap">{{ item.other.config['min_text'] }}</p>
                         <div class="flex flex-1 justify-around mx-10">
@@ -191,56 +214,75 @@
                         </div>
                         <p class="text-nowrap">{{ item.other.config['max_text'] }}</p>
                       </div>
-                      <small :class="{ 'text-danger': errors[0] }">{{ errors[0] }}</small>
+                      <small :class="{ 'text-[#ff3a3a]': errors[0] }">{{ errors[0] }}</small>
                     </div>
                   </ValidationProvider>
                 </template>
                 <template v-else-if="item['type'] === 'single'">
-                  <div class="overflow-x-auto whitespace-nowrap">
-                    <div class="table min-w-full table-auto border-spacing-y-2">
-                      <div class="table-row">
-                        <div class="table-cell p-1 w-20 h-12" />
-                        <div
-                          v-for="(column_item, i) in item.option['column']"
-                          :key="i"
-                          class="table-cell p-1 w-20 h-12 text-center leading-[48px] whitespace-nowrap"
-                        >
-                          {{ column_item.value }}
+                  <div
+                    :class="[
+                      'p-2 rounded-md border border-solid',
+                      singleErrorText['status'] && singleErrorText['isRequired'] ? 'border-[#ff3a3a]' : 'border-[#f9f9fb]',
+                    ]"
+                  >
+                    <QuestionTitle :info="item" />
+                    <div class="overflow-x-auto whitespace-nowrap">
+                      <div class="table min-w-full table-auto border-spacing-y-2">
+                        <div class="table-row">
+                          <div class="table-cell p-1 w-20 h-12" />
+                          <div
+                            v-for="(column_item, i) in item.option['column']"
+                            :key="i"
+                            class="table-cell p-1 w-20 h-12 text-center leading-[48px] whitespace-nowrap"
+                          >
+                            {{ column_item.value }}
+                          </div>
                         </div>
-                      </div>
-                      <div v-for="(list, i) in Object.keys(item.option['Ar'])" :key="`${list}-${i}`" class="table-row bg-[#e0e0e0]/30">
-                        <div class="table-cell p-1 min-w-20 h-12 whitespace-nowrap leading-[48px]">{{ list }}</div>
-                        <div v-for="(column, j) in item.option['Ar'][list]" :key="`${column}-${j}`" class="table-cell p-1">
-                          <label :for="`${list}-${column}`" class="p-1 block cursor-pointer">
-                            <input
-                              v-model="form.answers[index][item['title']][list]"
-                              class="hidden"
-                              type="radio"
-                              :id="`${list}-${column}`"
-                              :name="`${list}`"
-                              :value="column"
-                            />
-                            <p
-                              class="relative mx-auto py-2 pl-10 before:absolute before:rounded-full before:top-full before:left-1/2 before:block before:w-5 before:h-5 before:border before:border-solid before:border-[#d8d7e3] before:bg-white before:content-[''] before:-translate-x-1/2 before:-translate-y-1/2 radio-control"
-                            />
-                          </label>
+                        <div v-for="(list, i) in Object.keys(item.option['Ar'])" :key="`${list}-${i}`" class="table-row bg-[#e0e0e0]/30">
+                          <div class="table-cell p-1 min-w-20 h-12 whitespace-nowrap leading-[48px]">{{ list }}</div>
+                          <div v-for="(column, j) in item.option['Ar'][list]" :key="`${column}-${j}`" class="table-cell p-1">
+                            <label :for="`${list}-${column}`" class="p-1 block cursor-pointer">
+                              <input
+                                v-model="form.answers[index][item['title']][list]"
+                                class="hidden"
+                                type="radio"
+                                :id="`${list}-${column}`"
+                                :name="`${list}`"
+                                :value="column"
+                                @change="singleChange(item['is_required'], form.answers[index][item['title']])"
+                              />
+                              <p
+                                class="relative mx-auto py-2 pl-10 before:absolute before:rounded-full before:top-full before:left-1/2 before:block before:w-5 before:h-5 before:border before:border-solid before:border-[#d8d7e3] before:bg-white before:content-[''] before:-translate-x-1/2 before:-translate-y-1/2 radio-control"
+                              />
+                            </label>
+                          </div>
                         </div>
                       </div>
                     </div>
+                    <small v-if="singleErrorText['status']" class="text-[#ff3a3a]">{{ singleErrorText['text'] }}</small>
                   </div>
                 </template>
               </div>
             </li>
           </ValidationObserver>
         </ul>
+
+        <div class="flex justify-center">
+          <button class="py-3 px-10 rounded-full bg-[#54588c] hover:bg-[#3a3b72] text-white font-bold text-2xl" type="button" @click.prevent="submit">
+            送出
+          </button>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import QuestionTitle from '@/components/QuestionTitle.vue'
+
 export default {
   name: 'FormRender',
+  components: { QuestionTitle },
   data: () => ({
     form_data: {}, // 問題資料
     form: {
@@ -249,6 +291,11 @@ export default {
       answers: [],
     },
     fileTemporaryInfo: {},
+    singleErrorText: {
+      status: false,
+      isRequired: true,
+      text: '在這個問題中，你必須針對每一列選取一個回覆',
+    },
   }),
   mounted() {
     if (this.$route.query) {
@@ -312,7 +359,7 @@ export default {
       const formData = new FormData()
       const file = env.target.files[0]
       const sizeFormat = Math.ceil(file.size / 1024)
-      this.fileTemporaryInfo = { size: sizeFormat, name: file.name }
+      this.fileTemporaryInfo = { file, name: file.name, size: sizeFormat }
       if (file) {
         formData.append('file[]', file)
         formData.append('belong', 'answer')
@@ -320,6 +367,26 @@ export default {
           const { code, data } = res.data
           if (code === 200) this.form.answers[i][info['title']] = data.url
         })
+      }
+    },
+    submit() {
+      this.$refs.renderForm.validate().then((success) => {
+        if (!success) {
+          this.$toasted.error('登入資料未填寫完全', { position: 'top-center' })
+          return
+        }
+      })
+    },
+    singleChange(isRequired, question) {
+      this.singleErrorText['isRequired'] = isRequired
+      if (isRequired) {
+        console.log(Object.values(question))
+        for (let i = 0; i < Object.values(question).length; i++) {
+          if (Object.values(question)[i] === null) {
+            this.singleErrorText['status'] = true
+            break
+          } else this.singleErrorText['status'] = false
+        }
       }
     },
   },
