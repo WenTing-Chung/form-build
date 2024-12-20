@@ -149,7 +149,12 @@
                       <ul class="text-sm">
                         <li v-for="(opt, index) in item['option']" :key="index" class="flex items-center justify-between mb-3">
                           <div class="mr-3.5 w-4 h-4 border border-solid border-[#888] rounded-full bg-white" />
-                          <input class="flex-1 py-0.5 border-b border-solid border-transparent focus:border-[#888]" v-model="opt.value" type="text" />
+                          <input
+                            class="flex-1 py-0.5 border-b border-solid border-transparent focus:border-[#888]"
+                            v-model="opt.value"
+                            type="text"
+                            @input="opt.text = opt.value"
+                          />
                           <font-awesome-icon
                             v-if="active === i"
                             icon="fa-solid fa-xmark"
@@ -183,7 +188,12 @@
                       <ul class="text-sm">
                         <li v-for="(opt, index) in item['option']" :key="index" class="flex items-center justify-between mb-3">
                           <div class="mr-3.5 w-4 h-4 border border-solid border-[#888] bg-white" />
-                          <input class="flex-1 py-0.5 border-b border-solid border-transparent focus:border-[#888]" v-model="opt.value" type="text" />
+                          <input
+                            class="flex-1 py-0.5 border-b border-solid border-transparent focus:border-[#888]"
+                            v-model="opt.value"
+                            type="text"
+                            @input="opt.text = opt.value"
+                          />
                           <font-awesome-icon
                             v-if="active === i"
                             icon="fa-solid fa-xmark"
@@ -222,6 +232,7 @@
                               class="flex-1 py-0.5 border-b border-solid border-transparent focus:border-[#888]"
                               v-model="opt.value"
                               type="text"
+                              @input="opt.text = opt.value"
                             />
                             <font-awesome-icon
                               v-if="active === i"
@@ -410,7 +421,7 @@
                         </div>
                       </template>
                       <template v-else>
-                        <div class="table w-full">
+                        <div class="table w-full border-spacing-y-1">
                           <div class="table-row">
                             <div class="table-cell p-1 min-w-[20%] h-12" />
                             <div
@@ -421,7 +432,7 @@
                               {{ column_item.value }}
                             </div>
                           </div>
-                          <div v-for="(list_item, i) in item.option['list']" :key="i" class="table-row">
+                          <div v-for="(list_item, i) in item.option['list']" :key="i" class="table-row bg-[#e0e0e0]/30">
                             <div class="table-cell p-1 min-w-[20%] h-12 leading-[48px] whitespace-nowrap">{{ list_item.value }}</div>
                             <div
                               v-for="(column_item, j) in item.option['column'].length"
@@ -429,7 +440,7 @@
                               class="table-cell p-1 h-12 align-middle"
                               :data-column="column_item.value"
                             >
-                              <div class="w-5 h-5 mx-auto border border-solid border-[#888] rounded-full bg-[#f9f9fb]" />
+                              <div class="w-5 h-5 mx-auto border border-solid border-[#888] rounded-full bg-white" />
                             </div>
                           </div>
                         </div>
@@ -496,7 +507,7 @@
                         </div>
                       </template>
                       <template v-else>
-                        <div class="table w-full">
+                        <div class="table w-full border-spacing-y-1">
                           <div class="table-row">
                             <div class="table-cell p-1 min-w-[20%] h-12" />
                             <div
@@ -507,7 +518,7 @@
                               {{ column_item.value }}
                             </div>
                           </div>
-                          <div v-for="(list_item, i) in item.option['list']" :key="i" class="table-row">
+                          <div v-for="(list_item, i) in item.option['list']" :key="i" class="table-row bg-[#e0e0e0]/30">
                             <div class="table-cell p-1 min-w-[20%] h-12 leading-[48px] whitespace-nowrap">{{ list_item.value }}</div>
                             <div
                               v-for="(column_item, j) in item.option['column'].length"
@@ -515,7 +526,7 @@
                               class="table-cell p-1 h-12 align-middle"
                               :data-column="column_item.value"
                             >
-                              <div class="w-5 h-5 mx-auto border border-solid border-[#888] rounded-sm bg-[#f9f9fb]" />
+                              <div class="w-5 h-5 mx-auto border border-solid border-[#888] rounded-sm bg-white" />
                             </div>
                           </div>
                         </div>
@@ -638,9 +649,6 @@ export default {
       inputType_to_text,
     },
   }),
-  metaInfo: {
-    title: '表單問題設計',
-  },
   created() {
     if (this.$route.query.formId) {
       const id = Number(this.$route.query.formId)
