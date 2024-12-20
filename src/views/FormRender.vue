@@ -13,10 +13,10 @@
           <p class="mb-4 font-bold text-4xl">{{ form_data['name'] }}</p>
           <p class="text-base">{{ form_data['description'] }}</p>
         </div>
-        <ul class="mb-5 pl-10 list-decimal">
+        <ul class="mb-5 pl-8 lg:pl-10 list-decimal">
           <ValidationObserver ref="renderForm">
             <li v-for="(item, index) in form_data['questions']" :key="item['form_question_id']">
-              <div class="p-5 lg:px-6">
+              <div class="p-2.5 lg:py-3 lg:px-6">
                 <template v-if="item['type'] === 'text'">
                   <ValidationProvider :name="item['title']" :rules="{ required: item['is_required'] }">
                     <div
@@ -26,7 +26,7 @@
                       <QuestionTitle :info="item" />
                       <div>
                         <input
-                          v-model="form.answers[index][item['title']]"
+                          v-model="form.answers[index].answer['value']"
                           :class="['pb-0.5 w-4/5 border-b border-solid bg-[#f9f9fb]', errors[0] ? 'border-[#ff3a3a]' : 'border-[#cbcccd]']"
                           :maxlength="item.other.config['max']"
                           :type="item.other.config['type']"
@@ -46,7 +46,7 @@
                     >
                       <QuestionTitle :info="item" />
                       <textarea
-                        v-model="form.answers[index][item['title']]"
+                        v-model="form.answers[index].answer['value']"
                         :class="[
                           'w-full border-b border-solid bg-[#f9f9fb] resize-none focus-visible:outline-none',
                           errors[0] ? 'border-[#ff3a3a]' : 'border-[#cbcccd]',
@@ -74,7 +74,7 @@
                       <div v-for="(radio, i) in item['option']" :key="i" class="[&:not(:last-child)]:mb-3">
                         <label :for="`${item['title']}-${radio.text}-${i}`" :class="['w-full text-left text-base']">
                           <input
-                            v-model="form.answers[index][item['title']]"
+                            v-model="form.answers[index].answer['value']"
                             :id="`${item['title']}-${radio.text}-${i}`"
                             :name="item['title']"
                             :value="radio.value"
@@ -103,7 +103,7 @@
                       <div v-for="(checkbox, i) in item['option']" :key="i" class="[&:not(:last-child)]:mb-3">
                         <label :for="`${item['title']}-${checkbox.text}-${i}`" :class="['py-2 pl-10 cursor-pointer question-checkbox']">
                           <input
-                            v-model="form.answers[index][item['title']]"
+                            v-model="form.answers[index].answer['value']"
                             :id="`${item['title']}-${checkbox.text}-${i}`"
                             :name="item['title']"
                             :value="checkbox.value"
@@ -111,7 +111,7 @@
                             class="checkbox-checked"
                             type="checkbox"
                           />
-                          <span class="relative">{{ checkbox.text }}</span>
+                          <span class="relative before:-translate-y-1/2 after:-translate-y-1/2">{{ checkbox.text }}</span>
                         </label>
                       </div>
                       <small :class="{ 'text-[#ff3a3a]': errors[0] }">{{ errors[0] }}</small>
@@ -125,9 +125,9 @@
                       slot-scope="{ valid, errors }"
                     >
                       <QuestionTitle :info="item" />
-                      <div class="relative overflow-hidden w-1/2 h-10 border border-solid border-[#cbcccd] rounded-md">
+                      <div class="relative overflow-hidden w-full lg:w-1/2 h-10 border border-solid border-[#cbcccd] rounded-md">
                         <select
-                          v-model="form.answers[index][item['title']]"
+                          v-model="form.answers[index].answer['value']"
                           class="px-5 w-full h-full outline-none border-0 select"
                           :name="`question-${item['title']}`"
                           :id="`question-${item['title']}`"
@@ -163,7 +163,7 @@
                             :id="`${item['title']}-file`"
                             :accept="formatFileType(item.other.file['type'])"
                             :state="errors[0] ? false : valid ? true : null"
-                            @change.prevent="uploadFile($event, index, item)"
+                            @change.prevent="uploadFile($event, index)"
                           />
                           <font-awesome-icon icon="fa-solid fa-arrow-up-from-bracket" class="mr-3" />
                           <span>新增檔案</span>
@@ -196,7 +196,7 @@
                           <div v-for="num in item.other.config['max']" :key="num" class="mx-2.5 min-w-10">
                             <label :for="`${item['title']}-${num}`" class="block text-left text-base cursor-pointer">
                               <input
-                                v-model="form.answers[index][item['title']]"
+                                v-model="form.answers[index].answer['value']"
                                 :id="`${item['title']}-${num}`"
                                 :name="item['title']"
                                 :value="num"
@@ -222,7 +222,7 @@
                   <div
                     :class="[
                       'p-2 rounded-md border border-solid',
-                      singleErrorText['status'] && singleErrorText['isRequired'] ? 'border-[#ff3a3a]' : 'border-[#f9f9fb]',
+                      form.answers[index].errorStatus['status'] && item['is_required'] ? 'border-[#ff3a3a]' : 'border-[#f9f9fb]',
                     ]"
                   >
                     <QuestionTitle :info="item" />
@@ -241,26 +241,130 @@
                         <div v-for="(list, i) in Object.keys(item.option['Ar'])" :key="`${list}-${i}`" class="table-row bg-[#e0e0e0]/30">
                           <div class="table-cell p-1 min-w-20 h-12 whitespace-nowrap leading-[48px]">{{ list }}</div>
                           <div v-for="(column, j) in item.option['Ar'][list]" :key="`${column}-${j}`" class="table-cell p-1">
-                            <label :for="`${list}-${column}`" class="p-1 block cursor-pointer">
+                            <label :for="`single_${list}-${column}`" class="p-1 block cursor-pointer">
                               <input
-                                v-model="form.answers[index][item['title']][list]"
+                                v-model="form.answers[index].answer.value[list]"
                                 class="hidden"
                                 type="radio"
-                                :id="`${list}-${column}`"
+                                :id="`single_${list}-${column}`"
                                 :name="`${list}`"
                                 :value="column"
-                                @change="singleChange(item['is_required'], form.answers[index][item['title']])"
+                                @change="arrayChange(item['is_required'], form.answers[index], item['title'])"
                               />
                               <p
-                                class="relative mx-auto py-2 pl-10 before:absolute before:rounded-full before:top-full before:left-1/2 before:block before:w-5 before:h-5 before:border before:border-solid before:border-[#d8d7e3] before:bg-white before:content-[''] before:-translate-x-1/2 before:-translate-y-1/2 radio-control"
-                              />
+                                class="relative mx-auto py-2 before:absolute before:rounded-full before:top-1/2 before:left-1/2 before:block before:w-5 before:h-5 before:border before:border-solid before:border-[#d8d7e3] before:bg-white before:content-[''] before:-translate-x-1/2 before:-translate-y-1/2 radio-control"
+                              >
+                                &emsp;
+                              </p>
                             </label>
                           </div>
                         </div>
                       </div>
                     </div>
-                    <small v-if="singleErrorText['status']" class="text-[#ff3a3a]">{{ singleErrorText['text'] }}</small>
+                    <small v-if="form.answers[index].errorStatus['status'] && item['is_required']" class="text-[#ff3a3a]">
+                      {{ form.answers[index].errorStatus['errorText'] }}
+                    </small>
                   </div>
+                </template>
+                <template v-else-if="item['type'] === 'multiple'">
+                  <div
+                    :class="[
+                      'p-2 rounded-md border border-solid',
+                      form.answers[index].errorStatus['status'] && item['is_required'] ? 'border-[#ff3a3a]' : 'border-[#f9f9fb]',
+                    ]"
+                  >
+                    <QuestionTitle :info="item" />
+                    <div class="overflow-x-auto whitespace-nowrap">
+                      <div class="table min-w-full table-auto border-spacing-y-2">
+                        <div class="table-row">
+                          <div class="table-cell p-1 w-20 h-12" />
+                          <div
+                            v-for="(column_item, i) in item.option['column']"
+                            :key="i"
+                            class="table-cell p-1 w-20 h-12 text-center leading-[48px] whitespace-nowrap"
+                          >
+                            {{ column_item.value }}
+                          </div>
+                        </div>
+                        <div v-for="(list, i) in Object.keys(item.option['Ar'])" :key="`${list}-${i}`" class="table-row bg-[#e0e0e0]/30">
+                          <div class="table-cell p-1 min-w-20 h-12 whitespace-nowrap leading-[48px]">{{ list }}</div>
+                          <div v-for="(column, j) in item.option['Ar'][list]" :key="`${column}-${j}`" class="table-cell p-1">
+                            <label :for="`multiple_${list}-${column}`" class="p-1 block cursor-pointer question-checkbox">
+                              <input
+                                v-model="form.answers[index].answer.value[list]"
+                                class="checkbox-checked"
+                                type="checkbox"
+                                :id="`multiple_${list}-${column}`"
+                                :name="`${list}`"
+                                :value="column"
+                                @change="arrayChange(item['is_required'], form.answers[index], item['title'])"
+                              />
+                              <p
+                                class="relative py-2.5 before:left-1/2 before:-translate-x-1/2 before:-translate-y-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 checkbox-control"
+                              >
+                                &emsp;
+                              </p>
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <small v-if="form.answers[index].errorStatus['status'] && item['is_required']" class="text-[#ff3a3a]">
+                      {{ form.answers[index].errorStatus['errorText'] }}
+                    </small>
+                  </div>
+                </template>
+                <template v-else-if="item['type'] === 'date'">
+                  <ValidationProvider :name="item['title']" :rules="{ required: item['is_required'] }">
+                    <div
+                      :class="['p-2 rounded-md border border-solid', errors[0] ? 'border-[#ff3a3a]' : 'border-[#f9f9fb]']"
+                      slot-scope="{ valid, errors }"
+                    >
+                      <QuestionTitle :info="item" />
+                      <div>
+                        <date-picker class="mr-3" v-model="form.answers[index].answer['value']" value-type="format" type="date">
+                          <template #input>
+                            <input
+                              :class="[
+                                'py-1 px-3 w-full border-b border-solid bg-[#fafaf9] placeholder:text-[#888] text-lg',
+                                errors[0] ? 'border-[#ff3a3a]' : 'border-[#cbcccd]',
+                              ]"
+                              :value="form.answers[index].answer['value']"
+                              :state="errors[0] ? false : valid ? true : null"
+                              placeholder="年 / 月 / 日"
+                            />
+                          </template>
+                        </date-picker>
+                      </div>
+                      <small :class="{ 'text-[#ff3a3a]': errors[0] }">{{ errors[0] }}</small>
+                    </div>
+                  </ValidationProvider>
+                </template>
+                <template v-else-if="item['type'] === 'time'">
+                  <ValidationProvider :name="item['title']" :rules="{ required: item['is_required'] }">
+                    <div
+                      :class="['p-2 rounded-md border border-solid', errors[0] ? 'border-[#ff3a3a]' : 'border-[#f9f9fb]']"
+                      slot-scope="{ valid, errors }"
+                    >
+                      <QuestionTitle :info="item" />
+                      <div>
+                        <date-picker class="mr-3" v-model="form.answers[index].answer['value']" format="hh:mm a" value-type="format" type="time">
+                          <template #input>
+                            <input
+                              :class="[
+                                'py-1 px-3 w-full border-b border-solid bg-[#fafaf9] placeholder:text-[#888] text-lg',
+                                errors[0] ? 'border-[#ff3a3a]' : 'border-[#cbcccd]',
+                              ]"
+                              :value="form.answers[index].answer['value']"
+                              :state="errors[0] ? false : valid ? true : null"
+                              placeholder="時間"
+                            />
+                          </template>
+                        </date-picker>
+                      </div>
+                      <small :class="{ 'text-[#ff3a3a]': errors[0] }">{{ errors[0] }}</small>
+                    </div>
+                  </ValidationProvider>
                 </template>
               </div>
             </li>
@@ -291,11 +395,6 @@ export default {
       answers: [],
     },
     fileTemporaryInfo: {},
-    singleErrorText: {
-      status: false,
-      isRequired: true,
-      text: '在這個問題中，你必須針對每一列選取一個回覆',
-    },
   }),
   mounted() {
     if (this.$route.query) {
@@ -304,34 +403,50 @@ export default {
       this.formRenderInfo(form_id, share_code)
     }
   },
-  computed: {
-    rangeWidth: function () {
-      return function (num) {
-        return { width: `calc(100% / ${num})` }
-      }
-    },
-  },
+  // computed: {
+  //   rangeWidth: function () {
+  //     return function (num) {
+  //       return { width: `calc(100% / ${num})` }
+  //     }
+  //   },
+  // },
   methods: {
-    /**@取得表單資訊 */
+    /**@取得表單資訊
+     * @param {Number} form_id 表單ID
+     * @param {String} share_code 表單隨機碼
+     */
     formRenderInfo(form_id, share_code) {
       this.axios.renderInfo({ form_id, share_code }).then((res) => {
         const { code, data } = res.data
         if (code === 200) {
           this.form_data = data
           this.form['form_id'] = form_id
-          document.title = `${data['name']} - ${process.env.VUE_APP_TITLE}`
+          document.title = data['name']
           this.form_data['questions'].forEach((x) => {
             let obj = {}
+            obj['questionsType'] = x['type']
             obj['form_question_id'] = x['form_question_id']
-            if (x['type'] === 'checkbox') obj[x['title']] = []
-            else if (x['type'] === 'file') obj[x['title']] = null
+            if (x['type'] === 'checkbox') obj['answer'] = { text: x['title'], value: [] }
+            else if (['file', 'date', 'time'].includes(x['type'])) obj['answer'] = { text: x['title'], value: null }
             else if (x['type'] === 'single') {
               let ans = {}
-              Object.keys(x.option['Ar']).forEach((item) => {
-                ans[item] = null
-              })
-              obj[x['title']] = ans
-            } else obj[x['title']] = ''
+              Object.keys(x.option['Ar']).forEach((item) => (ans[item] = null))
+              obj['errorStatus'] = {
+                isRequired: x['is_required'],
+                status: false,
+                errorText: '在這個問題中，您必須針對每一列選取一個回覆',
+              }
+              obj['answer'] = { text: x['title'], value: ans }
+            } else if (x['type'] === 'multiple') {
+              let ans = {}
+              Object.keys(x.option['Ar']).forEach((item) => (ans[item] = []))
+              obj['errorStatus'] = {
+                isRequired: x['is_required'],
+                status: false,
+                errorText: '在這個問題中，您必須針對每一列選取一個或多個回覆',
+              }
+              obj['answer'] = { text: x['title'], value: ans }
+            } else obj['answer'] = { text: x['title'], value: '' }
             this.form['answers'].push(obj)
           })
         }
@@ -345,7 +460,9 @@ export default {
       const linesCount = lines.length - (navigator.userAgent.indexOf('MSIE') !== -1)
       q.other['style'] = `${linesCount * 30 + 20}px`
     },
-    /**@檔案上傳限制類型拼組 */
+    /**@檔案上傳限制類型拼組
+     * @param {Array} val 檔案類型限制
+     */
     formatFileType(val) {
       let str = ''
       val.forEach((x, i) => {
@@ -354,8 +471,11 @@ export default {
       })
       return str
     },
-    /**@檔案上傳設定key值 */
-    uploadFile(env, i, info) {
+    /**@檔案上傳設定key值
+     * @param {Object} env 上傳檔案事件
+     * @param {Number} i 問題索引值
+     */
+    uploadFile(env, i) {
       const formData = new FormData()
       const file = env.target.files[0]
       const sizeFormat = Math.ceil(file.size / 1024)
@@ -365,36 +485,50 @@ export default {
         formData.append('belong', 'answer')
         this.axios.upload(formData).then((res) => {
           const { code, data } = res.data
-          if (code === 200) this.form.answers[i][info['title']] = data.url
+          if (code === 200) this.form.answers[i].answer['value'] = data.url
         })
       }
     },
+    /**@陣列radio_checkbox樣式判斷
+     * @param {Boolean} isRequired 是否必填
+     * @param {Object} info 問題資訊
+     */
+    arrayChange(isRequired, info) {
+      if (isRequired) {
+        for (let i = 0; i < Object.values(info.answer['value']).length; i++) {
+          if (info['questionsType'] === 'single') {
+            if (Object.values(info.answer['value'])[i] === null) {
+              info.errorStatus['status'] = true
+              break
+            } else info.errorStatus['status'] = false
+          } else if (info['questionsType'] === 'multiple') {
+            if (Object.values(info.answer['value'])[i].length === 0) {
+              info.errorStatus['status'] = true
+              break
+            } else info.errorStatus['status'] = false
+          }
+        }
+      }
+    },
+    /**@表單送出 */
     submit() {
       this.$refs.renderForm.validate().then((success) => {
+        this.form['answers'].forEach((q) => {
+          if (['single', 'multiple'].includes(q.questionsType)) this.arrayChange(q.errorStatus['isRequired'], q)
+        })
         if (!success) {
           this.$toasted.error('登入資料未填寫完全', { position: 'top-center' })
           return
         }
       })
     },
-    singleChange(isRequired, question) {
-      this.singleErrorText['isRequired'] = isRequired
-      if (isRequired) {
-        console.log(Object.values(question))
-        for (let i = 0; i < Object.values(question).length; i++) {
-          if (Object.values(question)[i] === null) {
-            this.singleErrorText['status'] = true
-            break
-          } else this.singleErrorText['status'] = false
-        }
-      }
-    },
   },
 }
 </script>
 
 <style lang="scss" scoped>
-.question-checkbox span {
+.question-checkbox span,
+.question-checkbox p {
   &::before,
   &::after {
     position: absolute;
@@ -404,7 +538,6 @@ export default {
     height: 20px;
     border-radius: 4px;
     content: '';
-    transform: translateY(-50%);
   }
   &::before {
     border: 1px solid #cbcccd;
@@ -414,7 +547,8 @@ export default {
 input[type='checkbox'] {
   display: none;
 }
-input[class='checkbox-checked']:checked + span {
+input[class='checkbox-checked']:checked + span,
+input[class='checkbox-checked']:checked + p {
   &::before {
     border-color: #52528c;
     background-color: #52528c;
