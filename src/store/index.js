@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import meta from './meta'
 
 Vue.use(Vuex)
 
@@ -59,6 +60,8 @@ export default new Vuex.Store({
       commit('LOGIN_STATUS', status)
     },
   },
+  modules: {
+    meta,
+  },
   getters: {},
-  modules: {},
 })

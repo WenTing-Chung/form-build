@@ -66,9 +66,6 @@ export default {
     locationLink: `${location.origin}/form-render`,
     code: '',
   }),
-  metaInfo: {
-    title: '表單發布',
-  },
   created() {
     if (this.$route.query.formId) {
       const id = Number(this.$route.query.formId)

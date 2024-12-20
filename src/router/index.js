@@ -15,6 +15,9 @@ const routes = [
         component: () => import('@/views/NotLogged/Login.vue'),
         meta: {
           requireAuth: false,
+          metaInfo: {
+            title: '登入',
+          },
         },
       },
       {
@@ -23,6 +26,9 @@ const routes = [
         component: () => import('@/views/NotLogged/Register.vue'),
         meta: {
           requireAuth: false,
+          metaInfo: {
+            title: '註冊',
+          },
         },
       },
     ],
@@ -37,6 +43,9 @@ const routes = [
         component: () => import('@/views/GeneralList.vue'),
         meta: {
           requireAuth: true,
+          metaInfo: {
+            title: '表單清單',
+          },
         },
       },
       {
@@ -45,6 +54,9 @@ const routes = [
         component: () => import('@/views/Setting.vue'),
         meta: {
           requireAuth: true,
+          metaInfo: {
+            title: '帳號設定',
+          },
         },
       },
       {
@@ -57,6 +69,9 @@ const routes = [
             component: () => import('@/views/Form/Create.vue'),
             meta: {
               requireAuth: true,
+              metaInfo: {
+                title: '表單問題設計',
+              },
             },
           },
           {
@@ -65,6 +80,9 @@ const routes = [
             component: () => import('@/views/Form/Settings.vue'),
             meta: {
               requireAuth: true,
+              metaInfo: {
+                title: '表單設定',
+              },
             },
           },
           {
@@ -73,6 +91,9 @@ const routes = [
             component: () => import('@/views/Form/Release.vue'),
             meta: {
               requireAuth: true,
+              metaInfo: {
+                title: '表單發布',
+              },
             },
           },
         ],
@@ -93,6 +114,9 @@ const routes = [
     component: () => import('@/views/FormRender.vue'),
     meta: {
       requireAuth: false,
+      metaInfo: {
+        title: '黑快馬表單',
+      },
     },
   },
   {
@@ -112,6 +136,7 @@ const router = new VueRouter({
 })
 
 router.beforeEach(async (to, from, next) => {
+  if (to.meta.metaInfo) store.commit('meta/META_INFO', to.meta.metaInfo)
   if (to.meta.requireAuth) {
     const token = Vue.$cookies.get(`${process.env.VUE_APP_COOKIES}_Token`) || undefined
     if (token) next()

@@ -157,9 +157,6 @@ export default {
     is_show_pwd: false,
     is_show_checkPwd: false,
   }),
-  metaInfo: {
-    title: '帳號設定',
-  },
   created() {
     this.userInfo()
   },

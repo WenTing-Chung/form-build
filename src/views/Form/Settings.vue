@@ -178,7 +178,7 @@ export default {
       is_required_default: false,
       progress_bar: false, // 是否顯示進度條
       start_time: null,
-      submit_message: '我們已經收到你回覆的表單',
+      submit_message: '我們已經收到您回覆的表單',
       time_enable_status: false,
       question_number: false,
     },
@@ -188,9 +188,6 @@ export default {
       submit_message: '',
     },
   }),
-  metaInfo: {
-    title: '表單設定',
-  },
   created() {
     if (this.$route.query.formId) {
       const id = Number(this.$route.query.formId)
@@ -210,7 +207,7 @@ export default {
         const { code, data } = res.data
         if (code === 200) {
           this.form = data
-          this.form['submit_message'] = '我們已經收到你回覆的表單'
+          if (!this.form['submit_message']) this.form['submit_message'] = '我們已經收到您回覆的表單'
         }
       })
     },

@@ -1,7 +1,7 @@
 <template>
   <header :class="['relative', { 'shadow-[0px_3px_6px_0_rgba(0,0,0,0.16)]': !pathName.includes('form') }]">
     <div class="relative flex justify-between py-6 px-8 w-full bg-white">
-      <router-link :to="{ name: 'GeneralList' }" class="text-[#52528c] font-bold text-2xl">表單設計</router-link>
+      <router-link :to="{ name: 'GeneralList' }" class="text-[#52528c] font-bold text-2xl">黑快馬表單</router-link>
       <div class="relative">
         <button class="text-[#333] text-2xl" type="button" @click.prevent="is_bar = !is_bar">
           {{ userInfo.name }}

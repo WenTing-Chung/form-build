@@ -336,9 +336,6 @@ export default {
     // -------
     delList: [],
   }),
-  metaInfo: {
-    title: '表單清單',
-  },
   mounted() {
     this.is_containerHeight()
     document.addEventListener('click', this.operateList)

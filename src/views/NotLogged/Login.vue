@@ -57,7 +57,7 @@
       </ValidationObserver>
       <div class="mb-5">
         <input id="is-remember" v-model="is_remember" type="checkbox" class="hidden" />
-        <label for="is-remember" class="pl-8 checkbox-control">記住帳號</label>
+        <label for="is-remember" class="pl-8 before:-translate-y-1/2 after:-translate-y-1/2 checkbox-control">記住帳號</label>
       </div>
       <button
         class="mb-10 py-3 w-full rounded-full bg-[#54588c] hover:bg-[#3a3b72] text-white font-bold text-2xl"
@@ -87,9 +87,6 @@ export default {
     cookies_IsRemember: `${process.env.VUE_APP_COOKIES}_IsRemember`,
     cookies_Account: `${process.env.VUE_APP_COOKIES}_Account`,
   }),
-  metaInfo: {
-    title: '登入',
-  },
   created() {
     this.rememberStatus()
   },

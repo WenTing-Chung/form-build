@@ -140,9 +140,6 @@ export default {
     is_show_pwd: false,
     is_show_checkPwd: false,
   }),
-  metaInfo: {
-    title: '註冊',
-  },
   methods: {
     /**@註冊 */
     register() {

@@ -63,5 +63,18 @@ Vue.prototype.$EventBus = new Vue()
 new Vue({
   router,
   store,
+  metaInfo() {
+    const meta = this.$store.state.meta.metaInfo
+    return {
+      title: this.$route.name === 'FormRender' ? `${meta.title}` : `${meta.title} - ${process.env.VUE_APP_TITLE}`,
+      meta: [
+        { name: 'keywords', content: meta.keywords },
+        {
+          property: 'og:title',
+          content: this.$route.name === 'FormRender' ? `${process.env.VUE_APP_TITLE}` : `${meta.title} - ${process.env.VUE_APP_TITLE}`,
+        },
+      ],
+    }
+  },
   render: (h) => h(App),
 }).$mount('#app')
