@@ -219,7 +219,7 @@ export default {
     saveSetting() {
       this.form['id'] = this.$route.query['formId']
       this.axios.saveSetting(this.form).then((res) => {
-        if (res.dat.code === 200) this.getSettingInfo()
+        if (res.data.code === 200) this.getSettingInfo()
       })
     },
   },

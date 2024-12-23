@@ -36,5 +36,6 @@ input[type='radio']:checked + .radio-control::before {
 }
 
 .gradient-mix-image {
-  background: url('../image/bg.png'), linear-gradient(45deg, #54588c, #fff);
+  background: url('../image/bg.png'), linear-gradient(45deg, #54588c, #fff) center no-repeat;
+  background-size: cover;
 }

@@ -77,6 +77,9 @@ export default {
   renderInfo(form) {
     return service.get('/submit', { params: form })
   },
+  submitQuestionnaire(form) {
+    return service.post('/submit', form)
+  },
   /**
    * @param { 帳號設定 }
    */
