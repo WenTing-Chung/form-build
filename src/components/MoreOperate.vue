@@ -56,7 +56,7 @@ export default {
     },
     formOperateEvent(val) {
       if (['log', 'move', 'del'].includes(val)) this.$store.dispatch('isModal', true)
-      this.$emit('formOperateEvent', { id: this.location.id, name: this.location.name, type: val })
+      this.$emit('formOperateEvent', { id: this.location.id, folder_id: this.location.folder_id, name: this.location.name, type: val })
     },
   },
   beforeDestroy() {

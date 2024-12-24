@@ -1,5 +1,19 @@
 <template>
   <div class="flex flex-row-reverse w-full h-full bg-[#eee]">
+    <Modal v-if="modal" @closeModal="questionUploadImage = { id: null, questionName: '' }">
+      <p class="mb-5 text-[#54588c] font-bold text-3xl">{{ questionUploadImage['questionName'] }}</p>
+      <p class="mb-3 text-lg">問題上傳圖片</p>
+      <label for="coverImage" class="py-2 px-7 border border-solid border-[#888] rounded-md cursor-pointer">
+        <input
+          id="coverImage"
+          class="hidden"
+          type="file"
+          accept="image/*"
+          @change.prevent="changeCoverImg($event, 'question', questionUploadImage['id'])"
+        />
+        選擇檔案
+      </label>
+    </Modal>
     <FormCreateBar :add="dragAdd" @drag_add_question="drag_add_question" />
     <div class="overflow-y-auto flex-1 py-7 scroll-style" @drop="handleDrop($event)" @dragover.prevent>
       <div class="mb-9 mx-auto w-10/12">
@@ -16,13 +30,29 @@
         <div class="mb-7 p-7 rounded-2xl bg-white">
           <p class="mb-5 font-bold text-2xl">上傳縮圖</p>
           <template v-if="Object.keys(filePresentation).length">
-            <img class="mb-5 h-[200px]" :src="filePresentation.url" :alt="filePresentation.name" />
+            <div class="flex">
+              <img :class="{ 'mr-3 mb-5 h-[200px]': form['form_image'] }" :src="filePresentation.url" :alt="filePresentation.name" />
+              <font-awesome-icon
+                class="w-7 h-7 border border-solid border-[#ccc] rounded-full cursor-pointer"
+                icon="fa-solid fa-xmark"
+                size="xl"
+                @click.prevent=";(filePresentation = {}), (form['form_image'] = null)"
+              />
+            </div>
           </template>
-          <template v-else>
-            <img class="mb-5 h-[200px]" :src="form.form_image" />
+          <template v-else-if="form['form_image']">
+            <div class="flex">
+              <img :class="{ 'mr-3 mb-5 h-[200px]': form['form_image'] }" :src="form['form_image']" />
+              <font-awesome-icon
+                class="w-7 h-7 border border-solid border-[#ccc] rounded-full cursor-pointer"
+                icon="fa-solid fa-xmark"
+                size="xl"
+                @click.prevent="form['form_image'] = null"
+              />
+            </div>
           </template>
           <label for="coverImage" class="py-2 px-7 border border-solid border-[#888] rounded-md cursor-pointer">
-            <input id="coverImage" class="hidden" type="file" accept="image/*" @change.prevent="changeCoverImg($event)" />
+            <input id="coverImage" class="hidden" type="file" accept="image/*" @change.prevent="changeCoverImg($event, 'form')" />
             選擇檔案
           </label>
         </div>
@@ -111,6 +141,11 @@
                     v-model="item['description']"
                     type="text"
                     placeholder="說明"
+                  />
+                  <img
+                    v-if="item.other.config['image']"
+                    :class="{ 'mb-5 w-[250px]': item.other.config['image'] }"
+                    :src="item.other.config['image']"
                   />
                   <div>
                     <!-- 單行文字 ↓ -->
@@ -553,13 +588,14 @@
                     <hr class="mt-5 border-[#c7c7c7]" />
                     <div class="flex justify-end py-1">
                       <div class="flex">
-                        <!-- <div
-                            class="flex items-center justify-center mr-1.5 w-10 h-10 rounded-md text-[#888] hover:bg-[#eee] hover:text-[#555]"
-                            role="button"
-                            title="圖片"
-                          >
-                            <font-awesome-icon icon="fa-regular fa-image" size="xl" />
-                          </div> -->
+                        <div
+                          class="flex items-center justify-center mr-1.5 w-10 h-10 rounded-md text-[#888] hover:bg-[#eee] hover:text-[#555]"
+                          role="button"
+                          title="圖片"
+                          @click.prevent=";(questionUploadImage = { id: i, questionName: item['title'] }), $store.dispatch('isModal', true)"
+                        >
+                          <font-awesome-icon icon="fa-regular fa-image" size="xl" />
+                        </div>
                         <div
                           class="flex items-center justify-center mr-1.5 w-10 h-10 rounded-md text-[#888] hover:bg-[#eee] hover:text-[#555]"
                           role="button"
@@ -598,6 +634,12 @@
         </template>
       </div>
       <div class="flex justify-center mx-auto w-10/12">
+        <!-- <button
+          class="mr-5 py-2.5 px-12 border border-solid border-[#cbcccd] hover:border-[#e4e4f1] rounded-full bg-white hover:bg-[#e4e4f1] text-[#777] font-bold text-2xl"
+          type="button"
+        >
+          預覽
+        </button> -->
         <button
           v-if="$route.query.formId"
           class="py-2.5 px-12 border border-solid border-[#52528c] rounded-full bg-[#52528c] hover:bg-[#424281] text-white font-bold text-2xl"
@@ -626,10 +668,11 @@ import question from '@/utils/question'
 import { inputType, inputType_to_text, mediaList } from '@/utils/select'
 import FormCreateBar from '@/components/FormCreateBar.vue'
 import SwitchElement from '@/components/Switch.vue'
+import Modal from '@/components/Modal.vue'
 
 export default {
   name: 'FormCreate',
-  components: { draggable, FormCreateBar, SwitchElement },
+  components: { draggable, FormCreateBar, SwitchElement, Modal },
   data: () => ({
     form: {
       name: '',
@@ -641,6 +684,10 @@ export default {
     dragAdd: false,
     active: null, // 當前點擊問題Index
     filePresentation: {},
+    questionUploadImage: {
+      id: null,
+      questionName: '',
+    },
     dropdown: {
       inputType,
       mediaList,
@@ -656,7 +703,10 @@ export default {
     } else if (this.$route.query.folderId) this.form.folder_id = Number(this.$route.query.folderId)
   },
   computed: {
-    ...mapState({ temporaryData: (state) => state.temporaryData }),
+    ...mapState({
+      temporaryData: (state) => state.temporaryData,
+      modal: (state) => state.isModal,
+    }),
     dragOptions() {
       return {
         animation: 200,
@@ -773,18 +823,23 @@ export default {
         mediaArr.splice(i, 1)
       } else mediaArr.push(kind)
     },
-    /**@修改縮圖 */
-    changeCoverImg(env) {
+    /**@修改縮圖_問題圖片 */
+    changeCoverImg(env, kind, i = null) {
       const formData = new FormData()
       const file = env.target.files[0]
       if (file) {
         formData.append('file[]', file)
-        formData.append('belong', 'form')
+        formData.append('belong', kind)
         this.axios.upload(formData).then((res) => {
           const { code, data } = res.data
           if (code === 200) {
-            this.filePresentation = data
-            this.form['form_image'] = data.url
+            if (kind === 'form') {
+              this.filePresentation = data
+              this.form['form_image'] = data.url
+            } else if (kind === 'question') {
+              this.form.questions[i].other.config['image'] = data.url
+              this.$store.dispatch('isModal', false)
+            }
           }
         })
       }

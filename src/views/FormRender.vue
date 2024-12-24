@@ -1,14 +1,22 @@
 <template>
   <section>
-    <template v-if="form_data['is_expired']"></template>
-    <template v-else>
-      <Modal v-if="modal" :close-btn="false" class="text-center">
-        <p class="mb-5 text-[#54588c] font-bold text-3xl">{{ form_data['name'] }}</p>
-        <p class="mb-10 text-lg">{{ finishText }}</p>
-        <p class="font-bold">感謝您撥空填寫</p>
-      </Modal>
-      <div class="flex-1 h-screen bg-[#d8d7e3] overflow-y-auto scroll-style">
-        <div class="mx-auto pt-10 xl:pt-24 px-5 pb-10 xl:pb-20 w-full md:w-4/5 xl:w-[60%]">
+    <Modal v-if="modal" :close-btn="false" class="text-center">
+      <p class="mb-5 text-[#54588c] font-bold text-3xl">{{ form_data['name'] }}</p>
+      <p class="mb-10 text-lg">{{ finishText }}</p>
+      <p class="font-bold">感謝您撥空填寫</p>
+    </Modal>
+    <div class="flex-1 h-screen bg-[#d8d7e3] overflow-y-auto scroll-style">
+      <div
+        :class="['mx-auto pt-10 xl:pt-24 px-5 pb-10 xl:pb-20 w-full md:w-4/5 xl:w-[60%]', { 'flex items-center h-screen': form_data['is_expired'] }]"
+      >
+        <template v-if="form_data['is_expired']">
+          <div
+            class="relative py-10 px-5 w-full overflow-hidden rounded-2xl bg-[#f9f9fb] shadow-[0_3px_6px_0_rgb(82,82,140)] before:absolute before:top-0 before:left-0 before:block before:w-full before:h-2.5 before:bg-[#52528c] before:content-['']"
+          >
+            <p class="font-bold text-center text-3xl">此表單已超過可填寫時間</p>
+          </div>
+        </template>
+        <template v-else>
           <template v-if="form_data.form_image && Object.keys(form_data.form_image).length">
             <div class="overflow-hidden mb-6 rounded-[10px]">
               <img class="w-full h-56 object-cover" :src="form_data.form_image['path']" alt="top-of-page" />
@@ -392,9 +400,9 @@
               </button>
             </div>
           </div>
-        </div>
+        </template>
       </div>
-    </template>
+    </div>
   </section>
 </template>
 

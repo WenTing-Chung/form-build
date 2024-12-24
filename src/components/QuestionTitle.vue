@@ -13,6 +13,7 @@
       </span>
     </p>
     <p class="mb-4">{{ info['description'] }}</p>
+    <img v-if="info.other.config['image']" :class="{ 'mb-5 w-[min(100%,_500px)]': info.other.config['image'] }" :src="info.other.config['image']" />
   </div>
 </template>
 

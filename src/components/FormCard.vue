@@ -121,7 +121,13 @@ export default {
   methods: {
     /**@點擊3個點操作列_向上傳id */
     child_actionBar(e) {
-      this.$emit('child_actionBar', { id: this.cardInfo.id, name: this.cardInfo.name, x: e.clientX, y: e.clientY })
+      this.$emit('child_actionBar', {
+        id: this.cardInfo.id,
+        name: this.cardInfo.name,
+        folder_id: this.cardInfo.folder_id,
+        x: e.clientX,
+        y: e.clientY,
+      })
     },
     /**@星號 */
     child_collect() {
