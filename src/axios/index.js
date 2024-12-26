@@ -80,6 +80,9 @@ export default {
   submitQuestionnaire(form) {
     return service.post('/submit', form)
   },
+  statistics(id) {
+    return service.get('/form/record', { params: id })
+  },
   /**
    * @param { 帳號設定 }
    */

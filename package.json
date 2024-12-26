@@ -8,6 +8,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@ckeditor/ckeditor5-vue2": "^3.0.1",
     "@fortawesome/fontawesome-svg-core": "^6.5.2",
     "@fortawesome/free-brands-svg-icons": "^6.5.2",
     "@fortawesome/free-regular-svg-icons": "^6.5.2",
@@ -15,6 +16,7 @@
     "@fortawesome/vue-fontawesome": "^2.0.10",
     "autoprefixer": "^10.4.19",
     "axios": "^1.7.2",
+    "ckeditor5": "^42.0.2",
     "core-js": "^3.8.3",
     "postcss": "^8.4.39",
     "swiper": "^5.4.5",

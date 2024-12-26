@@ -138,7 +138,7 @@
       ref="folderList"
     >
       <template v-slot:addFormButton>
-        <router-link :to="{ name: 'FormCreate' }" id="add-btn" class="p-8 w-full bg-[#ecf371] text-left text-lg">
+        <router-link :to="{ name: 'FormCreate' }" id="add-btn" class="p-7 w-full bg-[#ecf371] text-left text-lg">
           <font-awesome-icon icon="fa-solid fa-plus" size="2xl" class="mr-5" />
           新增表單
         </router-link>
@@ -148,7 +148,7 @@
       </template>
     </Aside>
     <div class="flex-1 bg-[#eee] list-content">
-      <div class="flex items-center justify-between pt-10 px-6 pb-3 border-b border-solid border-[#bcbbcb] search-bar">
+      <div class="flex items-center justify-between pt-9 px-6 pb-3 border-b border-solid border-[#bcbbcb] search-bar">
         <div class="flex">
           <template v-if="show_type === 'list'">
             <button class="mr-3 py-1.5 px-2 rounded-[10px] bg-[#fafaf9] hover:bg-[#ff6060] text-[#57588B] hover:text-white" type="button">
@@ -496,7 +496,8 @@ export default {
     /**@表單卡片更多功能操作 */
     formEvent(val) {
       if (val.type === 'blank') window.open(`${location.origin}/form/create?formId=${val.id}`).location
-      if (val.type === 'move') this.moveFolderInfo = { id: val['id'], folder_id: val['folder_id'] }
+      else if (val.type === 'log') window.open(`${location.origin}/statistics-log?formId=${val.id}`).location
+      else if (val.type === 'move') this.moveFolderInfo = { id: val['id'], folder_id: val['folder_id'] }
       this.formEventType = val
     },
     /**@切換收藏_OK */

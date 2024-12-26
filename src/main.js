@@ -20,6 +20,7 @@ import VueMeta from 'vue-meta'
 // [vue-meta](https://www.npmjs.com/package/vue-meta)
 import VueClipboard from 'vue-clipboard2'
 // [vue-meta](https://www.npmjs.com/package/vue-clipboard2)
+import CKEditor from '@ckeditor/ckeditor5-vue2'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { fas } from '@fortawesome/free-solid-svg-icons'
@@ -53,6 +54,7 @@ Vue.use(Toasted, { theme: 'outline', position: 'top-center', duration: 3000 })
 Vue.use(VueCookies)
 Vue.use(VCalendar)
 Vue.use(DatePicker)
+Vue.use(CKEditor)
 Vue.use(VueMeta)
 Vue.use(VueClipboard)
 

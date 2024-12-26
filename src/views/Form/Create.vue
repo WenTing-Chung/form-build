@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-row-reverse w-full h-full bg-[#eee]">
-    <Modal v-if="modal" @closeModal="questionUploadImage = { id: null, questionName: '' }">
+    <Modal v-if="modal && modalType === 'questionImage'" @closeModal=";(modalType = ''), (questionUploadImage = { id: null, questionName: '' })">
       <p class="mb-5 text-[#54588c] font-bold text-3xl">{{ questionUploadImage['questionName'] }}</p>
       <p class="mb-3 text-lg">問題上傳圖片</p>
       <label for="coverImage" class="py-2 px-7 border border-solid border-[#888] rounded-md cursor-pointer">
@@ -14,6 +14,10 @@
         選擇檔案
       </label>
     </Modal>
+    <Modal v-if="modal && modalType === 'formDescription'" @closeModal="modalType = ''">
+      <p class="mb-5 text-[#54588c] font-bold text-3xl">表單說明</p>
+      <ckeditor v-if="isLayoutReady" v-model="form.description" :editor="editorConfig.editor" :config="editorConfig.config" />
+    </Modal>
     <FormCreateBar :add="dragAdd" @drag_add_question="drag_add_question" />
     <div class="overflow-y-auto flex-1 py-7 scroll-style" @drop="handleDrop($event)" @dragover.prevent>
       <div class="mb-9 mx-auto w-10/12">
@@ -25,7 +29,21 @@
             placeholder="未命名標題"
           />
           <hr class="mt-4 mb-7 bg-[#888]" />
-          <input v-model="form.description" class="w-full placeholder:text-[#555] focus:placeholder:text-[#ccc]" type="text" placeholder="表單說明" />
+          <div class="flex items-start">
+            <section class="flex-1 mr-5 pb-1 border-b border-solid border-[#0000001f] bg-white">
+              <template v-if="!form.description">表單說明</template>
+              <template v-else>
+                <div v-html="form.description" />
+              </template>
+            </section>
+            <button
+              class="py-1 px-3 rounded-md bg-[#54588c] hover:bg-[#3a3b72] text-white font-bold text-sm"
+              type="button"
+              @click.prevent=";(modalType = 'formDescription'), $store.dispatch('isModal', true)"
+            >
+              編輯器
+            </button>
+          </div>
         </div>
         <div class="mb-7 p-7 rounded-2xl bg-white">
           <p class="mb-5 font-bold text-2xl">上傳縮圖</p>
@@ -142,11 +160,16 @@
                     type="text"
                     placeholder="說明"
                   />
-                  <img
-                    v-if="item.other.config['image']"
-                    :class="{ 'mb-5 w-[250px]': item.other.config['image'] }"
-                    :src="item.other.config['image']"
-                  />
+                  <div v-if="item.other.config['image']" class="flex">
+                    <img :class="{ 'mr-3 mb-5 w-[250px]': item.other.config['image'] }" :src="item.other.config['image']" />
+                    <font-awesome-icon
+                      v-if="active === i"
+                      class="w-7 h-7 border border-solid border-[#ccc] rounded-full cursor-pointer"
+                      icon="fa-solid fa-xmark"
+                      size="xl"
+                      @click.prevent="item.other.config['image'] = ''"
+                    />
+                  </div>
                   <div>
                     <!-- 單行文字 ↓ -->
                     <template v-if="item.type === 'text'">
@@ -592,7 +615,11 @@
                           class="flex items-center justify-center mr-1.5 w-10 h-10 rounded-md text-[#888] hover:bg-[#eee] hover:text-[#555]"
                           role="button"
                           title="圖片"
-                          @click.prevent=";(questionUploadImage = { id: i, questionName: item['title'] }), $store.dispatch('isModal', true)"
+                          @click.prevent="
+                            ;(modalType = 'questionImage'),
+                              (questionUploadImage = { id: i, questionName: item['title'] }),
+                              $store.dispatch('isModal', true)
+                          "
                         >
                           <font-awesome-icon icon="fa-regular fa-image" size="xl" />
                         </div>
@@ -665,6 +692,7 @@
 import { mapState } from 'vuex'
 import draggable from 'vuedraggable'
 import question from '@/utils/question'
+import { CKEditorConfig } from '@/utils/formDescriptionCKeditor'
 import { inputType, inputType_to_text, mediaList } from '@/utils/select'
 import FormCreateBar from '@/components/FormCreateBar.vue'
 import SwitchElement from '@/components/Switch.vue'
@@ -682,6 +710,9 @@ export default {
     enabled: true,
     dragging: false,
     dragAdd: false,
+    isLayoutReady: false,
+    editorConfig: CKEditorConfig,
+    modalType: '', // Modal功能
     active: null, // 當前點擊問題Index
     filePresentation: {},
     questionUploadImage: {
@@ -701,6 +732,9 @@ export default {
       const id = Number(this.$route.query.formId)
       this.getFormInfo(id)
     } else if (this.$route.query.folderId) this.form.folder_id = Number(this.$route.query.folderId)
+  },
+  mounted() {
+    this.isLayoutReady = true
   },
   computed: {
     ...mapState({

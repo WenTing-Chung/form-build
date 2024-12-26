@@ -27,7 +27,7 @@
           >
             <div class="py-6 px-8 border-b border-solid border-[#707070]">
               <p class="mb-4 font-bold text-4xl">{{ form_data['name'] }}</p>
-              <p class="text-base">{{ form_data['description'] }}</p>
+              <div v-html="form_data['description']" />
             </div>
             <ul :class="['mb-5', form_data['question_number'] ? 'pl-8 pr-4 lg:pl-10 list-decimal' : 'px-2.5 lg:px-5 list-none']">
               <ValidationObserver ref="renderForm">

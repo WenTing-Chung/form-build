@@ -98,6 +98,17 @@ const routes = [
           },
         ],
       },
+      {
+        path: '/statistics-log',
+        name: 'StatisticsLog',
+        component: () => import('@/views/StatisticsLog.vue'),
+        meta: {
+          requireAuth: true,
+          metaInfo: {
+            title: '統計紀錄',
+          },
+        },
+      },
     ],
   },
   // {
