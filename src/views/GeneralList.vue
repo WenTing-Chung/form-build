@@ -496,7 +496,7 @@ export default {
     /**@表單卡片更多功能操作 */
     formEvent(val) {
       if (val.type === 'blank') window.open(`${location.origin}/form/create?formId=${val.id}`).location
-      else if (val.type === 'log') window.open(`${location.origin}/statistics-log?formId=${val.id}`).location
+      else if (val.type === 'log') this.$router.push({ name: 'StatisticsLog', query: { formId: val.id } })
       else if (val.type === 'move') this.moveFolderInfo = { id: val['id'], folder_id: val['folder_id'] }
       this.formEventType = val
     },

@@ -83,6 +83,9 @@ export default {
   statistics(id) {
     return service.get('/form/record', { params: id })
   },
+  export(id) {
+    return service.get('/form/export', { params: id })
+  },
   /**
    * @param { 帳號設定 }
    */
