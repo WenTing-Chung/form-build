@@ -22,8 +22,6 @@ import VueClipboard from 'vue-clipboard2'
 // [vue-clipboard2](https://www.npmjs.com/package/vue-clipboard2)
 import CKEditor from '@ckeditor/ckeditor5-vue2'
 // [@ckeditor/ckeditor5-vue2](https://www.npmjs.com/package/@ckeditor/ckeditor5-vue2)
-import JsonExcel from 'vue-json-excel'
-// [vue-json-excel](https://www.npmjs.com/package/vue-json-excel)
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { fas } from '@fortawesome/free-solid-svg-icons'
@@ -52,9 +50,6 @@ localize('zh_TW', zh)
 Vue.component('ValidationObserver', ValidationObserver)
 Vue.component('ValidationProvider', ValidationProvider)
 Object.keys(rules).forEach((rule) => extend(rule, rules[rule]))
-
-/**@JsonExcel */
-Vue.component('downloadExcel', JsonExcel)
 
 Vue.use(Toasted, { theme: 'outline', position: 'top-center', duration: 3000 })
 Vue.use(VueCookies)

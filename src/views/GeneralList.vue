@@ -138,7 +138,7 @@
       ref="folderList"
     >
       <template v-slot:addFormButton>
-        <router-link :to="{ name: 'FormCreate' }" id="add-btn" class="p-7 w-full bg-[#ecf371] text-left text-lg">
+        <router-link :to="{ name: 'FormCreate', query: { isNew: true } }" id="add-btn" class="p-7 w-full bg-[#ecf371] text-left text-lg">
           <font-awesome-icon icon="fa-solid fa-plus" size="2xl" class="mr-5" />
           新增表單
         </router-link>
@@ -495,8 +495,11 @@ export default {
     },
     /**@表單卡片更多功能操作 */
     formEvent(val) {
-      if (val.type === 'blank') window.open(`${location.origin}/form/create?formId=${val.id}`).location
-      else if (val.type === 'log') this.$router.push({ name: 'StatisticsLog', query: { formId: val.id } })
+      if (val.type === 'blank') {
+        this.$store.dispatch('modify_config_id', { formId: val.id })
+        localStorage.setItem(`${process.env.VUE_APP_COOKIES}_Config`, JSON.stringify({ formId: val.id }))
+        window.open(`${location.origin}/form/create?formId=${val.id}`).location
+      } else if (val.type === 'log') this.$router.push({ name: 'StatisticsLog', query: { formId: val.id } })
       else if (val.type === 'move') this.moveFolderInfo = { id: val['id'], folder_id: val['folder_id'] }
       this.formEventType = val
     },

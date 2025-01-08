@@ -32,13 +32,13 @@ export default {
           text: '設定',
           link: 'FormSettings',
           query: this.configID,
-          show: this.configID.folderId || !Object.keys(this.configID).length ? false : true,
+          show: this.$route.query.isNew ? false : true,
         },
         {
           text: '發布',
           link: 'FormRelease',
           query: this.configID,
-          show: this.configID.folderId || !Object.keys(this.configID).length ? false : true,
+          show: this.$route.query.isNew ? false : true,
         },
       ]
     },

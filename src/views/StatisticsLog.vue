@@ -54,16 +54,6 @@
             </ul>
           </div>
         </div>
-        <download-excel
-          id="excel_btn"
-          class="hidden"
-          :data="json_data"
-          :fields="json_fields"
-          :type="exportModal['type']"
-          :name="`${formInfo['name']}.xls`"
-        >
-          <button class="py-2 px-4 rounded-[10px] bg-[#54588c] hover:bg-[#3a3b72] text-white font-bold text-lg" type="button">匯出</button>
-        </download-excel>
         <div id="table-height" class="block overflow-auto scroll-style">
           <table class="table-auto w-full whitespace-nowrap">
             <thead>
@@ -85,6 +75,7 @@
 </template>
 
 <script>
+import xlsx from 'xlsx-js-style'
 import Pagination from '@/components/Pagination/Pagination.vue'
 
 export default {
@@ -191,8 +182,56 @@ export default {
           }
         })
         .then(() => {
-          if (this.json_data.length) document.querySelector('#excel_btn').click()
+          this.exportToExcel()
         })
+    },
+    exportToExcel() {
+      const header = Object.keys(this.json_fields) // 定義表頭
+      const sheetData = this.json_data.map((item) => {
+        const _item = {}
+        header.forEach((key) => {
+          _item[key] = item[key]
+        })
+        return _item
+      })
+      const worksheet = xlsx.utils.json_to_sheet(sheetData) // 創建一個工作表
+      const workbook = xlsx.utils.book_new() // 創建一個新的工作簿
+      // aoa_to_sheet   是將【一個二維陣列】轉化為sheet
+      // json_to_sheet  是將【由對象組成的陣列】轉化為sheet
+      // table_to_sheet 是將【table的dom】轉化為sheet
+
+      // ↓ 設置欄寬
+      const colsWidth = []
+      for (let i = 0; i < header.length; i++) {
+        colsWidth.push({ wch: 25 })
+      }
+      worksheet['!cols'] = colsWidth
+      // ↓ 設置行高
+      const rowsHeight = []
+      for (let i = 0; i < this.json_data.length; i++) {
+        rowsHeight.push({ hpx: 20 })
+      }
+      worksheet['!rows'] = rowsHeight
+      // ↓ 設置樣式
+      let range = xlsx.utils.decode_range(worksheet['!ref'])
+      let headerStyle = {
+        font: { sz: 14, name: '微軟正黑體', bold: true },
+        alignment: { vertical: 'center', horizontal: 'center' },
+      }
+      let defaultStyle = {
+        font: { sz: 11, name: '宋體' },
+        alignment: { vertical: 'center', horizontal: 'center' },
+      }
+      for (let row = range.s.r; row <= range.e.r; ++row) {
+        for (let col = range.s.c; col <= range.e.c; ++col) {
+          let cellAddress = xlsx.utils.encode_cell({ r: row, c: col })
+          let cell = worksheet[cellAddress]
+          if (header.includes(cell.v)) cell.s = headerStyle
+          else cell.s = defaultStyle
+        }
+      }
+      xlsx.utils.book_append_sheet(workbook, worksheet, '工作表') // 把工作表添加到工作簿
+      xlsx.writeFile(workbook, `${this.formInfo.name}.xlsx`)
     },
   },
 }

@@ -13,7 +13,7 @@
           <div
             class="relative py-10 px-5 w-full overflow-hidden rounded-2xl bg-[#f9f9fb] shadow-[0_3px_6px_0_rgb(82,82,140)] before:absolute before:top-0 before:left-0 before:block before:w-full before:h-2.5 before:bg-[#52528c] before:content-['']"
           >
-            <p class="font-bold text-center text-3xl">此表單已超過可填寫時間</p>
+            <p class="font-bold text-center text-2xl lg:text-3xl">此表單已超過可填寫時間</p>
           </div>
         </template>
         <template v-else>
