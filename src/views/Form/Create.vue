@@ -832,21 +832,26 @@ export default {
     modifyForm() {
       this.formFormat(this.form)
       this.axios.modifyForm(this.form).then((res) => {
-        if (res.data.code === 200) this.getFormInfo(this.form.id)
+        if (res.data.code === 200) {
+          this.getFormInfo(this.form.id)
+          this.filePresentation = {}
+        }
       })
     },
     /**@調整格式 */
     formFormat(form) {
       form['questions'].forEach((q) => {
         if (q['type'] === 'single' || q['type'] === 'multiple') {
-          let obj = {}
-          q.option['list'].forEach((l) => {
-            obj[l.value] = []
-            q.option['column'].forEach((c) => {
-              obj[l.value].push(c.value)
-            })
-          })
-          q.option['Ar'] = obj
+          let Ar = []
+          for (let i = 0; i < q.option['list'].length; i++) {
+            let itemObj = {}
+            itemObj = { text: `${q.option['list'][i]['value']}`, value: [] }
+            Ar.push(itemObj)
+            for (let j = 0; j < q.option['column'].length; j++) {
+              itemObj['value'].push(q.option['column'][j])
+            }
+          }
+          q.option['dataFormat'] = Ar
         }
       })
     },

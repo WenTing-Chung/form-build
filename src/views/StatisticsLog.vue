@@ -150,7 +150,6 @@ export default {
         const { code, data } = res.data
         if (code === 200) {
           const { exports, headers } = data
-          console.log(exports, headers)
           let Ar = []
           exports.forEch((info) => {
             let obj = {}

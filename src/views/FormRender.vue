@@ -257,17 +257,17 @@
                                 {{ column_item.value }}
                               </div>
                             </div>
-                            <div v-for="(list, i) in Object.keys(item.option['Ar'])" :key="`${list}-${i}`" class="table-row bg-[#e0e0e0]/30">
-                              <div class="table-cell p-1 min-w-20 h-12 whitespace-nowrap leading-[48px]">{{ list }}</div>
-                              <div v-for="(column, j) in item.option['Ar'][list]" :key="`${column}-${j}`" class="table-cell p-1">
-                                <label :for="`single_${list}-${column}`" class="p-1 block cursor-pointer">
+                            <div v-for="(list, i) in item.option['dataFormat']" :key="`${list['text']}-${i}`" class="table-row bg-[#e0e0e0]/30">
+                              <div class="table-cell p-1 min-w-20 h-12 whitespace-nowrap leading-[48px]">{{ list['text'] }}</div>
+                              <div v-for="(column, j) in list['value']" :key="`${column['value']}-${j}`" class="table-cell p-1">
+                                <label :for="`single_${list['text']}-${column['value']}`" class="p-1 block cursor-pointer">
                                   <input
-                                    v-model="form.answers[index].answer.value[list]"
+                                    v-model="form.answers[index].answer.value[i]['value']"
                                     class="hidden"
                                     type="radio"
-                                    :id="`single_${list}-${column}`"
-                                    :name="`${list}`"
-                                    :value="column"
+                                    :id="`single_${list['text']}-${column['value']}`"
+                                    :name="`${list['text']}`"
+                                    :value="column['value']"
                                     @change="arrayChange(item['is_required'], form.answers[index], item['title'])"
                                   />
                                   <p
@@ -305,17 +305,17 @@
                                 {{ column_item.value }}
                               </div>
                             </div>
-                            <div v-for="(list, i) in Object.keys(item.option['Ar'])" :key="`${list}-${i}`" class="table-row bg-[#e0e0e0]/30">
-                              <div class="table-cell p-1 min-w-20 h-12 whitespace-nowrap leading-[48px]">{{ list }}</div>
-                              <div v-for="(column, j) in item.option['Ar'][list]" :key="`${column}-${j}`" class="table-cell p-1">
-                                <label :for="`multiple_${list}-${column}`" class="p-1 block cursor-pointer question-checkbox">
+                            <div v-for="(list, i) in item.option['dataFormat']" :key="`${list['text']}-${i}`" class="table-row bg-[#e0e0e0]/30">
+                              <div class="table-cell p-1 min-w-20 h-12 whitespace-nowrap leading-[48px]">{{ list['text'] }}</div>
+                              <div v-for="(column, j) in list['value']" :key="`${column['value']}-${j}`" class="table-cell p-1">
+                                <label :for="`multiple_${list['text']}-${column['value']}`" class="p-1 block cursor-pointer question-checkbox">
                                   <input
-                                    v-model="form.answers[index].answer.value[list]"
+                                    v-model="form.answers[index].answer.value[i]['value']"
                                     class="checkbox-checked"
                                     type="checkbox"
-                                    :id="`multiple_${list}-${column}`"
-                                    :name="`${list}`"
-                                    :value="column"
+                                    :id="`multiple_${list['text']}-${column['value']}`"
+                                    :name="`${list['text']}`"
+                                    :value="column['value']"
                                     @change="arrayChange(item['is_required'], form.answers[index], item['title'])"
                                   />
                                   <p
@@ -461,8 +461,8 @@ export default {
             if (x['type'] === 'checkbox') obj['answer'] = { text: x['title'], value: [] }
             else if (['file', 'date', 'time'].includes(x['type'])) obj['answer'] = { text: x['title'], value: null }
             else if (x['type'] === 'single') {
-              let ans = {}
-              Object.keys(x.option['Ar']).forEach((item) => (ans[item] = null))
+              let ans = []
+              x.option['dataFormat'].forEach((item, i) => (ans[i] = { text: item['text'], value: '' }))
               obj['errorStatus'] = {
                 isRequired: x['is_required'],
                 status: false,
@@ -470,8 +470,8 @@ export default {
               }
               obj['answer'] = { text: x['title'], value: ans }
             } else if (x['type'] === 'multiple') {
-              let ans = {}
-              Object.keys(x.option['Ar']).forEach((item) => (ans[item] = []))
+              let ans = []
+              x.option['dataFormat'].forEach((item, i) => (ans[i] = { text: item['text'], value: [] }))
               obj['errorStatus'] = {
                 isRequired: x['is_required'],
                 status: false,
@@ -529,12 +529,14 @@ export default {
       if (isRequired) {
         for (let i = 0; i < Object.values(info.answer['value']).length; i++) {
           if (info['questionsType'] === 'single') {
-            if (Object.values(info.answer['value'])[i] === null) {
+            const result = info.answer['value'].some((x) => x['value'] === '')
+            if (result) {
               info.errorStatus['status'] = true
               break
             } else info.errorStatus['status'] = false
           } else if (info['questionsType'] === 'multiple') {
-            if (Object.values(info.answer['value'])[i].length === 0) {
+            const result = info.answer['value'].some((x) => x['value'].length === 0)
+            if (result) {
               info.errorStatus['status'] = true
               break
             } else info.errorStatus['status'] = false
@@ -550,17 +552,16 @@ export default {
           if (['single', 'multiple'].includes(q.questionsType)) {
             this.arrayChange(q.errorStatus['isRequired'], q)
             if (q.questionsType === 'single') {
-              if (Object.values(q.answer['value']).some((x) => x === null)) Arr_success = false
+              if (q.answer['value'].some((x) => x['value'] === '')) Arr_success = false
             } else if (q.questionsType === 'multiple') {
-              if (Object.values(q.answer['value']).some((x) => x.length === 0)) Arr_success = false
+              if (q.answer['value'].some((x) => x['value'].length === 0)) Arr_success = false
             }
           }
         })
         if (!success || !Arr_success) {
           this.$toasted.error('問題未填寫完全', { position: 'top-center' })
           return
-        }
-        if (Arr_success && success) {
+        } else {
           this.axios.submitQuestionnaire(this.form).then((res) => {
             if (res.data.code === 200) this.$store.dispatch('isModal', true)
           })
