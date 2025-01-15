@@ -184,6 +184,18 @@ export default {
           this.exportToExcel()
         })
     },
+    /**@計算單元格寬度 */
+    getCellWidth(value) {
+      if (value === null || value === '' || value === undefined) return 10
+      else if (/.*[\u4e00-\u9fa5]+.*$/.test(value)) {
+        // 中文長度
+        const chineseLength = value.match(/[\u4e00-\u9fa5]/g).length
+        // 不是中文
+        const otherLength = value.length - chineseLength
+        return chineseLength * 2.2 + otherLength * 1.1
+      } else return value.toString().length * 1.1
+    },
+    /**@匯出Excel */
     exportToExcel() {
       const header = Object.keys(this.json_fields) // 定義表頭
       const sheetData = this.json_data.map((item) => {
@@ -199,12 +211,36 @@ export default {
       // json_to_sheet  是將【由對象組成的陣列】轉化為sheet
       // table_to_sheet 是將【table的dom】轉化為sheet
 
-      // ↓ 設置欄寬
-      const colsWidth = []
-      for (let i = 0; i < header.length; i++) {
-        colsWidth.push({ wch: 25 })
-      }
-      worksheet['!cols'] = colsWidth
+      // ↓ 計算最大欄寬
+      let colWidths = []
+      this.json_data.forEach((row) => {
+        let index = 0
+        for (const key in row) {
+          if (colWidths[index] === null || colWidths[index] === '' || colWidths[index] === undefined) colWidths[index] = []
+          switch (typeof row[key]) {
+            case 'string':
+            case 'number':
+            case 'boolean':
+              colWidths[index].push(this.getCellWidth(row[key]))
+              break
+            case 'object':
+            case 'function':
+              colWidths[index].push(0)
+              break
+          }
+          index++
+        }
+      })
+      worksheet['!cols'] = []
+      // 每一列舉最大值為列寬
+      // console.log('colWidths: ', colWidths)
+      colWidths.forEach((widths, index) => {
+        // 計算列頭的寬度
+        widths.push(this.getCellWidth(header[index]))
+        // 設置最大值為列寬
+        worksheet['!cols'].push({ wch: Math.max(...widths) })
+      })
+
       // ↓ 設置行高
       const rowsHeight = []
       for (let i = 0; i < this.json_data.length; i++) {
@@ -214,8 +250,14 @@ export default {
       // ↓ 設置樣式
       let range = xlsx.utils.decode_range(worksheet['!ref'])
       let headerStyle = {
-        font: { sz: 14, name: '微軟正黑體', bold: true },
+        font: { sz: 12, name: '微軟正黑體', bold: true },
         alignment: { vertical: 'center', horizontal: 'center' },
+        fill: { fgColor: { rgb: 'EEEEEE' } },
+        border: {
+          right: { style: 'thin', color: '000000' },
+          bottom: { style: 'thin', color: '000000' },
+          left: { style: 'thin', color: '000000' },
+        },
       }
       let defaultStyle = {
         font: { sz: 11, name: '宋體' },
